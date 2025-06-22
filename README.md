@@ -6,12 +6,12 @@
 
 | Script | DOM Loaded? | Glance Ready? | Tested Version |
 | ------ | :--------: | :--------: | :--------: |
-| [HTML Script Loader](html-script-loader/) | YES | YES | v0.8.4 |
-| [Swipe Left and Right](swipe-left-and-right/) | YES | NO | v0.8.4  |
-| [Modal](modal/) | YES | NO | v0.8.4  |
-| [Tab Notification](tab-notification/) | YES | YES | v0.8.4  |
-| [Glimpse](glimpse/) | PARTIAL | PARTIAL | v0.8.4  |
-| **SOON!** [Responsive Table](#) | YES | YES | v0.8.4 |
+| [HTML Script Loader](html-script-loader/README.md) | YES | YES | v0.8.4 |
+| [Swipe Left and Right](swipe-left-and-right/README.md) | YES | NO | v0.8.4  |
+| [Modal](modal/README.md) | YES | NO | v0.8.4  |
+| [Tab Notification](tab-notification/README.md) | YES | YES | v0.8.4  |
+| [Glimpse](glimpse/README.md) | PARTIAL | PARTIAL | v0.8.4  |
+| [Responsive Table](responsive-table/README.md) | YES | YES | v0.8.4 |
 
 *PARTIAL simply means half of the script needs to be DOM Loaded and the other half is Glance Ready.*
 
