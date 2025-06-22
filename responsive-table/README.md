@@ -1,19 +1,10 @@
 [⇐ Micro-script list](../#micro-scripts)
 
 ### Desktop
-
-<video controls width="600">
-  <source src="preview1.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
-
+![preview1](preview1.webp)
 
 ### Mobile
-
-<video controls width="600">
-  <source src="preview2.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
+![preview2](preview2.webp)
 
 # Limitations
 This is a client-only implementation—**no server-side support**—because of how Glance is structured and how scripts are delivered.
