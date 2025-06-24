@@ -181,6 +181,7 @@
             }
           });
           divContent.classList.add('text-right', 'text-truncate');
+          if (divContent.getAttribute("title") === null) divContent.title = c.innerText.trim().replace(/\s+/g, " "); // workaround text-truncate
           divContent.innerHTML = c.innerHTML;
           li.appendChild(divContent);
 
