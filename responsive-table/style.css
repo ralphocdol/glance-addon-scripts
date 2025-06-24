@@ -178,6 +178,7 @@
   flex-wrap: wrap;
   gap: 0.25rem;
   justify-content: flex-end;
+  min-height: 3rem;
 }
 
 [responsive-table] .pagination-buttons>.page-btn {
