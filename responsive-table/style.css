@@ -43,6 +43,10 @@
   align-self: start;
 }
 
+[responsive-table] [table-row]>div>* {
+  line-height: normal;
+}
+
 [responsive-table] [table-row] {
   animation: rowEntrance .3s cubic-bezier(0.25, 1, 0.5, 1) backwards;
 }
