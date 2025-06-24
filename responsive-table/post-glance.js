@@ -27,7 +27,7 @@
     const totalColumns = headerCells.length;
     t.style.setProperty('--table-columns', totalColumns);
 
-    const template = headerCells.map(h => h.dataset.width || '1fr');
+    const template = headerCells.map(h => (h.dataset.width || '1') + 'fr');
     header.style.setProperty('--table-template', template.join(' '));
 
     colSorted[t_index] = 0;
@@ -125,13 +125,13 @@
         r.style.setProperty('--table-template', template.join(' '));
 
         [...children].forEach((c, i) => {
-          c.dataset.label = c.dataset.label || headerList[i];
+          c.dataset.label = c.dataset.label || headerList[i] || '';
           if (c.hasAttribute('data-show-on-mobile') || c.hasAttribute('data-as-mobile-title')) return;
 
           const li = document.createElement('li');
-          li.className = 'flex justify-between gap-10';
+          li.className = 'flex justify-between gap-55';
           li.innerHTML = `
-            <div class="text-truncate rtl color-highlight">${c.dataset.label}</div>
+            <div class="rtl color-highlight nowrap">${c.dataset.label}</div>
             <div class="text-right">${c.innerText.trim()}</div>
           `;
           ul.appendChild(li);
@@ -161,16 +161,16 @@
 
         let widest = '1fr';
         [...children].forEach((c, i) => {
-          c.dataset.label = c.dataset.label || headerList[i];
+          c.dataset.label = c.dataset.label || headerList[i] || '';
           if (!c.hasAttribute('data-as-collapsed-column')) return;
 
           hasCollapsed = true;
 
           const li = document.createElement('li');
-          li.className = 'flex justify-between';
+          li.className = 'flex justify-between gap-55';
 
           const divLabel = document.createElement('div');
-          divLabel.classList.add('text-truncate', 'rtl', 'color-highlight');
+          divLabel.classList.add('rtl', 'color-highlight', 'nowrap');
           divLabel.textContent = c.dataset.label;
           li.appendChild(divLabel);
 
@@ -180,7 +180,7 @@
               divContent.setAttribute(attr.name, attr.value)
             }
           });
-          divContent.classList.add('text-right');
+          divContent.classList.add('text-right', 'text-truncate');
           divContent.innerHTML = c.innerHTML;
           li.appendChild(divContent);
 
@@ -360,6 +360,8 @@
     container.innerHTML = '';
     const totalPages = Math.ceil(data[t_index].length / dataPageLimit[t_index]);
     const current = dataPage[t_index];
+
+    if (totalPages <= 1) return;
 
     function createBtn(page, isActive = false) {
       const btn = document.createElement('button');
