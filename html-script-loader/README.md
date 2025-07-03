@@ -7,11 +7,11 @@ Adding `<script></script>` in the `custom-api` template property or in the `html
 > Using API queries like `fetch` with API keys within the script is possible but it WILL expose them in the browser.
 
 # Usage
-The template should have the `attribute type="html-scripts"` and the function `scriptLoad()`
+The template should have the attribute `html-scripts` and the function `scriptLoad()`
 
 Add a script like so below your `custom-api`'s template property or `html`'s source property.
 ```javascript
-<script type="html-scripts">
+<script html-scripts>
     const scriptLoad = () => {  // this is required
         // your script should be in here
     }         
@@ -25,7 +25,7 @@ Add a script like so below your `custom-api`'s template property or `html`'s sou
   headers:
       Accept: application/json
   template: |
-    <script type="html-scripts">
+    <script html-scripts>
         const scriptLoad = () => {
             const updateClock = () => {
                 const now = new Date();
@@ -45,7 +45,7 @@ Add a script like so below your `custom-api`'s template property or `html`'s sou
   cache: 6h
   css-class: custom-widget-test # as your main class element to make sure you don't update anything else
   template: |
-    <script type="html-scripts">
+    <script html-scripts>
     const scriptLoad = () => {
         setInterval(async () => {
             const mainElement = document.querySelector('.custom-widget-test');
