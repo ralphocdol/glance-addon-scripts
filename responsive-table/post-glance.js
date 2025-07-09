@@ -132,7 +132,9 @@
           li.className = 'flex justify-between gap-55';
           li.innerHTML = `
             <div class="rtl color-highlight nowrap">${c.dataset.label}</div>
-            <div class="text-right">${c.innerText.trim()}</div>
+            <div class="text-right text-truncate" title="${c.innerText.trim().replace(/\s+/g, " ")}">
+              ${c.innerText.trim()}
+            </div>
           `;
           ul.appendChild(li);
         });
@@ -154,6 +156,8 @@
         details.className = 'details collapsed-column-details';
 
         const summary = document.createElement('summary');
+        summary.classList.add('text-truncate');
+        summary.title = children[0].innerText.trim().replace(/\s+/g, " ");
         summary.innerText = children[0].textContent.trim();
 
         const ul = document.createElement('ul');
@@ -181,7 +185,7 @@
             }
           });
           divContent.classList.add('text-right', 'text-truncate');
-          if (divContent.getAttribute("title") === null) divContent.title = c.innerText.trim().replace(/\s+/g, " "); // workaround text-truncate
+          divContent.title = c.innerText.trim().replace(/\s+/g, " "); // workaround text-truncate
           divContent.innerHTML = c.innerHTML;
           li.appendChild(divContent);
 

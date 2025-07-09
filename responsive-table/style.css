@@ -216,6 +216,9 @@
 
 [responsive-table] .collapsed-column-details>ul>li {
   line-height: 2rem;
+}
+
+[responsive-table] .collapsed-column-details>ul>li:not(:last-child) {
   border-bottom: 1px solid var(--color-popover-border);
 }
 
@@ -327,5 +330,14 @@
 
   [responsive-table] .collapsed-column-details>summary::-webkit-details-marker {
     display: none;
+  }
+
+  [responsive-table] [hide-on-mobile] {
+    display: none !important;
+  }
+
+  [responsive-table] [table-header]>div,
+  [responsive-table] [table-row]>div {
+    padding-right: unset;
   }
 }
