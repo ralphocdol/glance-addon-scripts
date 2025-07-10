@@ -2,6 +2,8 @@
 >
 > This repository is provided "as is" without any warranties or guarantees. Use it at your own risk. The authors are not responsible for any damage, loss of data, or any issues arising from the use or misuse of this code.
 
+*Check the [Widget Repository](https://github.com/ralphocdol/glance-custom-widgets) that uses these scripts.*
+
 ### Micro-Scripts
 
 | Script | DOM Loaded? | Glance Ready? | Tested Version |
