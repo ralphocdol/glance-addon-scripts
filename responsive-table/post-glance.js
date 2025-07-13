@@ -71,8 +71,6 @@
     t.style.display = 'block';
     t.classList.add('show');
 
-    if (!isPaginate[t_index]) data[t_index].length = 0;
-
     body.style.minHeight = body.offsetHeight + 'px';
   });
 
