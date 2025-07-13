@@ -21,7 +21,7 @@ _Read the main [README](../#micro-scripts) to learn how this should be `$include
 - `spawn.js` - a shared function that launches Glimpse
 - `glimpse.css` - the...uhm... css, you have to load this with either the [default method](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#custom-css-file) or if you already use the default then you can import it inside:
     ```css
-    @import url('glimpse.css');
+    @import url('/assets/glimpse.css');
     ```
 
 # Configurations
