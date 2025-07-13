@@ -47,13 +47,16 @@ There are multiple methods you can load the scripts, such as:
 
         // Add here if the script needs the DOM to be loaded 
         // but doesn't need the Glance to be ready
-        $include: glimpse/pre-glance.js // example since 1 part of Glimpse can be loaded before Glance is ready
+
+        // example since 1 part of Glimpse can be loaded before Glance is ready
+        $include: glimpse/pre-glance.js
 
         console.info("Waiting for Glance...");
         while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
         console.info("Glance is ready...");
 
-        $include: glimpse/post-glance.js // example since 1 part of Glimpse can be loaded after Glance is ready
+        // example since 1 part of Glimpse can be loaded after Glance is ready
+        $include: glimpse/post-glance.js
 
         // Add here if the script needs the Glance to be ready
     });
