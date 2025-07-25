@@ -23,6 +23,7 @@
   border-bottom: 1px solid hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.5);
   line-height: 4rem;
   padding: 0 var(--widget-table-spacing);
+  gap: 1rem;
 }
 
 [responsive-table] [table-header] {
@@ -45,7 +46,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   align-self: start;
-  padding-right: 1rem;
 }
 
 [responsive-table] [table-row] {
