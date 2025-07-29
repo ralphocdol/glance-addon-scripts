@@ -3,6 +3,7 @@
     const EXCLUDED_CLASS = [
         'carousel-container',
         'mobile-navigation-page-links',
+        'widget-group-header',
         'widget-exclude-swipe',
     ]
     const EXCLUDED_TAGS = [
