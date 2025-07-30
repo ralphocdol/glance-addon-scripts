@@ -56,7 +56,7 @@
   if (!search) return;
 
   const uniqueStore = [];
-  
+
   const loadingAnimationElement = document.createElement('div');
   loadingAnimationElement.className = 'custom-page-loading-container';
   loadingAnimationElement.innerHTML = `
@@ -102,6 +102,7 @@
   const glimpseResult = glimpse.querySelector('.glimpse-result');
   const glanceBang = glimpse.querySelector('.search-bang');
   const glanceContent = document.querySelector('#page-content');
+  const glancePageTitle = document.querySelector('#page>h1')?.innerText || '';
   const iframeBySlug = {};
 
   function isValidUrl(str) {
@@ -156,8 +157,8 @@
     '.widget-type-videos',
     '.widget-type-bookmarks',
   ].map(c => `${c}:not(.glimpsable-hidden)`)
-  .concat('.glimpsable')
-  .join(', ');
+    .concat('.glimpsable')
+    .join(', ');
 
   let controller;
   let lastCallId = 0;
@@ -247,7 +248,7 @@
     searchInput.blur();
   }
 
-  async function searchScrape({ contentElement, query, callId }) {
+  async function searchScrape({ contentElement, query, callId, pageTitle = glancePageTitle }) {
     if (callId !== lastCallId) return;
     const columns = contentElement?.querySelectorAll('.page-columns');
     if (!columns?.length) return;
@@ -255,16 +256,16 @@
     await Promise.allSettled(
       Array.from(columns).flatMap(column => [
         ...Array.from(column.querySelectorAll(widgetClasses)).flatMap(widget => [
-          createWidgetResult({ widget, query, callId, listSelector: 'ul.list', itemSelector: ':scope > li' }),
-          createWidgetResult({ widget, query, callId, listSelector: 'ul.list-with-separator', itemSelector: ':scope > .monitor-site, .docker-container' }),
-          createWidgetResult({ widget, query, callId, listSelector: '.cards-horizontal', itemSelector: ':scope > .card' }),
-          createWidgetResult({ widget, query, callId, listSelector: '.cards-vertical', itemSelector: ':scope > .widget-content-frame' }),
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.list', itemSelector: ':scope > li' }),
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.list-with-separator', itemSelector: ':scope > .monitor-site, .docker-container' }),
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-horizontal', itemSelector: ':scope > .card' }),
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-vertical', itemSelector: ':scope > .widget-content-frame' }),
         ]),
         ...Array.from(column.querySelectorAll('.glimpsable-custom')).map(widget =>
-          createWidgetResult({ widget, query, callId, listSelector: '[glimpse-list]' })
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '[glimpse-list]' })
         ),
         ...Array.from(column.querySelectorAll('.glimpsable-custom-list')).map(widget =>
-          createWidgetResult({ widget, query, callId, listSelector: '[glimpse-list]', itemSelector: '[glimpse-item]' })
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '[glimpse-list]', itemSelector: '[glimpse-item]' })
         )
       ])
     );
@@ -314,7 +315,7 @@
         if (!iframeBySlug[s]) break;
       }
 
-      await searchScrape({ contentElement: doc.querySelector('#page-content'), query, callId });
+      await searchScrape({ contentElement: doc.querySelector('#page-content'), query, callId, pageTitle: doc.querySelector('#page>h1')?.innerText || '' });
     }
   }
 
@@ -357,7 +358,7 @@
     searchSuggestListContainer.replaceChildren(newWidget);
   }
 
-  async function createWidgetResult({ widget, query, callId, listSelector, itemSelector }) {
+  async function createWidgetResult({ widget, query, callId, pageTitle, listSelector, itemSelector }) {
     return new Promise((resolve) => {
       if (callId !== lastCallId) return resolve();
       const headerSource = widget.querySelector('.widget-header > h2')?.innerText;
@@ -384,9 +385,11 @@
       newWidget.innerHTML = `<div class="widget-header"><h2 class="uppercase"></h2></div>`;
 
       const header = newWidget.querySelector('h2');
-      header.innerText = headerSource
+      const newTitle = headerSource
         ?? document.getElementById(widgetContent.closest('.widget-group-content')?.getAttribute('aria-labelledby'))?.innerText
         ?? '';
+
+      header.innerText = newTitle ? `${pageTitle} → ${newTitle}`: pageTitle;
 
       widgetContentClone.innerHTML = '';
       newWidget.appendChild(widgetContentClone);
@@ -395,6 +398,7 @@
       ulClone.innerHTML = '';
       ulClone.removeAttribute('data-collapse-after');
       ulClone.classList.add('container-expanded');
+      ulClone.style.display = ulClone.style.display !== 'none' ? ulClone.style.display : 'block';
       newWidget.querySelector('.widget-content').appendChild(ulClone);
 
       resultSearch.forEach((el, i) => {
