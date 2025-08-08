@@ -398,6 +398,8 @@
       ulClone.innerHTML = '';
       ulClone.removeAttribute('data-collapse-after');
       ulClone.classList.add('container-expanded');
+      ulClone.classList.remove('widget-content');
+      ulClone.classList.remove('widget-content-frame');
       ulClone.style.display = ulClone.style.display !== 'none' ? ulClone.style.display : 'block';
       newWidget.querySelector('.widget-content').appendChild(ulClone);
 
