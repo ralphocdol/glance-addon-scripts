@@ -19,7 +19,7 @@
     } else {
       glanceWidgetContainer = e.closest(`.widget`);
       glanceWidgetTab = glanceWidgetContainer.querySelector('.widget-header h2 a');
-      glanceWidgetTab.classList.add(`${tabNotificationClass}-${i}`)
+      glanceWidgetTab?.classList.add(`${tabNotificationClass}-${i}`)
       glanceWidgetTabTarget = `.${tabNotificationClass}-${i}`;
     }
 
@@ -37,7 +37,7 @@
         background-color: var(${isError ? '--color-negative' : '--color-primary'});
         color: var(--color-background);
         border-radius: var(--border-radius);
-        padding: 0 3px;
+        padding: 0 5px;
         font-size: 1rem;
         white-space: nowrap;
         line-height: 1.5rem;
