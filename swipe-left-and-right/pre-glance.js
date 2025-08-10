@@ -13,14 +13,17 @@
     let touchstartX, touchstartY;
     let touchendX, touchendY;
     let touchstartT, touchendT;
+    let isMultiTouch = false;
 
     document.addEventListener('touchstart', (event) => {
+        isMultiTouch = event.touches.length > 1;
         touchstartX = event.changedTouches[0].screenX;
         touchstartY = event.changedTouches[0].screenY;
         touchstartT = new Date();
     }, false);
 
     document.addEventListener('touchend', (event) => {
+        if (isMultiTouch) return;
         let targetElement = event.target;
         while (targetElement && !EXCLUDED_TAGS.some(t => targetElement.tagName.toLowerCase().includes(t)) && !EXCLUDED_CLASS.some(c => targetElement.classList.contains(c))) {
             targetElement = targetElement.parentElement;
