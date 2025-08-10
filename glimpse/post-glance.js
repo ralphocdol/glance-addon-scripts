@@ -5,7 +5,7 @@
   const headerNav = document.querySelector('.header-container > .header');
   if (!headerNav) return;
   const headerSearchNav = createNavElement();
-  headerSearchNav.className = 'glimpse-search-nav';
+  headerSearchNav.className = 'glimpse-search-nav search-icon-container';
   const navElement = headerNav.querySelector(':scope > nav');
   if (!navElement) return;
   navElement.parentNode.insertBefore(headerSearchNav, navElement.nextSibling);
@@ -21,7 +21,7 @@
   $include: spawn.js
 
   function createNavElement() {
-    const newElement = document.createElement('a');
+    const newElement = document.createElement('div');
     newElement.setAttribute('title', 'Launch Glimpse');
     newElement.innerHTML = `
       <svg class="search-icon" stroke="var(--color-text-highlight)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">

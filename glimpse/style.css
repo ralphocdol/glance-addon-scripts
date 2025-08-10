@@ -145,11 +145,12 @@
   cursor: pointer;
   display: flex;
   height: 100%;
-  width: 40px;
+  width: 4rem;
   justify-content: center;
   align-content: center;
   opacity: 0.7;
   transition: opacity 0.3s ease;
+  padding: 0.8rem;
 }
 
 .glimpse-search-nav:hover {
