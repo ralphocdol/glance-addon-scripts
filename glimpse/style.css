@@ -159,6 +159,9 @@
 }
 
 .glimpse-search-nav:hover {
-  color: var(--color-text-highlight);
   opacity: 1;
+}
+
+.glimpse-search-nav:hover > svg {
+  stroke: var(--color-text-highlight);
 }
