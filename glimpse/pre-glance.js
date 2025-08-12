@@ -93,7 +93,6 @@
 
   const closeBtnElement = document.createElement('span');
   closeBtnElement.className = 'close';
-  closeBtnElement.textContent = '\u00D7';
   closeBtnElement.addEventListener('click', e => closeGlimpse());
   glimpseSearch.querySelector('.widget-header').appendChild(closeBtnElement);
 

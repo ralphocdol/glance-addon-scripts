@@ -128,7 +128,6 @@
 
 .modal .close {
     cursor: pointer;
-    font-size: 24px;
     width: 24px;
     height: 24px;
     display: flex;
@@ -144,6 +143,12 @@
     background-color: var(--color-negative);
     border-radius: var(--border-radius);
     color: var(--color-background);
+}
+
+.modal .close::before {
+	content: '×';
+	font-size: 23px;
+	line-height: 1;
 }
 
 .modal .modal-header {

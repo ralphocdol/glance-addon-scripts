@@ -30,7 +30,6 @@
 
     const closeBtnElement = document.createElement('span');
     closeBtnElement.className = 'close';
-    closeBtnElement.textContent = '\u00D7';
 
     const modal = document.querySelector('.modal');
     const modalContainer = modal.querySelector('.modal-container');
