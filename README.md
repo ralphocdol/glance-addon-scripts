@@ -1,3 +1,8 @@
+## ⚠️ Disclaimer
+
+This repository provides an **unofficial add-on script** for [Glance](https://github.com/glanceapp/glance).  
+It is **not affiliated with, endorsed by, or connected to** it or its maintainers.
+
 > [!WARNING]
 >
 > This repository is provided "as is" without any warranties or guarantees. Use it at your own risk. The authors are not responsible for any damage, loss of data, or any issues arising from the use or misuse of this code.
@@ -66,3 +71,4 @@ There are multiple methods you can load the scripts, such as:
 >
 > Doing it this way will make the JS file follow the Glance's configuration template for the `document` `head`. Like how the a `${LOCAL_VARIABLE}` will be treated as an environment variable and needs to be escaped with `\` and become `\${LOCAL_VARIABLE}`. See https://github.com/glanceapp/glance/blob/v0.8.3/docs/configuration.md#environment-variables.
     
+
