@@ -14,24 +14,32 @@
     }
 
     const modalWrapper = document.createElement('div');
+    modalWrapper.id = 'modal';
     modalWrapper.classList.add('modal', 'widget-exclude-swipe');
+    modalWrapper.setAttribute('role', 'dialog');
+    modalWrapper.setAttribute('aria-modal', 'true');
+    modalWrapper.setAttribute('aria-labelledby', 'modalTitle');
+    modalWrapper.setAttribute('aria-describedby', 'modalDescription');
+    modalWrapper.hidden = true;
+
     modalWrapper.innerHTML = `
       <div class="modal-container">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="modal-header-content"></div>
+            <div class="modal-header-content" id="modalTitle"></div>
           </div>
-          <div class="modal-body"></div>
+          <div class="modal-body" id="modalDescription"></div>
           <div class="modal-footer"></div>
         </div>
       </div>
   `;
     document.body.appendChild(modalWrapper);
 
+
     const closeBtnElement = document.createElement('span');
     closeBtnElement.className = 'close';
 
-    const modal = document.querySelector('.modal');
+    const modal = document.getElementById('modal');
     const modalContainer = modal.querySelector('.modal-container');
     const modalHeader = modal.querySelector('.modal-header');
     const modalHeaderContent = modal.querySelector('.modal-header-content');
@@ -96,7 +104,10 @@
             }
 
             modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show', 'fade-in'), 10);
+            setTimeout(() => {
+                modal.hidden = false;
+                modal.classList.add('show', 'fade-in');
+            }, 10);
             document.body.style.overflow = 'hidden';
         }
         if (e.target === closeBtn || (modal.hasAttribute('dismiss-on-outside-click') && e.target === modal)) {
@@ -111,6 +122,7 @@
     });
 
     function closeModal() {
+        modal.hidden = true;
         modal.style.display = 'none';
         modal.classList.remove('show', 'fade-in');
         modalBody.innerHTML = '';
