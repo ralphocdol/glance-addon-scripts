@@ -55,6 +55,7 @@
 
   if (!search) return;
 
+  const showSearchSuggest = !!searchSuggestEndpoint;
   const uniqueStore = [];
 
   const loadingAnimationElement = document.createElement('div');
@@ -83,6 +84,10 @@
   const glimpseSearch = document.querySelector('#glimpse .glimpse-search');
   [...search.childNodes].forEach(child => glimpseSearch.appendChild(child.cloneNode(true)));
 
+  const glimpseSearchSuggestContainer = document.createElement('div');
+  glimpseSearchSuggestContainer.classList.add('glimpse-search-suggest-container', 'flex', 'flex-column');
+  glimpseSearch.appendChild(glimpseSearchSuggestContainer);
+
   const closeBtnElement = document.createElement('span');
   closeBtnElement.className = 'close';
   closeBtnElement.addEventListener('click', e => closeGlimpse());
@@ -100,11 +105,10 @@
     const searchBangContainer = document.createElement('div');
     searchBangContainer.className = 'glimpse-bang-suggest';
     searchBangContainer.innerHTML = ``;
-    glimpseSearch.appendChild(searchBangContainer);
-    const searchBangListContainer = glimpseSearch.querySelector('.glimpse-bang-suggest');
-    searchBangListContainer.style.display = 'none';
+    glimpseSearchSuggestContainer.appendChild(searchBangContainer);
+    searchBangContainer.style.display = 'none';
     if (glanceSearch?.bangs.length > 0) {
-      searchBangListContainer.style.display = 'flex';
+      searchBangContainer.style.display = 'flex';
       const searchBangItems = document.createElement('ul');
 
       searchBangItems.addEventListener('click', e => {
@@ -125,16 +129,16 @@
         </li>`)
         .join('');
 
-      searchBangListContainer.replaceChildren(searchBangItems);
+      searchBangContainer.replaceChildren(searchBangItems);
     }
   }
 
+  const emptySearchSuggest = `<span style="padding: 3px 15px; margin: 3px 0;">No suggestion...</span>`;
   const searchSuggestContainer = document.createElement('div');
   searchSuggestContainer.className = 'glimpse-search-suggest';
-  searchSuggestContainer.innerHTML = ``;
-  glimpseSearch.appendChild(searchSuggestContainer);
-  const searchSuggestListContainer = glimpseSearch.querySelector('.glimpse-search-suggest');
-  searchSuggestListContainer.style.display = 'none';
+  searchSuggestContainer.innerHTML = emptySearchSuggest;
+  glimpseSearchSuggestContainer.appendChild(searchSuggestContainer);
+  searchSuggestContainer.style.display = showSearchSuggest ? 'flex' : 'none';
 
   function isValidUrl(str) {
     const domainPattern = /^([a-z0-9-]{1,63}\.)+[a-z]{2,}$/i;
@@ -200,10 +204,7 @@
     const signal = controller.signal;
 
     glimpseResult.innerHTML = '';
-    if (searchSuggestEndpoint) {
-      searchSuggestListContainer.innerHTML = '';
-      searchSuggestListContainer.style.display = 'none';
-    }
+    searchSuggestContainer.innerHTML = emptySearchSuggest;
     const query = (e.target.value || '')
       .replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '')
       .trim()
@@ -368,20 +369,17 @@
   async function showSearchSuggestion({ query, signal }) {
     if (!searchSuggestEndpoint) return;
 
-    searchSuggestListContainer.style.display = 'flex';
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
-    searchSuggestListContainer.appendChild(loadingAnimationClone);
+    searchSuggestContainer.innerHTML = '';
+    searchSuggestContainer.appendChild(loadingAnimationClone);
 
     const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal });
     const result = await getSuggestion.json();
-    if (!result?.[1].length) {
-      searchSuggestListContainer.innerHTML = '<span style="padding: 2px 15px;">No suggestion...</span>';
-      return;
-    }
+    if (!result?.[1].length) return;
     const searchEngine = glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
-    const newWidget = document.createElement('ul');
-    newWidget.innerHTML = `
+    const searchSuggestList = document.createElement('ul');
+    searchSuggestList.innerHTML = `
       ${result[1].map(r => {
       const suggestLink = searchEngine ? searchEngine + encodeURIComponent(r) : '#';
       const target = searchEngine ? '_blank' : '';
@@ -391,7 +389,7 @@
           </li>`}).join('')
       }
     `;
-    searchSuggestListContainer.replaceChildren(newWidget);
+    searchSuggestContainer.replaceChildren(searchSuggestList);
   }
 
   async function createWidgetResult({ widget, query, callId, pageTitle, listSelector, itemSelector }) {

@@ -87,14 +87,18 @@
   font-size: 2rem;
 }
 
+#glimpse .glimpse-search-suggest-container {
+  gap: 0.3rem;
+}
+
 #glimpse .glimpse-bang-suggest,
 #glimpse .glimpse-search-suggest {
   display: none;
   padding: 2px;
   overflow-y: auto;
   background: var(--color-widget-background);
-  border-radius: var(--border-radius);
-  border: 1px solid hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.5);
+  border-radius: 0 0 5px 5px;
+  border: 1px solid hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.15);
   box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
 }
 
@@ -155,6 +159,12 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@media (max-width: 550px) {
+  #glimpse .glimpse-wrapper {
+    padding: 0 10px
+  }
 }
 
 /* Glance overrides */
