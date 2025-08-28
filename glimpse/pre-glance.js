@@ -11,9 +11,9 @@
       { title: '', shortcut: '', url: '' }, // duplicate as needed
     ]
   };
+  const showBangSuggest = true; // Suggests the search bang list
   const searchSuggestEndpoint = '';
-  // Other page search may or may not work due to limitations, and can be slow
-  const pagesSlug = [
+  const pagesSlug = [ // Other page search may or may not work due to limitations, and can be slow
     // 'home-page',
     // 'page-1',
     // 'page-2',
@@ -83,14 +83,6 @@
   const glimpseSearch = document.querySelector('#glimpse .glimpse-search');
   [...search.childNodes].forEach(child => glimpseSearch.appendChild(child.cloneNode(true)));
 
-  const searchSuggestContainer = document.createElement('div');
-  searchSuggestContainer.className = 'widget-content glimpse-suggest';
-  searchSuggestContainer.innerHTML = ``;
-  glimpseSearch.appendChild(searchSuggestContainer);
-
-  const searchSuggestListContainer = glimpseSearch.querySelector('.glimpse-suggest');
-  searchSuggestListContainer.style.display = 'none';
-
   const closeBtnElement = document.createElement('span');
   closeBtnElement.className = 'close';
   closeBtnElement.addEventListener('click', e => closeGlimpse());
@@ -103,6 +95,46 @@
   const glanceContent = document.querySelector('#page-content');
   const glancePageTitle = document.querySelector('#page>h1')?.innerText || '';
   const iframeBySlug = {};
+
+  if (showBangSuggest) {
+    const searchBangContainer = document.createElement('div');
+    searchBangContainer.className = 'glimpse-bang-suggest';
+    searchBangContainer.innerHTML = ``;
+    glimpseSearch.appendChild(searchBangContainer);
+    const searchBangListContainer = glimpseSearch.querySelector('.glimpse-bang-suggest');
+    searchBangListContainer.style.display = 'none';
+    if (glanceSearch?.bangs.length > 0) {
+      searchBangListContainer.style.display = 'flex';
+      const searchBangItems = document.createElement('ul');
+
+      searchBangItems.addEventListener('click', e => {
+        const targetElement = e.target.closest('.glimpse-bang-item');
+        if (!targetElement || !searchBangItems.contains(targetElement)) return;
+        searchInput.value = searchInput.value.replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '');
+        searchInput.value = targetElement.dataset.shortcut + ' ' + searchInput.value.trim();
+        glanceBang.textContent = targetElement.dataset.title;
+        searchInput.focus();
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      searchBangItems.innerHTML = glanceSearch.bangs
+        .map(b => `<li>
+            <span class="glimpse-bang-item" data-shortcut="${b.shortcut}" data-title="${b.title}">
+              ${b.shortcut} <span class="color-subdue">(${b.title})</span>
+            </span>
+        </li>`)
+        .join('');
+
+      searchBangListContainer.replaceChildren(searchBangItems);
+    }
+  }
+
+  const searchSuggestContainer = document.createElement('div');
+  searchSuggestContainer.className = 'glimpse-search-suggest';
+  searchSuggestContainer.innerHTML = ``;
+  glimpseSearch.appendChild(searchSuggestContainer);
+  const searchSuggestListContainer = glimpseSearch.querySelector('.glimpse-search-suggest');
+  searchSuggestListContainer.style.display = 'none';
 
   function isValidUrl(str) {
     const domainPattern = /^([a-z0-9-]{1,63}\.)+[a-z]{2,}$/i;
@@ -168,9 +200,14 @@
     const signal = controller.signal;
 
     glimpseResult.innerHTML = '';
-    searchSuggestListContainer.innerHTML = '';
-    searchSuggestListContainer.style.display = 'none';
-    const query = (e.target.value || '').trim().toLowerCase();
+    if (searchSuggestEndpoint) {
+      searchSuggestListContainer.innerHTML = '';
+      searchSuggestListContainer.style.display = 'none';
+    }
+    const query = (e.target.value || '')
+      .replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '')
+      .trim()
+      .toLowerCase();
     if (query.length < 1) {
       loadingAnimationElement.remove();
       return;
@@ -339,7 +376,7 @@
     const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal });
     const result = await getSuggestion.json();
     if (!result?.[1].length) {
-      searchSuggestListContainer.innerHTML = 'No suggestion...';
+      searchSuggestListContainer.innerHTML = '<span style="padding: 2px 15px;">No suggestion...</span>';
       return;
     }
     const searchEngine = glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
@@ -388,7 +425,7 @@
         ?? document.getElementById(widgetContent.closest('.widget-group-content')?.getAttribute('aria-labelledby'))?.innerText
         ?? '';
 
-      header.innerText = newTitle ? `${pageTitle} → ${newTitle}`: pageTitle;
+      header.innerHTML = newTitle ? `${pageTitle} <span class="color-primary">→</span> ${newTitle}`: pageTitle;
 
       widgetContentClone.innerHTML = '';
       newWidget.appendChild(widgetContentClone);

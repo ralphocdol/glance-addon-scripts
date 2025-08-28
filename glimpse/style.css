@@ -87,34 +87,46 @@
   font-size: 2rem;
 }
 
-#glimpse .glimpse-suggest {
+#glimpse .glimpse-bang-suggest,
+#glimpse .glimpse-search-suggest {
   display: none;
-  padding: 10px;
+  padding: 2px;
   overflow-y: auto;
+  background: var(--color-widget-background);
+  border-radius: var(--border-radius);
+  border: 1px solid hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.5);
+  box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
 }
 
-#glimpse .glimpse-suggest ul {
+#glimpse .glimpse-bang-suggest ul,
+#glimpse .glimpse-search-suggest ul {
   display: flex;
   flex: 1;
+  margin: 3px 0 5px;
 }
 
-#glimpse .glimpse-suggest li {
+#glimpse .glimpse-bang-suggest li,
+#glimpse .glimpse-search-suggest li {
   display: flex;
   flex: 1;
   text-align: center;
   align-content: center;
 }
 
-#glimpse .glimpse-suggest li a {
+#glimpse .glimpse-bang-suggest li > span,
+#glimpse .glimpse-search-suggest li > a {
   flex: 1;
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  padding: 10px 15px;
+  padding: 3px 15px;
+  cursor: pointer;
+  user-select: none;
 }
 
-#glimpse .glimpse-suggest li:hover {
+#glimpse .glimpse-bang-suggest li:hover,
+#glimpse .glimpse-search-suggest li:hover {
   background-color: var(--color-primary);
   border-radius: var(--border-radius);
   color: var(--color-background);
