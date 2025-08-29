@@ -72,6 +72,7 @@
   const glimpse = document.createElement('div');
   glimpse.id = 'glimpse';
   glimpse.className = 'widget-exclude-swipe';
+  glimpse.style.display = 'none';
   glimpse.innerHTML = `
     <div class="glimpse-wrapper">
       <div class="glimpse-search widget widget-type-search"></div>
