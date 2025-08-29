@@ -105,3 +105,5 @@ Choose a unique suffix to keep it distinctly identifiable.*
 | `glimpseKey` | '' | The shortcut key to call Glimpse, set to empty `''` by default to disable. *Setting this to `'s'` will override Glance's default search key focus* |
 | `waitForGlance` | true | Setting this to `false` will make the search and search-bangs functionality of Glance not work as those are loaded after Glance is ready, Glimpse functionality will remain working. This just limits when the `glimpseKey` can be triggered |
 | `showBangSuggest` | false | Suggests your defined `bang`s |
+| `mobileBottomSearch` | false | Repositions the search bar and the suggestions to the bottom for ease of access. |
+| `resizeOnSoftKeyboardOpen` | false | On most mobile browsers when, a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard making the `mobileBottomSearch` suggestions not scrollable. This attempts to fix that by making the content resized instead. |

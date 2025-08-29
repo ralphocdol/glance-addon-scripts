@@ -163,7 +163,12 @@
 
 @media (max-width: 550px) {
   #glimpse .glimpse-wrapper {
-    padding: 0 10px
+    padding: 0 1rem;
+  }
+
+  #glimpse .glimpse-wrapper.bottom-search {
+    flex-direction: column-reverse;
+    padding: 0 1rem 2rem; 
   }
 }
 

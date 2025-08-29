@@ -22,6 +22,8 @@
   const glimpseKey = '';
   const waitForGlance = true;
   const detectUrl = true; // Make sure to set to false if https://github.com/glanceapp/glance/issues/229 is addressed.
+  const mobileBottomSearch = true;
+  const resizeOnSoftKeyboardOpen = false; // Read Glimpse's README
   // --------------------------------------------------------------------------------
 
   const replaceBraces = str => str.replace(/[{}]/g, '!');
@@ -65,6 +67,13 @@
     <div class="loading-icon" aria-hidden="true"></div>
   `;
 
+  if (resizeOnSoftKeyboardOpen) {
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content';
+    document.head.appendChild(meta);
+  }
+
   const mainPagePath = Array.from(document.querySelectorAll('.nav a')).map(a => a.getAttribute('href'))?.[0];
   const windowPathname = window.location.pathname;
   const currentPathList = windowPathname.split('/').filter(p => p !== '');
@@ -101,6 +110,8 @@
   const glanceContent = document.querySelector('#page-content');
   const glancePageTitle = document.querySelector('#page>h1')?.innerText || '';
   const iframeBySlug = {};
+
+  if (mobileBottomSearch) glimpseWrapper.classList.add('bottom-search')
 
   if (showBangSuggest) {
     const searchBangContainer = document.createElement('div');
