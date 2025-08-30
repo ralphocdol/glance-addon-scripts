@@ -161,7 +161,7 @@
   to { opacity: 1; }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 1190px) {
   #glimpse .glimpse-wrapper {
     padding: 0 1rem;
   }
