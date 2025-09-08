@@ -28,6 +28,5 @@ Until then, this will have to do.
 | custom-modal | Yes | - | - | Will be used as a modal container |
 | dismiss-on-outside-click | No | false | true, false | will allow the modal to be closed when clicked anywhere outside the modal |
 | modal-no-background | No | false | true, false | will remove the background of the modal |
-| width | No | wide | small, medium, wide, full | Sets the width of the modal. |
-| height | No | tall | short, medium, tall, full | Sets the "maximum" height of the modal, will automatically use the height depending on the content. |
-| fillHeight | No | false | true, false | Fills the set height regardless of the content |
+| width | No | wide-auto | small, medium, wide, full | Sets the width of the modal. Append `-auto` to make it dynamic up to the selected width. |
+| height | No | tall-auto | short, medium, tall, full | Sets the "maximum" height of the modal, will automatically use the height depending on the content. Append `-auto` to make it dynamic up to the selected height. |

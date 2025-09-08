@@ -4,6 +4,10 @@
         MEDIUM: 'medium',
         WIDE: 'wide',
         FULL: 'full',
+        SMALL_AUTO: 'small-auto',
+        MEDIUM_AUTO: 'medium-auto',
+        WIDE_AUTO: 'wide-auto',
+        FULL_AUTO: 'full-auto',
     }
 
     const ENUM_HEIGHT = {
@@ -11,6 +15,10 @@
         MEDIUM: 'medium',
         TALL: 'tall',
         FULL: 'full',
+        SHORT_AUTO: 'short-auto',
+        MEDIUM_AUTO: 'medium-auto',
+        TALL_AUTO: 'tall-auto',
+        FULL_AUTO: 'full-auto',
     }
 
     const modalWrapper = document.createElement('div');
@@ -33,6 +41,7 @@
         </div>
       </div>
   `;
+
     document.body.appendChild(modalWrapper);
 
 
@@ -89,19 +98,12 @@
             );
 
             const attributeWidth = triggerElement.getAttribute('width');
-            const width = Object.values(ENUM_WIDTH).includes(attributeWidth) ? attributeWidth : ENUM_WIDTH.WIDE;
+            const width = Object.values(ENUM_WIDTH).includes(attributeWidth) ? attributeWidth : ENUM_WIDTH.WIDE_AUTO;
             modalContainer.classList.add(`modal-width-${width}`);
 
             const attributeHeight = triggerElement.getAttribute('height');
-            const height = Object.values(ENUM_HEIGHT).includes(attributeHeight) ? attributeHeight : ENUM_HEIGHT.TALL;
+            const height = Object.values(ENUM_HEIGHT).includes(attributeHeight) ? attributeHeight : ENUM_HEIGHT.TALL_AUTO;
             modalContainer.classList.add(`modal-height-${height}`);
-
-            const fillHeight = triggerElement.getAttribute('fillHeight');
-            if (fillHeight !== null && (fillHeight === '' || fillHeight === 'true')) {
-                modalContainer.style.height = '100%';
-            } else {
-                modalContainer.style.removeProperty('height');
-            }
 
             modal.style.display = 'flex';
             setTimeout(() => {
