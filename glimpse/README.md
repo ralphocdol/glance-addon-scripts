@@ -18,6 +18,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 _Read the main [README](../#micro-scripts) to learn how this should be `$include`d._
 - `pre-glance.js` - must be added after the DOM is loaded
 - `post-glance.js` - must be added after Glance is loaded
+- `config.js` - the user configuration
 - `spawn.js` - a shared function that launches Glimpse
 - `glimpse.css` - the...uhm... css, you have to load this with either the [default method](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#custom-css-file) or if you already use the default then you can import it inside:
     ```css
