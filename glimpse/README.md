@@ -27,11 +27,10 @@ _Read the main [README](../#micro-scripts) to learn how this should be `$include
 
 # Configurations
 ## Setting up
-Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration. Here's a quick configuration to get you started:
+Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration except for `newTab`. Here's a quick configuration to get you started:
 ```javascript
   const glanceSearch = { 
     searchUrl: 'https://duckduckgo.com/?q={QUERY}',
-    newTab: true,
     autofocus: false,
     target: '_blank',
     placeholder: 'Type here to search…',
