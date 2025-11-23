@@ -1,6 +1,8 @@
 (() => {
   $include: config.js
   const replaceBraces = str => str.replace(/[{}]/g, '!');
+  glanceSearch.target = glanceSearch.target ?? '_blank';
+  const newTab = glanceSearch.target === '_blank';
   const glanceSearchWidget = `
     <div class="widget widget-type-search">
       <div class="widget-header">
@@ -8,7 +10,7 @@
       </div>
       <div class="widget-content widget-content-frameless">
         <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center" 
-          data-default-search-url="${replaceBraces(glanceSearch.searchUrl)}" data-new-tab="${glanceSearch.newTab}" data-target="${glanceSearch.target}">
+          data-default-search-url="${replaceBraces(glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glanceSearch.target}">
           <div class="search-bangs">
             ${glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
           </div>
@@ -63,6 +65,13 @@
     </div>
   `;
   document.body.appendChild(glimpse);
+
+  if (autoClose) {
+    glimpse.addEventListener('click', e => {
+      if (!e.target.closest('a')) return;
+      closeGlimpse();
+    });
+  }
 
   const bodyOverflowState = document.body.style.overflow;
   const glimpseSearch = document.querySelector('#glimpse .glimpse-search');
@@ -119,10 +128,10 @@
     }
   }
 
-  const emptySearchSuggest = `<span style="padding: 3px 15px; margin: 3px 0;">No suggestion...</span>`;
+  const emptySearchSuggest = msg => `<span style="padding: 3px 15px; margin: 3px 0;">${msg ?? 'No suggestions…'}</span>`;
   const searchSuggestContainer = document.createElement('div');
   searchSuggestContainer.className = 'glimpse-search-suggest';
-  searchSuggestContainer.innerHTML = emptySearchSuggest;
+  searchSuggestContainer.innerHTML = emptySearchSuggest();
   glimpseSearchSuggestContainer.appendChild(searchSuggestContainer);
   searchSuggestContainer.style.display = showSearchSuggest ? 'flex' : 'none';
 
@@ -187,10 +196,9 @@
     const callId = ++lastCallId;
     if (controller) controller.abort();
     controller = new AbortController();
-    const signal = controller.signal;
-
+    
     glimpseResult.innerHTML = '';
-    searchSuggestContainer.innerHTML = emptySearchSuggest;
+    searchSuggestContainer.innerHTML = emptySearchSuggest();
     const query = (e.target.value || '')
       .replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '')
       .trim()
@@ -205,16 +213,21 @@
     glimpseWrapper.appendChild(loadingAnimationElement);
     try {
       await searchScrape({ contentElement: glanceContent, query, callId });
-      await Promise.allSettled([
-        showSearchSuggestion({ query, signal }),
+      const [suggestionResult] = await Promise.allSettled([
+        showSearchSuggestion({ query, controller }),
         ...pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
       ]);
+      if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
       if (callId !== lastCallId) return;
-      if (glimpseResult.innerHTML == '') glimpseResult.innerText = 'No widget found...';
     } catch (err) {
-      if (err.name !== 'AbortError') console.error(`Glimpse Error: ${err}`);
+      if (err?.name !== 'AbortError') {
+        loadingAnimationElement.remove();
+        console.error(`Glimpse Error: ${err}`);
+        searchSuggestContainer.innerHTML = emptySearchSuggest('Search suggestion API failed to respond…')
+      }
     } finally {
+      if (glimpseResult.innerHTML == '') glimpseResult.innerText = 'No widget found…';
       if (callId === lastCallId) loadingAnimationElement.remove();
     }
 
@@ -223,14 +236,21 @@
   const handleKeydown = e => {
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
-    if (e.key === 'Enter' && isValidUrl(query)) {
-      e.stopImmediatePropagation();
-      e.target.value = '';
-      if (glanceSearch.newTab && !e.ctrlKey || !glanceSearch.newTab && e.ctrlKey) {
-        window.open(toUrl(query), '_blank', 'noopener,noreferrer').focus();
-      } else {
-        window.location.href = toUrl(query);
+    if (e.key === 'Enter') {
+      if (isValidUrl(query)) {
+        e.stopImmediatePropagation();
+        e.target.value = '';
+        if (newTab && !e.ctrlKey || !newTab && e.ctrlKey) {
+          window.open(toUrl(query), glanceSearch.target, 'noopener,noreferrer').focus();
+        } else {
+          window.location.href = toUrl(query);
+        }
       }
+
+      setTimeout(() => {
+        if (autoClose) closeGlimpse();
+        if (preserveQuery) searchInput.value = query;
+      }, 50);
     }
   }
 
@@ -352,7 +372,7 @@
     });
   }
 
-  async function showSearchSuggestion({ query, signal }) {
+  async function showSearchSuggestion({ query, controller }) {
     if (!searchSuggestEndpoint) return;
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
@@ -360,22 +380,28 @@
     searchSuggestContainer.innerHTML = '';
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
-    const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal });
-    const result = await getSuggestion.json();
-    if (!result?.[1].length) return;
-    const searchEngine = glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
-    const searchSuggestList = document.createElement('ul');
-    searchSuggestList.innerHTML = `
-      ${result[1].map(r => {
-      const suggestLink = searchEngine ? searchEngine + encodeURIComponent(r) : '#';
-      const target = searchEngine ? '_blank' : '';
-      return `
-          <li>
-            <a href="${suggestLink}" target="${target}" rel="noreferrer">${r}</a>
-          </li>`}).join('')
-      }
-    `;
-    searchSuggestContainer.replaceChildren(searchSuggestList);
+    try {
+      const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+      const result = await getSuggestion.json();
+      if (!result?.[1].length) return;
+      const searchEngine = glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
+      const searchSuggestList = document.createElement('ul');
+      searchSuggestList.innerHTML = `
+        ${result[1].map(r => {
+        const suggestLink = searchEngine ? searchEngine + encodeURIComponent(r) : '#';
+        const target = searchEngine ? '_blank' : '';
+        return `
+            <li>
+              <a href="${suggestLink}" target="${target}" rel="noreferrer">${r}</a>
+            </li>`}).join('')
+        }
+      `;
+      searchSuggestContainer.replaceChildren(searchSuggestList);
+    } catch (e) {
+      console.error(e);
+      controller.abort();
+      return new Promise.reject();
+    }
   }
 
   async function createWidgetResult({ widget, query, callId, pageTitle, listSelector, itemSelector }) {

@@ -100,11 +100,13 @@ css-class: glimpse-unique-some-unique-name
 Choose a unique suffix to keep it distinctly identifiable.*
 
 ## Other user definable variables
-| Variables           | Default | Description |
-|---------------------|---------|---------------------------|
-| `cleanupOtherPages` | true | Whether to clean the iframes or not. Can lead to high usage if set to `false` but could otherwise speed up your widget queries |
-| `glimpseKey` | '' | The shortcut key to call Glimpse, set to empty `''` by default to disable. *Setting this to `'s'` will override Glance's default search key focus* |
-| `waitForGlance` | true | Setting this to `false` will make the search and search-bangs functionality of Glance not work as those are loaded after Glance is ready, Glimpse functionality will remain working. This just limits when the `glimpseKey` can be triggered |
-| `showBangSuggest` | false | Suggests your defined `bang`s |
-| `mobileBottomSearch` | false | Repositions the search bar and the suggestions to the bottom for ease of access. |
-| `resizeOnSoftKeyboardOpen` | false | On most mobile browsers when, a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard making the `mobileBottomSearch` suggestions not scrollable. This attempts to fix that by making the content resized instead. |
+| Variables           | Description |
+|---------------------|--------------------------|
+| `cleanupOtherPages` | Whether to clean the iframes or not. Can lead to high usage if set to `false` but could otherwise speed up your widget queries |
+| `glimpseKey` | The shortcut key to call Glimpse, set to empty `''` by default to disable. *Setting this to `'s'` will override Glance's default search key focus* |
+| `waitForGlance` | Setting this to `false` will make the search and search-bangs functionality of Glance not work as those are loaded after Glance is ready, Glimpse functionality will remain working. This just limits when the `glimpseKey` can be triggered |
+| `showBangSuggest` | Suggests your defined `bang`s |
+| `mobileBottomSearch` | Repositions the search bar and the suggestions to the bottom for ease of access. |
+| `resizeOnSoftKeyboardOpen` | On most mobile browsers when, a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard making the `mobileBottomSearch` suggestions not scrollable. This attempts to fix that by making the content resized instead. |
+| `autoClose` | Automatically closes Glimpse on search submit (enter) |
+| `preserveQuery` | Preserves search query |
