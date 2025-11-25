@@ -300,7 +300,7 @@
       Array.from(columns).flatMap(column => [
         ...Array.from(column.querySelectorAll(widgetClasses)).flatMap(widget => [
           createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.list', itemSelector: ':scope > li' }),
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.list-with-separator', itemSelector: ':scope > .monitor-site, .docker-container' }),
+          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.dynamic-columns', itemSelector: ':scope > .monitor-site, .docker-container, .flex' }),
           createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-horizontal', itemSelector: ':scope > .card' }),
           createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-vertical', itemSelector: ':scope > .widget-content-frame' }),
         ]),
