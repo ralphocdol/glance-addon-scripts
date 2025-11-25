@@ -1,0 +1,20 @@
+.lazy-unloader-parent img:not([src]) {
+  content-visibility: hidden;
+}
+
+.lazy-unloader-parent img[data-src],
+.lazy-unloader-parent img[data-src].icon {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.lazy-unloader-parent img[data-src].lazy-unloader-loaded:not(.icon),
+.lazy-unloader-parent .icon-parent:hover img[data-src].lazy-unloader-loaded.icon,
+.lazy-unloader-parent .monitor-site:hover img[data-src].lazy-unloader-loaded.monitor-site-icon,
+.lazy-unloader-parent .docker-container:hover img[data-src].lazy-unloader-loaded.docker-container-icon {
+    opacity: 1;
+}
+
+.lazy-unloader-parent img[data-src].lazy-unloader-loaded.icon {
+    opacity: 0.85;
+}
