@@ -19,6 +19,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 | [Tab Notification](tab-notification/README.md) | YES | YES | v0.8.4  |
 | [Glimpse](glimpse/README.md) | PARTIAL | PARTIAL | v0.8.4  |
 | [Responsive Table](responsive-table/README.md) | YES | YES | v0.8.4 |
+| [Lazy Unloader](lazy-unloader/README.md) | YES | YES | v0.8.4 |
 
 *PARTIAL simply means half of the script needs to be DOM Loaded and the other half is Glance Ready.*
 
