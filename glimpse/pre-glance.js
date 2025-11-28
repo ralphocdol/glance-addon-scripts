@@ -453,7 +453,10 @@
         const clone = el.cloneNode(true);
         clone.classList.add('collapsible-item');
         clone.style.setProperty('animation-delay', `${i * 20}ms`);
-        clone.querySelectorAll('img').forEach(img => img.removeAttribute('loading'));
+        clone.querySelectorAll('img').forEach(img => {
+          img.removeAttribute('loading');
+          if (!!window.lazyUnloaderInit) window.lazyUnloaderInit(img);
+        });
         ulClone.appendChild(clone);
       });
 
