@@ -4,7 +4,7 @@ const glanceSearch = {
     target: '_blank',
     placeholder: 'Type here to search…',
     bangs: [
-        { title: '', shortcut: '', url: '' },       // duplicate as needed
+        { title: '', shortcut: '', url: '', rawQuery: true },       // duplicate as needed
     ]
 };
 const showBangSuggest = true;                       // Suggests the search bang list

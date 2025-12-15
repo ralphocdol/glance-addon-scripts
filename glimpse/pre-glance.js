@@ -9,7 +9,7 @@
         <h2 class="uppercase">Search</h2>
       </div>
       <div class="widget-content widget-content-frameless">
-        <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center" 
+        <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center"
           data-default-search-url="${replaceBraces(glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glanceSearch.target}">
           <div class="search-bangs">
             ${glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
@@ -96,6 +96,8 @@
 
   if (mobileBottomSearch) glimpseWrapper.classList.add('bottom-search')
 
+  const getBangRegExp = new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
+
   if (showBangSuggest) {
     const searchBangContainer = document.createElement('div');
     searchBangContainer.className = 'glimpse-bang-suggest';
@@ -109,7 +111,7 @@
       searchBangItems.addEventListener('click', e => {
         const targetElement = e.target.closest('.glimpse-bang-item');
         if (!targetElement || !searchBangItems.contains(targetElement)) return;
-        searchInput.value = searchInput.value.replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '');
+        searchInput.value = searchInput.value.replace(getBangRegExp, '');
         searchInput.value = targetElement.dataset.shortcut + ' ' + searchInput.value.trim();
         glanceBang.textContent = targetElement.dataset.title;
         searchInput.focus();
@@ -196,11 +198,11 @@
     const callId = ++lastCallId;
     if (controller) controller.abort();
     controller = new AbortController();
-    
+
     glimpseResult.innerHTML = '';
     searchSuggestContainer.innerHTML = emptySearchSuggest();
     const query = (e.target.value || '')
-      .replace(new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g'), '')
+      .replace(getBangRegExp, '')
       .trim()
       .toLowerCase();
     if (query.length < 1) {
@@ -233,18 +235,20 @@
 
   }, 300);
 
+  const openUrl = url => window.open(url, glanceSearch.target, 'noopener,noreferrer');
   const handleKeydown = e => {
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
     if (e.key === 'Enter') {
-      if (isValidUrl(query)) {
+      const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
+      const currentBangObject = glanceSearch.bangs.find(b => b.shortcut === currentBangString);
+
+      if (currentBangObject?.rawQuery) {
         e.stopImmediatePropagation();
-        e.target.value = '';
-        if (newTab && !e.ctrlKey || !newTab && e.ctrlKey) {
-          window.open(toUrl(query), glanceSearch.target, 'noopener,noreferrer').focus();
-        } else {
-          window.location.href = toUrl(query);
-        }
+        openUrl(currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, '')));
+      } else if (detectUrl && isValidUrl(query)) {
+        e.stopImmediatePropagation();
+        openUrl(toUrl(query));
       }
 
       setTimeout(() => {
@@ -255,7 +259,7 @@
   }
 
   searchInput.addEventListener('input', handleInput);
-  if (detectUrl) searchInput.addEventListener('keydown', handleKeydown);
+  searchInput.addEventListener('keydown', handleKeydown);
 
   document.addEventListener('keydown', event => {
     const activeElement = document.activeElement;
