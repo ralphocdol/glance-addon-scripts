@@ -4,6 +4,7 @@
         'carousel-container',
         'mobile-navigation-page-links',
         'widget-group-header',
+        'popover-container',
         'widget-exclude-swipe',
     ]
     const EXCLUDED_TAGS = [
@@ -36,7 +37,7 @@
         let touchTime = touchendT - touchstartT;
 
         const swipeThresholdX = 50; //Min horizontal
-        const swipeThresholdY = 50; //Max vertical 
+        const swipeThresholdY = 50; //Max vertical
         const swipeThresholdT = 800; //Max time
 
         let touchX = Math.abs(touchendX - touchstartX);
