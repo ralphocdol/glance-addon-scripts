@@ -5,16 +5,31 @@
   const headerNav = document.querySelector('.header-container > .header');
   if (!headerNav) return;
   const headerSearchNav = createNavElement();
-  headerSearchNav.className = 'glimpse-search-nav search-icon-container';
-  const navElement = headerNav.querySelector(':scope > nav');
-  if (!navElement) return;
-  navElement.parentNode.insertBefore(headerSearchNav, navElement.nextSibling);
+  headerSearchNav.classList.add('search-icon-container');
+
+  const overflowElement = headerNav.querySelector('.overflow-menu .overflow-menu-items');
+  if (overflowElement) {
+    const overflowItemDesktop = window.createOverflowItemElement(headerSearchNav);
+    overflowElement.append(overflowItemDesktop);
+  } else {
+    const navElement = headerNav.querySelector(':scope > nav');
+    if (navElement) {
+      headerSearchNav.classList.add('glimpse-search-nav');
+      navElement.parentNode.insertBefore(headerSearchNav, navElement.nextSibling);
+    }
+  }
 
   const mobileNav = document.querySelector('.mobile-navigation > .mobile-navigation-icons');
-  mobileNav.querySelector('a[href="#top"]').remove(); // This removes the scroll to top
   const mobileSearchNav = createNavElement();
-  mobileSearchNav.className = 'mobile-navigation-label';
-  mobileNav.prepend(mobileSearchNav);
+
+  const overflowMobileElement = mobileNav.querySelector('.overflow-menu .overflow-menu-items');
+  if (overflowMobileElement) {
+    const overflowItemMobile = window.createOverflowItemElement(mobileSearchNav);
+    overflowMobileElement.append(overflowItemMobile);
+  } else {
+    mobileNav.querySelector('a[href="#top"]').remove(); // This removes the scroll to top
+    mobileNav.prepend(mobileSearchNav);
+  }
 
   const searchInput = glimpse.querySelector('.search-input');
 
