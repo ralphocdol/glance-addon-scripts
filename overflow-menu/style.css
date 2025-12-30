@@ -32,10 +32,6 @@
   opacity: 1;
 }
 
-.overflow-menu:hover > svg {
-  stroke: var(--color-text-highlight);
-}
-
 .popover-content .overflow-menu-items {
   display: grid;
   grid-template-columns: repeat(var(--overflow-columns), 1fr);
@@ -47,7 +43,13 @@
   background-color: var(--color-primary);
 }
 
-.popover-content .overflow-menu-items .overflow-menu-item:hover > * {
-  stroke: var(--color-text-highlight);
+.popover-content .overflow-menu-items .overflow-menu-item .overflow-menu-item-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: var(--color-text-base);
+}
+
+.popover-content .overflow-menu-items .overflow-menu-item:hover .overflow-menu-item-icon {
   color: var(--color-separator);
 }

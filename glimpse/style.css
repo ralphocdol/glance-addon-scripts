@@ -219,6 +219,15 @@
   opacity: 1;
 }
 
-.glimpse-search-nav:hover > svg {
+.glimpse-search-nav:hover > .search-icon {
   stroke: var(--color-text-highlight);
+}
+
+/* Overflow Overrides */
+.popover-content .overflow-menu-items .overflow-menu-item .search-icon {
+  color: var(--color-text-base);
+}
+
+.popover-content .overflow-menu-items .overflow-menu-item:hover .search-icon {
+  color: var(--color-separator);
 }

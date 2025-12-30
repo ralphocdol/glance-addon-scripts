@@ -12,14 +12,17 @@
   const mobileSearchNav = createOverflowMenuElement();
   mobileSearchNav.classList.add('mobile-navigation-label');
 
-  mobileNav.querySelector('a[href="#top"]').remove(); // This removes the scroll to top
-
   const newOverflowItem = document.createElement('div');
   newOverflowItem.classList.add('overflow-menu-item');
-  newOverflowItem.innerHTML = '<a href="#top">↑</a>'; // This adds a new scroll to top inside the overflow menu
+  newOverflowItem.innerHTML = `
+    <a href="#top" class="overflow-menu-top">
+      <svg class="overflow-menu-item-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 20L12 4M12 4L18 10M12 4L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+    </a>
+  `;
 
   mobileSearchNav.querySelector('.overflow-menu-items').appendChild(newOverflowItem);
   mobileNav.prepend(mobileSearchNav);
+  mobileNav.querySelector('a[href="#top"]:not(.overflow-menu-top)').remove(); // This removes the scroll to top
 
   function createOverflowMenuElement() {
     const newElement = document.createElement('div');
