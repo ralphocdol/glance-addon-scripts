@@ -1,0 +1,53 @@
+.overflow-menu {
+  --overflow-columns: 3;
+  display: none;
+}
+
+.overflow-menu .overflow-menu-button,
+.popover-content .overflow-menu-items .overflow-menu-item {
+  cursor: pointer;
+  display: flex;
+  width: 4.2rem;
+  justify-content: center;
+  align-content: center;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
+.overflow-menu .overflow-menu-button {
+  padding: 1rem;
+}
+.overflow-menu .overflow-menu-button:hover {
+  opacity: 1;
+}
+
+.popover-content .overflow-menu-items .overflow-menu-item {
+  border-radius: var(--border-radius);
+  aspect-ratio: 1 / 1;
+  padding: 0.8rem;
+}
+
+.overflow-menu:hover {
+  opacity: 1;
+}
+
+.overflow-menu:hover > svg {
+  stroke: var(--color-text-highlight);
+}
+
+.popover-content .overflow-menu-items {
+  display: grid;
+  grid-template-columns: repeat(var(--overflow-columns), 1fr);
+  gap: 2rem;
+}
+
+.popover-content .overflow-menu-items .overflow-menu-item:hover {
+  opacity: 1;
+  background-color: var(--color-primary);
+}
+
+.popover-content .overflow-menu-items .overflow-menu-item:hover > * {
+  stroke: var(--color-text-highlight);
+  color: var(--color-separator);
+}
