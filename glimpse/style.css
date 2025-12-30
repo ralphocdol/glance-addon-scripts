@@ -4,11 +4,11 @@
   transform: scaleY(0);
   position: fixed;
   top: 0; left: 0;
-  width: 100%; 
+  width: 100%;
   height: 100%;
   justify-content: center;
   transition: opacity 0.3s ease;
-  z-index: 15;
+  z-index: 21; /* 1 higher than Glance's popover */
 }
 
 #glimpse::before {
@@ -93,20 +93,50 @@
 
 #glimpse .glimpse-bang-suggest,
 #glimpse .glimpse-search-suggest {
+  position: relative;
   display: none;
   padding: 2px;
   overflow-y: auto;
   background: var(--color-widget-background);
   border-radius: 0 0 5px 5px;
   border: 1px solid hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.15);
-  box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+  box-shadow: 0px 1px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+}
+
+#glimpse .glimpse-bang-suggest::before,
+#glimpse .glimpse-bang-suggest::after,
+#glimpse .glimpse-search-suggest::before,
+#glimpse .glimpse-search-suggest::after {
+  content: "";
+  position: absolute;
+  width: 2rem;
+  height: 100%;
+  top: 0px;
+  bottom: 1rem;
+  z-index: 10;
+  opacity: 0.2;
+  pointer-events: none;
+  transition-duration: 0.2s;
+}
+
+#glimpse .glimpse-bang-suggest::before,
+#glimpse .glimpse-search-suggest::before {
+  background: linear-gradient(to right, var(--color-background), transparent);
+}
+
+#glimpse .glimpse-bang-suggest::after,
+#glimpse .glimpse-search-suggest::after {
+  right: 0px;
+  background: linear-gradient(to left, var(--color-background), transparent);
 }
 
 #glimpse .glimpse-bang-suggest ul,
 #glimpse .glimpse-search-suggest ul {
   display: flex;
   flex: 1;
-  margin: 3px 0 5px;
+  padding-bottom: 0.3rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 #glimpse .glimpse-bang-suggest li,
@@ -168,7 +198,7 @@
 
   #glimpse .glimpse-wrapper.bottom-search {
     flex-direction: column-reverse;
-    padding: 0 1rem 2rem; 
+    padding: 0 1rem 2rem;
   }
 }
 
