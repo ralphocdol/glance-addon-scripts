@@ -1,6 +1,6 @@
 .overflow-menu {
   --overflow-columns: 3;
-  display: none;
+  /*display: none;*/
 }
 
 .overflow-menu .overflow-menu-button,
