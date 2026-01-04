@@ -22,6 +22,8 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 | [Lazy Unloader](lazy-unloader/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Overflow Menu](overflow-menu/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
+*see [main.js](#inside-mainjs) for info regarding pre/post*
+
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
@@ -67,5 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 >
 > Doing it this way will make the JS file follow the Glance's configuration template for the `document` `head`. Like how the a `${LOCAL_VARIABLE}` will be treated as an environment variable and needs to be escaped with `\` and become `\${LOCAL_VARIABLE}`. See https://github.com/glanceapp/glance/blob/v0.8.3/docs/configuration.md#environment-variables.
     
+
 
 
