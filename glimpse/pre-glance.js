@@ -94,8 +94,8 @@
   const glancePageTitle = document.querySelector('#page>h1')?.innerText || '';
   const iframeBySlug = {};
 
-  if (mobileBottomSearch) glimpseWrapper.classList.add('bottom-search')
-
+  glimpseResult.addEventListener('scroll', () => glimpseResult.classList.toggle('is-scrolled', glimpseResult.scrollTop > 0));
+  if (mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
   const getBangRegExp = new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
 
   if (showBangSuggest) {
@@ -222,6 +222,7 @@
       if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
       if (callId !== lastCallId) return;
+      if (glimpseResult.innerHTML == '') glimpseResult.innerHTML = 'No widget found…';
     } catch (err) {
       if (err?.name !== 'AbortError') {
         loadingAnimationElement.remove();
@@ -229,7 +230,6 @@
         searchSuggestContainer.innerHTML = emptySearchSuggest('Search suggestion API failed to respond…')
       }
     } finally {
-      if (glimpseResult.innerHTML == '') glimpseResult.innerText = 'No widget found…';
       if (callId === lastCallId) loadingAnimationElement.remove();
     }
 
@@ -258,8 +258,15 @@
     }
   }
 
-  searchInput.addEventListener('input', handleInput);
-  searchInput.addEventListener('keydown', handleKeydown);
+  searchInput.addEventListener('focus', () => {
+    searchInput.addEventListener('input', handleInput);
+    searchInput.addEventListener('keydown', handleKeydown);
+  });
+
+  searchInput.addEventListener('blur', () => {
+    searchInput.removeEventListener('input', handleInput);
+    searchInput.removeEventListener('keydown', handleKeydown);
+  });
 
   document.addEventListener('keydown', event => {
     const activeElement = document.activeElement;
@@ -450,7 +457,11 @@
       ulClone.classList.add('container-expanded');
       ulClone.classList.remove('widget-content');
       ulClone.classList.remove('widget-content-frame');
-      ulClone.style.display = ulClone.style.display !== 'none' ? ulClone.style.display : 'block';
+      ulClone.style.display = getComputedStyle(ulClone).display === 'none' ? 'block' : getComputedStyle(ulClone).display;
+      if (ulClone.hasAttribute('responsive-table')) {
+        ulClone.style.display = 'block';
+        ulClone.style.setProperty('--table-columns', ulClone.firstElementChild.children.length);
+      }
       newWidget.querySelector('.widget-content').appendChild(ulClone);
 
       resultSearch.forEach((el, i) => {
