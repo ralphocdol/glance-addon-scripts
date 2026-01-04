@@ -11,62 +11,57 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 
 ### Micro-Scripts
 
-| Script | DOM Loaded? | Glance Ready? | Tested Version |
-| ------ | :--------: | :--------: | :--------: |
-| [HTML Script Loader](html-script-loader/README.md) | YES | YES | v0.8.4 |
-| [Swipe Left and Right](swipe-left-and-right/README.md) | YES | NO | v0.8.4  |
-| [Modal](modal/README.md) | YES | NO | v0.8.4  |
-| [Tab Notification](tab-notification/README.md) | YES | YES | v0.8.4  |
-| [Glimpse](glimpse/README.md) | PARTIAL | PARTIAL | v0.8.4  |
-| [Responsive Table](responsive-table/README.md) | YES | YES | v0.8.4 |
-| [Lazy Unloader](lazy-unloader/README.md) | YES | YES | v0.8.4 |
-
-*PARTIAL simply means half of the script needs to be DOM Loaded and the other half is Glance Ready.*
+| Script | Pre-DOM | Post-DOM/Pre-Glance | Post-Glance | Tested Version |
+| ------ | :--------: | :--------: | :--------: | :--------: |
+| [HTML Script Loader](html-script-loader/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Swipe Left and Right](swipe-left-and-right/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Modal](modal/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Tab Notification](tab-notification/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Glimpse](glimpse/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Responsive Table](responsive-table/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Lazy Unloader](lazy-unloader/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Overflow Menu](overflow-menu/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
 ### Loading Script
-Issues with loading the scripts are mostly because of the lack of [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) for JavaScript.
+Issues with loading the scripts are mostly because of the lack of [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) for JavaScript. To address this, we can use `$include` to load the script.
 
-There are multiple methods you can load the scripts, such as:
+#### in the `document` config:
+```yaml
+document:
+    head: |
+        <script>
+            $include: path-to-js/main.js
+        </script>
+```
 
-* The loader I used to use that loads the scripts like modules and appends File Modified Data as Cache Busting was https://github.com/ralphocdol/glance-js-loader#setting-up-loader which is deprecated. 
+#### inside `main.js`
+```javascript
+// Pre-DOM
+// Add here if the script doesn't need both DOM and Glance to be ready
 
-* Or the current one I'm using:
+document.addEventListener('DOMContentLoaded', async () => {
+    console.info("DOM is ready...");
 
-    in the `document` config:
-    ```yaml
-    document:
-        head: |
-            <script>
-                $include: path-to-js/main.js
-            </script>
-    ```
+    // Post-DOM/Pre-Glance
+    // Add here if the script needs the DOM to be loaded 
+    // but doesn't need the Glance to be ready
 
-    inside `main.js`
-    ```javascript
-    // Add here if the script doesn't need both DOM and Glance to be ready
+    // example since 1 part of Glimpse can be loaded before Glance is ready
+    $include: glimpse/pre-glance.js
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        console.info("DOM is ready...");
-
-        // Add here if the script needs the DOM to be loaded 
-        // but doesn't need the Glance to be ready
-
-        // example since 1 part of Glimpse can be loaded before Glance is ready
-        $include: glimpse/pre-glance.js
-
-        console.info("Waiting for Glance...");
-        while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
-        console.info("Glance is ready...");
-
-        // example since 1 part of Glimpse can be loaded after Glance is ready
-        $include: glimpse/post-glance.js
-
-        // Add here if the script needs the Glance to be ready
-    });
-    ```
+    console.info("Waiting for Glance...");
+    while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+    console.info("Glance is ready...");
+    
+    // Post-Glance
+    // Add here if the script needs the Glance to be ready
+    // example since 1 part of Glimpse can be loaded after Glance is ready
+    $include: glimpse/post-glance.js
+});
+```
 
 > [!NOTE]
 >
