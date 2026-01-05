@@ -7,10 +7,10 @@
   const headerSearchNav = createNavElement();
   headerSearchNav.classList.add('search-icon-container');
 
-  const overflowElement = headerNav.querySelector('.overflow-menu .overflow-menu-items');
-  if (overflowElement) {
-    const overflowItemDesktop = window.createOverflowItemElement(headerSearchNav);
-    overflowElement.append(overflowItemDesktop);
+  const customMenuElement = headerNav.querySelector('.custom-menu .custom-menu-items');
+  if (customMenuElement) {
+    const customMenuItemDesktop = window.createCustomMenuItemElement(headerSearchNav);
+    customMenuElement.append(customMenuItemDesktop);
   } else {
     const navElement = headerNav.querySelector(':scope > nav');
     if (navElement) {
@@ -22,10 +22,10 @@
   const mobileNav = document.querySelector('.mobile-navigation > .mobile-navigation-icons');
   const mobileSearchNav = createNavElement();
 
-  const overflowMobileElement = mobileNav.querySelector('.overflow-menu .overflow-menu-items');
-  if (overflowMobileElement) {
-    const overflowItemMobile = window.createOverflowItemElement(mobileSearchNav);
-    overflowMobileElement.append(overflowItemMobile);
+  const customMenuMobileElement = mobileNav.querySelector('.custom-menu .custom-menu-items');
+  if (customMenuMobileElement) {
+    const customMenuItemMobile = window.createCustomMenuItemElement(mobileSearchNav);
+    customMenuMobileElement.append(customMenuItemMobile);
   } else {
     // mobileNav.querySelector('a[href="#top"]').remove(); // This removes the scroll to top
     mobileNav.classList.add('glimpse-search-mobile-nav');

@@ -1,6 +1,6 @@
 [⇐ Micro-script list](../#micro-scripts)
 
-This simply adds an overflow menu to the navigation bar. And will be used for other micro-scripts in future that may have user interactable elements like [Glimpse](../glimpse).
+This simply adds a custom menu to the navigation bar. And will be used for other micro-scripts in future that may have user interactable elements like [Glimpse](../glimpse).
 
 ![1](preview1.png)
 ![2](preview2.png)
