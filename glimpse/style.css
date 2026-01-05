@@ -106,6 +106,7 @@
   animation: loadingContainerEntrance 200ms backwards;
   animation-delay: 150ms;
   font-size: 2rem;
+  padding: 1rem 0;
 }
 
 #glimpse .glimpse-search-suggest-container {
@@ -217,9 +218,25 @@
     padding: 0 1rem;
   }
 
+  #glimpse .glimpse-result {
+    margin-bottom: 2rem;
+  }
+
   #glimpse .glimpse-wrapper.bottom-search {
     flex-direction: column-reverse;
     padding: 0 1rem 2rem;
+  }
+
+  #glimpse .glimpse-wrapper.bottom-search .glimpse-search {
+    order: 1;
+  }
+
+  #glimpse .glimpse-wrapper.bottom-search .glimpse-result {
+    order: 3;
+  }
+
+  #glimpse .glimpse-wrapper.bottom-search .custom-page-loading-container {
+    order: 2;
   }
 }
 
