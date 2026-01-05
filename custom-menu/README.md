@@ -10,6 +10,6 @@ This simply adds a custom menu to the navigation bar. And will be used for other
 
 ```js
 setTimeout(() => {
-  $include: overflow-menu/post-glance.js
+  $include: custom-menu/post-glance.js
 }, 50);
 ```
