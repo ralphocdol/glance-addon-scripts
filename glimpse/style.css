@@ -248,11 +248,11 @@
   cursor: pointer;
 }
 
-/* Overflow Menu Overrides */
-.popover-content .overflow-menu-items .overflow-menu-item .search-icon {
+/* Custom Menu Overrides */
+.popover-content .custom-menu-items .custom-menu-item .search-icon {
   color: var(--color-text-base);
 }
 
-.popover-content .overflow-menu-items .overflow-menu-item:hover .search-icon {
+.popover-content .custom-menu-items .custom-menu-item:hover .search-icon {
   color: var(--color-separator);
 }
