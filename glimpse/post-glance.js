@@ -10,7 +10,7 @@
 
   const customMenu = window.createCustomMenuItemElement?.({
     className: 'search-icon-container',
-    hoverTitle: 'Launch Glimpse',
+    tooltip: 'Launch Glimpse',
     icon,
     actionFn: () => spawnGlimpse()
   });

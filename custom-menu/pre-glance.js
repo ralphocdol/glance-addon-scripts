@@ -47,15 +47,15 @@
     return newElement;
   }
 
-  function createCustomMenuItemElement({ className, hoverTitle, icon, actionFn }) {
-    if (!className || !hoverTitle || !icon || !actionFn) {
+  function createCustomMenuItemElement({ className, tooltip, icon, actionFn }) {
+    if (!className || !tooltip || !icon || !actionFn) {
       console.error('Missing required parameters');
       return;
     }
 
     const navElement = document.createElement('div');
     navElement.classList.add(className);
-    navElement.setAttribute('title', hoverTitle);
+    navElement.setAttribute('title', tooltip);
     navElement.innerHTML = icon;
 
     const customMenuDesktopElement = headerNav.querySelector('.custom-menu .custom-menu-items');

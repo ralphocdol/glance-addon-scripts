@@ -13,3 +13,13 @@ setTimeout(() => {
   $include: custom-menu/post-glance.js
 }, 50);
 ```
+
+# Usage
+```js
+window.createCustomMenuItemElement?.({
+  className: 'class-of-the-menu',
+  tooltip: 'Tooltip on icon hover',
+  icon: '', // <img> or <svg>
+  actionFn: () => {} //on icon click function
+});
+```
