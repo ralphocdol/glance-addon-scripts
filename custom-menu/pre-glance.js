@@ -40,11 +40,40 @@
     return newElement;
   }
 
-  function createCustomMenuItemElement(appendElement) {
+  function createCustomMenuItemContainerElement(appendElement) {
     const newElement = document.createElement('div');
     newElement.classList.add('custom-menu-item');
     newElement.append(appendElement);
     return newElement;
+  }
+
+  function createCustomMenuItemElement({ className, tooltip, icon, actionFn }) {
+    if (!className || !tooltip || !icon || !actionFn) {
+      console.error('Missing required parameters');
+      return;
+    }
+
+    const navElement = document.createElement('div');
+    navElement.classList.add(className);
+    navElement.setAttribute('title', tooltip);
+    navElement.innerHTML = icon;
+
+    const customMenuDesktopElement = headerNav.querySelector('.custom-menu .custom-menu-items');
+    const customMenuMobileElement = mobileNav.querySelector('.custom-menu .custom-menu-items');
+
+    if (customMenuDesktopElement) {
+      const customMenuDesktopItem = createCustomMenuItemContainerElement(navElement);
+      customMenuDesktopItem.addEventListener('click', actionFn);
+      customMenuDesktopElement.append(customMenuDesktopItem);
+    }
+
+    if (customMenuMobileElement) {
+      const customMenuMobileItem = createCustomMenuItemContainerElement(navElement.cloneNode(true));
+      customMenuMobileItem.addEventListener('click', actionFn);
+      customMenuMobileElement.append(customMenuMobileItem);
+    }
+
+    return { customMenuDesktopElement: !!customMenuDesktopElement, customMenuMobileElement: !!customMenuMobileElement };
   }
 
   window.createCustomMenuItemElement = createCustomMenuItemElement;
