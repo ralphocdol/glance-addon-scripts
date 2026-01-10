@@ -1,13 +1,12 @@
 [⇐ Micro-script list](../#micro-scripts)
 
-### Desktop
-![desktop](preview1.webp)
+This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
 
-### Mobile
+![desktop](preview1.webp)
 ![mobile](preview2.webp)
 
-# Overview
-This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
+# Dependency
+- [Custom Menu](../custom-menu) *(optional)* — adds the launch button inside the custom menu instead
 
 # Limitations
 - Only the Docker, Monitor, and recurring HTML structure widgets like RSS are supported. 
