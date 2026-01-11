@@ -1,6 +1,6 @@
 (() => {
   console.log('HTML Script Loader loaded...')
-  document.querySelectorAll('script[html-scripts]').forEach((s, i) => {
+  document.querySelectorAll('script[html-script]').forEach((s, i) => {
     const widgetSrc = [...s.closest?.('.widget')?.classList || []].find(c => c.startsWith('widget-type-'))?.slice(12) || 'html';
     const newFunctionName = `scriptLoad_${i}`;
     const htmlScript = document.createElement('script');
