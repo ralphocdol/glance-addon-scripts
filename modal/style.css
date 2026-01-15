@@ -1,53 +1,51 @@
 #modal {
-    display: none;
-    opacity: 0;
-    transform: scaleY(0);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease;
-    z-index: 16;
-    --space-vertical: 1.5rem;
-    --space-horizontal: 1.5rem;
+  display: none;
+  opacity: 0;
+  transform: scaleY(0);
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  z-index: 21;
+  --space-vertical: 1.5rem;
+  --space-horizontal: 1.5rem;
 }
 
 #modal::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color-widget-background-highlight);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-widget-background-highlight);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 #modal.show {
-    opacity: 1;
-    display: flex;
-    transform: scaleY(1);
+  opacity: 1;
+  display: flex;
+  transform: scaleY(1);
 }
 
 #modal.show::before {
-    opacity: 0.7;
+  opacity: 0.7;
 }
 
 #modal .modal-container {
-    --shadow-properties: 0 15px 20px -10px;
-    --shadow-color: hsla(var(--bghs), calc(var(--bgl) * 0.2), 0.5);
-    background: var(--color-popover-background);
-    border: 1px solid var(--color-popover-border);
-    border-radius: var(--border-radius);
-    animation: modalFrameEntrance 0.3s backwards cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: var(--shadow-properties) var(--shadow-color);
-    display: flex;
-    margin: 3rem;
-    transition: width 0.3s ease, height 0.3s ease;
+  --shadow-properties: 0 15px 20px -10px;
+  --shadow-color: hsla(var(--bghs), calc(var(--bgl) * 0.2), 0.5);
+  background: var(--color-popover-background);
+  border: 1px solid var(--color-popover-border);
+  border-radius: var(--border-radius);
+  animation: modalFrameEntrance 0.3s backwards cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-properties) var(--shadow-color);
+  display: flex;
+  margin: 3rem;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 #modal .modal-height-short { height: 30vh; }
@@ -98,109 +96,143 @@
 }
 
 #modal[modal-no-background] .modal-container {
-    background: none;
-    border: none;
-    box-shadow: none;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
 
 #modal.show .modal-container {
-    transform: scale(1);
+  transform: scale(1);
 }
 
 #modal .modal-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #modal .close {
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    user-select: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  user-select: none;
 }
 
 #modal .close:hover {
-    background-color: var(--color-negative);
-    border-radius: var(--border-radius);
-    color: var(--color-background);
+  background-color: var(--color-negative);
+  border-radius: var(--border-radius);
+  color: var(--color-background);
 }
 
 #modal .close::before {
-    content: '×';
-    font-size: 23px;
-    line-height: 1;
+	content: '×';
+	font-size: 23px;
+	line-height: 1;
 }
 
 #modal .modal-header {
-    position: relative;
-    padding: var(--space-vertical) var(--space-horizontal) 0;
+  position: relative;
+  padding: var(--space-vertical) var(--space-horizontal) 0;
 }
 
 #modal .modal-header-content {
-    padding-right: 45px;
+  padding-right: 45px;
 }
 
 #modal .modal-body {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-    padding: 0 var(--space-horizontal);
-    margin: 0.5rem 0;
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 0 var(--space-horizontal);
+  margin: 0.5rem 0;
 }
 
 #modal .modal-footer {
-    padding: 0 var(--space-horizontal) var(--space-vertical);
+  padding: 0 var(--space-horizontal) var(--space-vertical);
 }
 
 #modal .modal-content .modal-header,
 #modal .modal-content .modal-footer {
-    flex: 0 0 5%;
+  flex: 0 0 5%;
 }
 
 #modal .modal-content .modal-header:empty,
 #modal .modal-content .modal-footer:empty {
-    flex: 0 0 0%;
-    display: none;
+  flex: 0 0 0%;
+  display: none;
 }
+
 
 [modal-header],
 [modal-body],
 [modal-footer] {
-    display: none;
+  display: none;
 }
 
 [custom-modal] {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #modal.fade-in {
-    animation: fadeIn 0.5s backwards cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeIn 0.5s backwards cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #modal.fade-out {
-    animation: fadeOut 0.5s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeOut 0.5s forwards cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes modalFrameEntrance {
-    from {
-        opacity: 0;
-        transform: translateY(var(--entrance-direction));
-    }
+  from {
+    opacity: 0;
+    transform: translateY(var(--entrance-direction));
+  }
+}
+
+/* Custom */
+#modal .modal-content .modal-body p.body-paragraph {
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  /* text-align: justify; */
+  padding: 0 1.5rem 0 0;
+  /* margin-right: -15px; */
+}
+
+#modal .modal-content .modal-footer .footer-subcontainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+#modal .modal-content .modal-footer .footer-subcontainer .footer-div {
+  flex: 1 1 0;
+  min-width: 20rem;
+}
+
+#modal .attachments > * {
+    color: var(--color-separator);
+    background-color: var(--color-primary);
+}
+
+@media (max-width: 550px) {
+  #modal .modal-content .modal-footer .footer-subcontainer .footer-div > * {
+    display: flex;
+    justify-content: center;
+  }
 }
