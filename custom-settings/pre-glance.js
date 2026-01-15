@@ -174,7 +174,7 @@
       widget.maxLength = widget.maxLength || null;
       const widgetElement = createElementFn({ classes: 'custom-settings-content-card' });
       if (widget?.style) Object.assign(widgetElement.style, widget.style);
-      if (widget?.colSpan) widgetElement.style.gridColumn = `span ${widget.colSpan}`;
+      if (widget?.colOffset) widgetElement.style.gridColumn = `1 / -${widget.colOffset}`;
 
       const toolTipEl = widget.tooltip ? createElementFn({
         tag: 'span',
