@@ -1,6 +1,6 @@
 [⇐ Micro-script list](../#micro-scripts)
 
-This will be the place where redundant functions or a boilerplate will be stored and will be a `window` function. Scripts here will be considered as `pre-DOM`.
+This will be the place where redundant functions or a boilerplate will be stored and will be a `window` function. Scripts here will be considered as `pre-DOM` but should be above the actual `pre-dom.js`.
 
 ```js
 // Pre-DOM

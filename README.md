@@ -43,6 +43,8 @@ document:
 #### inside `main.js`
 ```javascript
 // Pre-DOM
+// Add here for global-functions
+
 // Add here if the script doesn't need both DOM and Glance to be ready
 
 document.addEventListener('DOMContentLoaded', async () => {
