@@ -301,13 +301,27 @@
           const textareaAdditionInfo = createElementFn({ tag:'div', htmlContent: widget?.additionalInfo || '' });
           textareaActions.appendChild(textareaAdditionInfo);
 
+          const btnContainer = createElementFn({ classes: 'more-btns' });
+          widget.moreButtons && widget.moreButtons.forEach(b => {
+            const moreButtons = createElementFn({
+              tag: 'button',
+              classes: 'flex btn',
+              attrs: { title: b.tooltip },
+              datasets: { click: '', key: b.key },
+              htmlContent: b.name,
+            });
+            btnContainer.appendChild(moreButtons);
+          });
+
           const btnEl = createElementFn({
             tag: 'button',
             classes: 'flex btn',
             datasets: { click: '', key: widget.key },
             htmlContent: widget?.customButton || `<svg><use href="#svg-icon-save"></use></svg> SAVE`,
           });
-          textareaActions.appendChild(btnEl);
+          btnContainer.appendChild(btnEl);
+
+          textareaActions.appendChild(btnContainer);
 
           widgetElement.appendChild(inputGroup);
           widgetElement.appendChild(textareaActions);
@@ -326,6 +340,7 @@
             const btn = createElementFn({
               tag: 'button',
               classes: 'btn',
+              attrs: { title: b.tooltip },
               datasets: { click: '', key: b.key },
               style: { background: b.negative ? 'var(--color-negative)' : '' },
               textContent: b.name
