@@ -1,8 +1,11 @@
 (() => {
   $include: config.js
+  const configKey = 'glimpse-search-config';
+  const glimpseConfigCopy = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseConfig;
+  glimpseConfigCopy.glanceSearch.target = glimpseConfigCopy.glanceSearch.target ?? '_blank';
+
   const replaceBraces = str => str.replace(/[{}]/g, '!');
-  glanceSearch.target = glanceSearch.target ?? '_blank';
-  const newTab = glanceSearch.target === '_blank';
+  const newTab = glimpseConfigCopy.glanceSearch.target === '_blank';
   const glanceSearchWidget = `
     <div class="widget widget-type-search">
       <div class="widget-header">
@@ -10,16 +13,16 @@
       </div>
       <div class="widget-content widget-content-frameless">
         <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center"
-          data-default-search-url="${replaceBraces(glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glanceSearch.target}">
+          data-default-search-url="${replaceBraces(glimpseConfigCopy.glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glimpseConfigCopy.glanceSearch.target}">
           <div class="search-bangs">
-            ${glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
+            ${glimpseConfigCopy.glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
           </div>
           <div class="search-icon-container">
             <svg class="search-icon" stroke="var(--color-text-subdue)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
             </svg>
           </div>
-          <input class="search-input" type="text" placeholder="${glanceSearch.placeholder}" autocomplete="off" autofocus="${glanceSearch.autofocus}">
+          <input class="search-input" type="text" placeholder="${glimpseConfigCopy.glanceSearch.placeholder}" autocomplete="off" autofocus="${glimpseConfigCopy.glanceSearch.autofocus}">
           <div class="search-bang"></div>
           <kbd class="hide-on-mobile" title="Press [S] to focus the search input">S</kbd>
         </div>
@@ -33,7 +36,7 @@
 
   if (!search) return;
 
-  const showSearchSuggest = !!searchSuggestEndpoint;
+  const showSearchSuggest = !!glimpseConfigCopy.searchSuggestEndpoint;
   const uniqueStore = [];
 
   const loadingAnimationElement = document.createElement('div');
@@ -43,7 +46,7 @@
     <div class="loading-icon" aria-hidden="true"></div>
   `;
 
-  if (resizeOnSoftKeyboardOpen) {
+  if (glimpseConfigCopy.resizeOnSoftKeyboardOpen) {
     const meta = document.createElement('meta');
     meta.name = 'viewport';
     meta.content = 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content';
@@ -66,7 +69,7 @@
   `;
   document.body.appendChild(glimpse);
 
-  if (autoClose) {
+  if (glimpseConfigCopy.autoClose) {
     glimpse.addEventListener('click', e => {
       if (!e.target.closest('a')) return;
       closeGlimpse();
@@ -95,16 +98,16 @@
   const iframeBySlug = {};
 
   glimpseResult.addEventListener('scroll', () => glimpseResult.classList.toggle('is-scrolled', glimpseResult.scrollTop > 0));
-  if (mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
-  const getBangRegExp = new RegExp(glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
+  if (glimpseConfigCopy.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
+  const getBangRegExp = new RegExp(glimpseConfigCopy.glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
 
-  if (showBangSuggest) {
+  if (glimpseConfigCopy.showBangSuggest) {
     const searchBangContainer = document.createElement('div');
     searchBangContainer.className = 'glimpse-bang-suggest';
     searchBangContainer.innerHTML = ``;
     glimpseSearchSuggestContainer.appendChild(searchBangContainer);
     searchBangContainer.style.display = 'none';
-    if (glanceSearch?.bangs.length > 0) {
+    if (glimpseConfigCopy.glanceSearch?.bangs.length > 0) {
       searchBangContainer.style.display = 'flex';
       const searchBangItems = document.createElement('ul');
 
@@ -118,7 +121,7 @@
         searchInput.dispatchEvent(new Event('input', { bubbles: true }));
       });
 
-      searchBangItems.innerHTML = glanceSearch.bangs
+      searchBangItems.innerHTML = glimpseConfigCopy.glanceSearch.bangs
         .map(b => `<li>
             <span class="glimpse-bang-item" data-shortcut="${b.shortcut}" data-title="${b.title}">
               ${b.shortcut} <span class="color-subdue">(${b.title})</span>
@@ -210,14 +213,14 @@
       return;
     }
 
-    if (detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
+    if (glimpseConfigCopy.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
 
     glimpseWrapper.appendChild(loadingAnimationElement);
     try {
       await searchScrape({ contentElement: glanceContent, query, callId });
       const [suggestionResult] = await Promise.allSettled([
         showSearchSuggestion({ query, controller }),
-        ...pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
+        ...glimpseConfigCopy.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
       ]);
       if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
@@ -227,6 +230,7 @@
       if (err?.name !== 'AbortError') {
         loadingAnimationElement.remove();
         console.error(`Glimpse Error: ${err}`);
+        window.showToast?.(`Glimpse Error, see logs for more info.`, { type: 'error' });
         searchSuggestContainer.innerHTML = emptySearchSuggest('Search suggestion API failed to respond…')
       }
     } finally {
@@ -235,25 +239,25 @@
 
   }, 300);
 
-  const openUrl = url => window.open(url, glanceSearch.target, 'noopener,noreferrer');
+  const openUrl = url => window.open(url, glimpseConfigCopy.glanceSearch.target, 'noopener,noreferrer');
   const handleKeydown = e => {
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
     if (e.key === 'Enter') {
       const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
-      const currentBangObject = glanceSearch.bangs.find(b => b.shortcut === currentBangString);
+      const currentBangObject = glimpseConfigCopy.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
 
       if (currentBangObject?.rawQuery) {
         e.stopImmediatePropagation();
         openUrl(currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, '')));
-      } else if (detectUrl && isValidUrl(query)) {
+      } else if (glimpseConfigCopy.detectUrl && isValidUrl(query)) {
         e.stopImmediatePropagation();
         openUrl(toUrl(query));
       }
 
       setTimeout(() => {
-        if (autoClose) closeGlimpse();
-        if (preserveQuery) searchInput.value = query;
+        if (glimpseConfigCopy.autoClose) closeGlimpse();
+        if (glimpseConfigCopy.preserveQuery) searchInput.value = query;
       }, 50);
     }
   }
@@ -270,6 +274,7 @@
 
   document.addEventListener('keydown', event => {
     const activeElement = document.activeElement;
+    const modalElement = document.getElementById('modal');
 
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName) ||
       activeElement.isContentEditable ||
@@ -277,9 +282,13 @@
       return;
     }
 
-    if (glimpseKey && event.code === keyToCode(glimpseKey) && activeElement !== searchInput) {
-      event.preventDefault();
-      if ((waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !waitForGlance) spawnGlimpse();
+    const hasActiveModal = !!(modalElement && getComputedStyle(modalElement).display !== 'none');
+    if (glimpseConfigCopy.glimpseKey &&
+      event.code === keyToCode(glimpseConfigCopy.glimpseKey) &&
+      activeElement !== searchInput &&
+      !hasActiveModal) {
+        event.preventDefault();
+        if ((glimpseConfigCopy.waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !glimpseConfigCopy.waitForGlance) spawnGlimpse();
     }
 
     if (event.key === 'Escape') closeGlimpse();
@@ -374,8 +383,8 @@
   }
 
   function cleanupAllIframes() {
-    if (!cleanupOtherPages) return;
-    pagesSlug.forEach(slug => {
+    if (!glimpseConfigCopy.cleanupOtherPages) return;
+    glimpseConfigCopy.pagesSlug.forEach(slug => {
       const iframe = iframeBySlug[slug];
       if (!iframe) return;
       if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
@@ -384,7 +393,7 @@
   }
 
   async function showSearchSuggestion({ query, controller }) {
-    if (!searchSuggestEndpoint) return;
+    if (!glimpseConfigCopy.searchSuggestEndpoint) return;
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
@@ -392,10 +401,10 @@
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
     try {
-      const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+      const getSuggestion = await fetch(glimpseConfigCopy.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
       const result = await getSuggestion.json();
       if (!result?.[1].length) return;
-      const searchEngine = glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
+      const searchEngine = glimpseConfigCopy.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
       const searchSuggestList = document.createElement('ul');
       searchSuggestList.innerHTML = `
         ${result[1].map(r => {
@@ -409,6 +418,7 @@
       `;
       searchSuggestContainer.replaceChildren(searchSuggestList);
     } catch (e) {
+      window.showToast?.(`Glimpse search suggest error, see logs for more info`, { type: 'error' });
       console.error(e);
       controller.abort();
       return new Promise.reject();
@@ -463,6 +473,7 @@
         ulClone.style.setProperty('--table-columns', ulClone.firstElementChild.children.length);
       }
       newWidget.querySelector('.widget-content').appendChild(ulClone);
+      if (widget.classList.contains('privacy-overlay')) newWidget.querySelector('.widget-content').classList.add('privacy-overlay');
 
       resultSearch.forEach((el, i) => {
         const clone = el.cloneNode(true);
