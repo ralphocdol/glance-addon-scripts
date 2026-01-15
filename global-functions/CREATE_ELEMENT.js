@@ -1,6 +1,10 @@
+/*
+ * Boilerplate for creating HTML element
+ */
 (() => {
   window.CREATE_ELEMENT = function ({
     tag = 'div',
+    isFragment = false,
     id = null,
     classes = null,
     style = null,
@@ -12,7 +16,7 @@
     textContent = null,
     events = null,
   } = {}) {
-    const e = document.createElement(tag);
+    const e = isFragment ? document.createDocumentFragment() : document.createElement(tag);
 
     if (id !== null) e.id = id;
     if (style !== null) Object.assign(e.style, style);
