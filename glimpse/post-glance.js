@@ -54,22 +54,22 @@
             NOTE: <span style="font-style: italic;">Reload the page after every change.</span>
           </div>`
         },
-        { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, columnsUsed: 1 },
-        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, columnsUsed: 1, tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q=' },
+        { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colSpan: 3 },
+        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colSpan: 3, tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q=' },
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
         { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder },
         { type: 'text', name: 'Shortcut Key', key: 'glimpseKey', value: storedGlimpseConfig.glimpseKey, maxLength: 1 },
         { type: 'toggle', name: 'Search Auto Focus', key: 'glanceSearch.autofocus', value: storedGlimpseConfig.glanceSearch.autofocus },
         { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
         { type: 'toggle', name: 'Cleanup Other Pages', key: 'cleanupOtherPages', value: storedGlimpseConfig.cleanupOtherPages, tooltip: 'Cleans other page search on Glimpse close. High resource usage if false.' },
-        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'pagesSlug', value: storedGlimpseConfig.pagesSlug, columnsUsed: 1, tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.' },
+        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'pagesSlug', value: storedGlimpseConfig.pagesSlug, colSpan: 3, tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.' },
         { type: 'toggle', name: 'Wait For Glance', key: 'waitForGlance', value: storedGlimpseConfig.waitForGlance },
         { type: 'toggle', name: 'Detect URL', key: 'detectUrl', value: storedGlimpseConfig.detectUrl },
         { type: 'toggle', name: 'Mobile Bottom Search', key: 'mobileBottomSearch', value: storedGlimpseConfig.mobileBottomSearch, tooltip: 'Repositions the search bar and the suggestions to the bottom in mobile view for ease of access.' },
         { type: 'toggle', name: 'Resize On Keyboard', key: 'resizeOnSoftKeyboardOpen', value: storedGlimpseConfig.resizeOnSoftKeyboardOpen, tooltip: 'On most mobile browsers, when a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard. This attempts to fix that by making the content resized instead.' },
         { type: 'toggle', name: 'Auto Close', key: 'autoClose', value: storedGlimpseConfig.autoClose },
         { type: 'toggle', name: 'Preserve Search Query', key: 'preserveQuery', value: storedGlimpseConfig.preserveQuery, tooltip: 'Preserves Query on search.' },
-        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), columnsUsed: 1 },
+        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), colSpan: 3},
         { type: 'custom-html', contentHTML: `
           <div style="width: 100%;">
             <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/glimpse">
@@ -90,7 +90,7 @@
         { type: 'buttons', buttons: [
           { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
           { name: 'Reload Page', key: 'reload-page' },
-        ], columnsUsed: 2 },
+        ], colSpan: 2 },
       ],
       contentEventListener: {
         setup: () => {
