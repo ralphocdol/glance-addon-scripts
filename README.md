@@ -30,7 +30,9 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
 ### Loading Script
-Issues with loading the scripts are mostly because of the lack of [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) for JavaScript. To address this, we can use `$include` to load the script.
+Issues with loading the scripts are mostly because of the lack of [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) for JavaScript. To address this, we can use `$include` to load the script BUT doing so will not cache the script and will just append them directly to the DOM which may not be ideal.
+
+The [old method](https://github.com/ralphocdol/glance-js-loader?tab=readme-ov-file#modules) I used to use was to have a `module.json` have a script loader. See https://github.com/ralphocdol/glance-js-loader/blob/main/assets/custom.js
 
 #### in the `document` config:
 ```yaml
