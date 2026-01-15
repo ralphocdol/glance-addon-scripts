@@ -4,8 +4,8 @@ No native modal in Glance at the moment though there was a request for it: https
 
 Until then, this will have to do.
 
-![preview1](preview1.png)
-![preview2](preview2.png)
+![preview1](preview/preview1.png)
+![preview2](preview/preview2.png)
 
 # Usage
 ```html

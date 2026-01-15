@@ -2,8 +2,8 @@
 
 This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
 
-![desktop](preview1.webp)
-![mobile](preview2.webp)
+![desktop](preview/preview1.webp)
+![mobile](preview/preview2.webp)
 
 # Dependency
 - [Custom Menu](../custom-menu) *(optional)* — adds the launch button inside the custom menu instead

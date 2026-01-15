@@ -1,8 +1,8 @@
 [⇐ Micro-script list](../#micro-scripts)
 
-![reddit custom-api](preview1.png)
+![reddit custom-api](preview/preview1.png)
 
-![reddit custom-api](preview2.png)
+![reddit custom-api](preview/preview2.png)
 
 This is mainly for `custom-api` and/or "probably" `extension` too. This does not work on native Glance widget.
 

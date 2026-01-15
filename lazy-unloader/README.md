@@ -4,7 +4,7 @@ This loads images when they're in view and unloads them when they're not, freein
 Better used in pages with a plenty of thumbnails that you had to scroll the entire page like Glance's [Video widget](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#videos)'s `grid-cards` style.
 
 Example below is using the [youtube-embedded-player](https://github.com/glanceapp/community-widgets/blob/main/widgets/youtube-embedded-player/README.md) Community Widget:
-![preview1](preview1.webp)
+![preview1](preview/preview1.webp)
 
 > [!CAUTION]
 >

@@ -1,10 +1,10 @@
 [⇐ Micro-script list](../#micro-scripts)
 
 ### Desktop
-![preview1](preview1.webp)
+![preview1](preview/preview1.webp)
 
 ### Mobile
-![preview2](preview2.webp)
+![preview2](preview/preview2.webp)
 
 # Limitations
 This is a client-only implementation—**no server-side support**—because of how Glance is structured and how scripts are delivered.
