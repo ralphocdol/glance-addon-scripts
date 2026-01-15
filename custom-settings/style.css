@@ -1,0 +1,445 @@
+[custom-modal="custom-settings"] {
+  display: none;
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: -9999px;
+  top: -9999px;
+}
+
+#modal.custom-settings {
+  --custom-settings-border: 1px solid color-mix(in hsl, var(--color-primary) 70%, transparent);
+}
+#modal.custom-settings::before {
+  opacity: 0.4;
+}
+
+#modal.custom-settings .modal-header {
+  display: none;
+}
+
+#modal.custom-settings .modal-body {
+  border: 1px solid var(--color-popover-border);
+  border-radius: var(--border-radius);
+  background: var(--color-widget-background);
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+#modal.custom-settings nav {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 20%;
+  background: hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 12%)), 0.4);
+  min-width: 8rem;
+  box-shadow: 0.2rem 0 0.5rem hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+}
+
+#modal.custom-settings nav div[role="button"] {
+  cursor: pointer;
+  user-select: none;
+  padding: 1rem;
+  max-height: 7.7rem;
+  transition: background 0.3s;
+}
+
+#modal.custom-settings nav .nav-bottom {
+  margin-top: auto;
+}
+
+#modal.custom-settings nav div[role="button"].exit-btn:hover {
+  background: linear-gradient(to right, var(--color-negative) 0%, var(--color-negative) 65%, transparent 100%);
+  color: var(--color-separator);
+}
+
+#modal.custom-settings nav div[role="button"]:hover {
+  background: linear-gradient(to right, var(--color-separator) 0%, var(--color-separator) 65%, transparent 100%);
+}
+
+#modal.custom-settings nav div[role="button"].active {
+  cursor: default;
+  background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 65%, transparent 100%);
+  color: var(--color-separator);
+  font-weight: bold;
+}
+
+#modal.custom-settings main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+#modal.custom-settings main > div .custom-settings-title {
+  user-select: none;
+  padding-bottom: 1rem;
+}
+
+#modal.custom-settings main > div {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height 250ms ease,
+    opacity 180ms ease;
+}
+
+#modal.custom-settings main > div.show {
+  max-height: 1000vh;
+  opacity: 1;
+}
+
+#modal.custom-settings main > div > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  grid-auto-rows: auto;
+}
+
+#modal.custom-settings .custom-settings-content-card {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#modal.custom-settings .custom-settings-content-card:not(.frameless) {
+  padding: 1rem;
+  background: var(--color-widget-background);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-widget-content-border);
+  box-shadow: 0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
+}
+
+#modal.custom-settings .custom-settings-content-card .info {
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  font-size: 0.85em;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  opacity: .7;
+}
+
+#modal.custom-settings button.btn {
+  padding: 5px 10px;
+  background: var(--color-primary);
+  color: var(--color-separator);
+  border-radius: var(--border-radius);
+}
+
+#modal.custom-settings button.btn.btn-float {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  background: var(--color-widget-background);
+  color: var(--color-primary);
+}
+
+#modal.custom-settings button.btn svg {
+  height: 17px;
+  aspect-ratio: 1 / 1;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+/* region: Toggle switch */
+#modal.custom-settings .card-toggle .toggle {
+  display: inline-block;
+  cursor: pointer;
+}
+
+#modal.custom-settings .card-toggle .toggle input {
+  display: none;
+}
+
+#modal.custom-settings .card-toggle .toggle-switch {
+  --toggle-width: 38px;
+  --toggle-height: 20px;
+  --toggle-padding: 2px;
+  --toggle-circle-size: calc(var(--toggle-height) - var(--toggle-padding) * 2);
+  --toggle-active-color: var(--color-positive);
+  --toggle-inactive-color: var(--color-negative);
+
+  display: block;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: calc(var(--toggle-height) / 2);
+  background: var(--toggle-inactive-color);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#modal.custom-settings .card-toggle .toggle-switch::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  top: var(--toggle-padding);
+  left: var(--toggle-padding);
+  width: var(--toggle-circle-size);
+  height: var(--toggle-circle-size);
+  border-radius: 50%;
+  background: var(--color-widget-background);
+  transition: transform 0.3s;
+}
+
+/* 🔁 active → checked */
+#modal.custom-settings .card-toggle .toggle input:checked + .toggle-switch {
+  background: var(--toggle-active-color);
+}
+
+#modal.custom-settings .card-toggle .toggle input:checked + .toggle-switch::after {
+  transform: translateX(
+    calc(
+      var(--toggle-width)
+      - var(--toggle-circle-size)
+      - var(--toggle-padding) * 2
+    )
+  );
+}
+/* endregion */
+
+/* region: Input Field */
+#modal.custom-settings .card-text .input-group {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
+}
+
+#modal.custom-settings .card-text .input-group input {
+  outline: none;
+  padding: 5px 8px;
+}
+
+#modal.custom-settings .card-text .input-group input:focus-within {
+  border-color: var(--color-primary);
+}
+
+#modal.custom-settings .card-text .input-group label {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  transform: translateY(-50%);
+  transition: .3s;
+}
+
+#modal.custom-settings .card-text .input-group input:focus + label,
+#modal.custom-settings .card-text .input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.85em;
+  background: var(--color-widget-background);
+  padding: 0 5px;
+  color: var(--color-primary);
+}
+/* endregion */
+
+/* region: Select Group */
+#modal.custom-settings .card-dropdown .select-group {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
+}
+#modal.custom-settings .card-dropdown .select-group::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--color-primary);
+  transform: translateY(-50%);
+}
+#modal.custom-settings .card-dropdown .select-group label {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  font-size: 0.85em;
+  background: var(--color-widget-background);
+  padding: 0 5px;
+  pointer-events: none;
+  transform: translateY(-50%);
+  border-radius: var(--border-radius);
+  color: var(--color-primary);
+}
+
+#modal.custom-settings .card-dropdown .select-group select {
+  width: 100%;
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 5px 8px;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+/* endregion */
+
+/* region: multi-text */
+#modal.custom-settings .card-multi-text .input-group {
+  position: relative;
+  width: 100%;
+  border: var(--custom-settings-border);
+  border-radius: var(--border-radius);
+}
+
+#modal.custom-settings .card-multi-text .input-group input {
+  outline: none;
+  padding: 5px 8px;
+}
+
+#modal.custom-settings .card-multi-text .input-group input:focus-within {
+  border-color: var(--color-primary);
+}
+
+#modal.custom-settings .card-multi-text .input-group label {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  transform: translateY(-50%);
+  transition: .3s;
+}
+
+#modal.custom-settings .card-multi-text .input-group input:focus + label,
+#modal.custom-settings .card-multi-text .input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.85em;
+  background: var(--color-widget-background);
+  padding: 0 5px;
+  color: var(--color-primary);
+}
+/* endregion */
+
+/* region: textarea */
+#modal.custom-settings .card-textarea {
+  flex-direction: column;
+}
+
+#modal.custom-settings .card-textarea .input-group {
+  position: relative;
+  width: 100%;
+  border: var(--custom-settings-border);
+  border-radius: var(--border-radius);
+}
+
+#modal.custom-settings .card-textarea .input-group textarea {
+  border: none;
+  outline: none;
+  padding: 10px;
+  width: 100%;
+  background: none;
+  resize: vertical;
+  color: var(--color-text-paragraph);
+}
+
+#modal.custom-settings .card-textarea .input-group textarea:focus-within {
+  border-color: var(--color-primary);
+}
+
+#modal.custom-settings .card-textarea .input-group label {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  transform: translateY(-50%);
+  transition: .3s;
+}
+
+#modal.custom-settings .card-textarea .input-group textarea:focus + label,
+#modal.custom-settings .card-textarea .input-group textarea:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.85em;
+  background: var(--color-widget-background);
+  padding: 0 5px;
+  color: var(--color-primary);
+}
+
+#modal.custom-settings .card-textarea .textarea-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+/* endregion */
+
+/* region: buttons */
+#modal.custom-settings .card-buttons {
+ display: flex;
+ gap: 5px;
+ flex-wrap: wrap;
+ justify-content: unset;
+}
+/* endregion */
+
+/* region: Color Input */
+#modal.custom-settings .card-color {
+  width: 100%;
+}
+
+#modal.custom-settings .card-color input {
+  border: none;
+  outline: none;
+  height: 2.5rem;
+}
+/* endregion */
+
+/* region: Slider Input */
+#modal.custom-settings .card-slider {
+  width: 100%;
+}
+
+#modal.custom-settings .card-slider .slider-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+#modal.custom-settings .card-slider input {
+  border-radius: var(--border-radius);
+  border: var(--custom-settings-border);
+  outline: none;
+  height: 2.5rem;
+  accent-color: var(--color-primary);
+  flex: 0 0 50%;
+}
+/* endregion */
+
+/* Glance Overrides */
+.popover-frame {
+  border-radius: var(--border-radius);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)),
+    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1))
+  ), var(--background-image-url-body, none) center/cover no-repeat fixed;
+  z-index: -9999;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+
+body.bg-img-visible::before {
+  opacity: 1;
+}
+
+.widget-content:not(.widget-content-frameless), .widget-content-frame {
+  transition:
+    background-color .5s ease,
+    color .5s ease;
+}
