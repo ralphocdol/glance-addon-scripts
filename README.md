@@ -22,6 +22,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 | [Lazy Unloader](lazy-unloader/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Custom Menu](custom-menu/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Toast Message](toast-message/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Custom Settings](custom-settings/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
 *see [main.js](#inside-mainjs) for info regarding pre/post*
 
