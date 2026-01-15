@@ -7,6 +7,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 
 # Dependency
 - [Custom Menu](../custom-menu) *(optional)* — adds the launch button inside the custom menu instead
+- [Custom Settings](../custom-settings) *(optional)* — adds a custom-settings, must have the `Custom Menu` to work. Your modified configurations are ONLY available in wherever browser you modified them to, it does NOT have a sync functionality. This utilizes your browser's `localStorage` and will based its configuration by default from [config.js](config.js).
 
 # Limitations
 - Only the Docker, Monitor, and recurring HTML structure widgets like RSS are supported. 
@@ -19,7 +20,7 @@ _Read the main [README](../#micro-scripts) to learn how this should be `$include
 - `post-glance.js` - must be added after Glance is loaded
 - `config.js` - the user configuration
 - `spawn.js` - a shared function that launches Glimpse
-- `glimpse.css` - the...uhm... css, you have to load this with either the [default method](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#custom-css-file) or if you already use the default then you can import it inside:
+- `style.css` - the...uhm... css, you have to load this with either the [default method](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#custom-css-file) or if you already use the default then you can import it inside:
     ```css
     @import url('/assets/glimpse.css');
     ```

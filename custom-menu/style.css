@@ -58,16 +58,16 @@
 }
 
 .popover-content .custom-menu-items .custom-menu-item .inactive img,
-.popover-content .custom-menu-items .custom-menu-item .inactive svg:not(.search-icon) {
+.popover-content .custom-menu-items .custom-menu-item .inactive svg {
   color: var(--color-negative);
 }
 
 .popover-content .custom-menu-items .custom-menu-item .active img,
-.popover-content .custom-menu-items .custom-menu-item .active svg:not(.search-icon) {
+.popover-content .custom-menu-items .custom-menu-item .active svg {
   color: var(--color-positive);
 }
 
 .popover-content .custom-menu-items .custom-menu-item:hover img,
-.popover-content .custom-menu-items .custom-menu-item:hover svg:not(.search-icon) {
+.popover-content .custom-menu-items .custom-menu-item:hover svg {
   color: var(--color-separator);
 }
