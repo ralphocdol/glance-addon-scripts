@@ -212,7 +212,7 @@
 
 #modal.custom-settings .card-text .input-group input {
   outline: none;
-  padding: 5px 8px;
+  padding: 5px 40px 5px 8px;
 }
 
 #modal.custom-settings .card-text .input-group input:focus-within {
@@ -295,7 +295,7 @@
 
 #modal.custom-settings .card-multi-text .input-group input {
   outline: none;
-  padding: 5px 8px;
+  padding: 5px 40px 5px 8px;
 }
 
 #modal.custom-settings .card-multi-text .input-group input:focus-within {
@@ -372,6 +372,12 @@
   justify-content: space-between;
   width: 100%;
   align-items: center;
+}
+
+#modal.custom-settings .card-textarea .textarea-actions .more-btns {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 /* endregion */
 
