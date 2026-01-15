@@ -1,4 +1,15 @@
 (() => {
+  const createElementFn = window.CREATE_ELEMENT;
+  if (typeof createElementFn !== 'function') {
+    const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
+    if (typeof window.showToast === 'function') {
+      window.showToast?.(msg, { title: 'CUSTOM MENU', type: 'error' });
+    } else {
+      alert(msg);
+    }
+    console.error('CREATE_ELEMENT not found');
+    return;
+  }
   const headerNav = document.querySelector('.header-container > .header');
   const mobileNav = document.querySelector('.mobile-navigation > .mobile-navigation-icons');
   if (!headerNav || !mobileNav) return;
@@ -41,22 +52,24 @@
   }
 
   function createCustomMenuItemContainerElement(appendElement) {
-    const newElement = document.createElement('div');
-    newElement.classList.add('custom-menu-item');
+    const newElement = createElementFn({ classes: 'custom-menu-item' });
     newElement.append(appendElement);
     return newElement;
   }
 
-  function createCustomMenuItemElement({ className, tooltip, icon, actionFn }) {
+  function createCustomMenuItemElement({ className, tooltip, icon, actionFn, status }) {
     if (!className || !tooltip || !icon || !actionFn) {
-      console.error('Missing required parameters');
+      window.showToast?.('Missing required parameters, see logs.', { title: 'CUSTOM MENU', type: 'error' })
+      console.error('Missing required parameters:', { className, tooltip, icon, actionFn });
       return;
     }
 
-    const navElement = document.createElement('div');
-    navElement.classList.add(className);
-    navElement.setAttribute('title', tooltip);
-    navElement.innerHTML = icon;
+    const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
+    const navElement = createElementFn({
+      classes: `${className}${newStatus}`,
+      props: { title: tooltip },
+      htmlContent: icon,
+    });
 
     const customMenuDesktopElement = headerNav.querySelector('.custom-menu .custom-menu-items');
     const customMenuMobileElement = mobileNav.querySelector('.custom-menu .custom-menu-items');
@@ -72,8 +85,6 @@
       customMenuMobileItem.addEventListener('click', actionFn);
       customMenuMobileElement.append(customMenuMobileItem);
     }
-
-    return { customMenuDesktopElement: !!customMenuDesktopElement, customMenuMobileElement: !!customMenuMobileElement };
   }
 
   window.createCustomMenuItemElement = createCustomMenuItemElement;

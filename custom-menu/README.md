@@ -5,7 +5,11 @@ This simply adds a custom menu to the navigation bar. And will be used for other
 ![1](preview/preview1.png)
 ![2](preview/preview2.png)
 
-### Note
+# Dependency
+- [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
+- [Toast Message](../toast-message) *(optional)*
+
+# Note
 `post-glance.js` is loaded a bit differently as it needs to have a delay before it is executed.
 
 ```js
