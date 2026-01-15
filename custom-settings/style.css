@@ -132,8 +132,8 @@
 
 #modal.custom-settings button.btn.btn-float {
   position: absolute;
-  top: 0;
-  right: 5px;
+  top: 1px;
+  right: 2px;
   background: var(--color-widget-background);
   color: var(--color-primary);
 }
