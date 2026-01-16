@@ -55,10 +55,12 @@
   color: var(--color-background);
 }
 
-#modal.custom-settings nav div[role="button"]:hover,
-#modal.custom-settings nav div[role="button"].active:hover {
-  background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 0%, transparent 100%);
-  color: var(--color-background);
+@media (hover: hover) and (pointer: fine) {
+  #modal.custom-settings nav div[role="button"]:hover,
+  #modal.custom-settings nav div[role="button"].active:hover {
+    background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 0%, transparent 100%);
+    color: var(--color-background);
+  }
 }
 
 #modal.custom-settings nav div[role="button"].active {
