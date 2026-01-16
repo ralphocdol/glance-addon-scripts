@@ -6,8 +6,9 @@ This will replace Glance's default theming and will do more than just change col
 
 > [!NOTE]
 >
-> 1. This is a client-side functionality, all modifications will only be store on the browser.
-> 2. Config fetching using URL will mostly not work (client-side limitation) unless you proxy it or have full control over it.
+> 1. This is a client-side functionality, all modifications will only be stored in the browser.
+> 2. There is no syncing, you can only fetch a configuration.
+> 3. Config fetching using URL will mostly not work unless you proxy it or have full control over it.
 
 # Dependency
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
