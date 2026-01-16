@@ -60,18 +60,16 @@
   sidebarElement.appendChild(navBottom);
   settingsElementBody.appendChild(sidebarElement);
 
-  const contentElement = createElementFn({
-    tag: 'main',
-    htmlContent: `
-      <div data-content="about" class="show">
-        <div style="display: block;">
-          See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/custom-settings" target="_blank">Repository</a>
-        </div>
-        <div style="display: block;">
-          Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
-        </div>
-      </div>`,
-  });
+  const contentElement = createElementFn({ tag: 'main' });
+  contentElement.innerHTML = `
+    <div data-content="about" class="show">
+      <div style="display: block;">
+        See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/custom-settings" target="_blank">Repository</a>
+      </div>
+      <div style="display: block;">
+        Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
+      </div>
+    </div>`,
   settingsElementBody.appendChild(contentElement);
 
   const svgSaveElement = createElementFn({
