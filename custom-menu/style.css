@@ -69,5 +69,5 @@
 
 .popover-content .custom-menu-items .custom-menu-item:hover img,
 .popover-content .custom-menu-items .custom-menu-item:hover svg {
-  color: var(--color-separator);
+  color: var(--color-background);
 }

@@ -37,7 +37,12 @@
   box-shadow: 0.2rem 0 0.5rem hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
 }
 
+#modal.custom-settings nav .nav-bottom {
+  margin-top: auto;
+}
+
 #modal.custom-settings nav div[role="button"] {
+  position: relative;
   cursor: pointer;
   user-select: none;
   padding: 1rem;
@@ -45,24 +50,34 @@
   transition: background 0.3s;
 }
 
-#modal.custom-settings nav .nav-bottom {
-  margin-top: auto;
-}
-
 #modal.custom-settings nav div[role="button"].exit-btn:hover {
   background: linear-gradient(to right, var(--color-negative) 0%, var(--color-negative) 65%, transparent 100%);
-  color: var(--color-separator);
+  color: var(--color-background);
 }
 
-#modal.custom-settings nav div[role="button"]:hover {
-  background: linear-gradient(to right, var(--color-separator) 0%, var(--color-separator) 65%, transparent 100%);
+#modal.custom-settings nav div[role="button"]:hover,
+#modal.custom-settings nav div[role="button"].active:hover {
+  background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 0%, transparent 100%);
+  color: var(--color-background);
 }
 
 #modal.custom-settings nav div[role="button"].active {
   cursor: default;
-  background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 65%, transparent 100%);
-  color: var(--color-separator);
+  color: var(--color-primary);
   font-weight: bold;
+}
+
+#modal.custom-settings nav div[role="button"].active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid var(--color-primary);
 }
 
 #modal.custom-settings main {
@@ -126,7 +141,7 @@
 #modal.custom-settings button.btn {
   padding: 5px 10px;
   background: var(--color-primary);
-  color: var(--color-separator);
+  color: var(--color-background);
   border-radius: var(--border-radius);
 }
 
