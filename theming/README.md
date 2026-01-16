@@ -4,7 +4,7 @@ This will replace Glance's default theming and will do more than just change col
 
 ![custom-settings](preview/preview1.png)
 
-> [!NOTE
+> [!NOTE]
 >
 > 1. This is a client-side functionality, all modifications will only be store on the browser.
 > 2. Config fetching using URL will mostly not work (client-side limitation) unless you proxy it or have full control over it.
