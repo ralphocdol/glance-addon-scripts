@@ -18,3 +18,6 @@ This will replace Glance's default theming and will do more than just change col
 Just enable `Override Theming` in `custom-settings` as shown in the preview above.
 
 To get started, just copy the [sample-themes.json](sample-themes.json) to your `assets-path` and enter that path in the `Load Theme Config From Path/URL`.
+
+# Credits
+[svilenmarkov](https://github.com/svilenmarkov) - https://github.com/glanceapp/glance/discussions/184
