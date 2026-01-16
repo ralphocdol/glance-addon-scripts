@@ -1,0 +1,26 @@
+.popover-frame {
+  border-radius: var(--border-radius);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)),
+    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1))
+  ), var(--background-image-url-body, none) center/cover no-repeat fixed;
+  z-index: -9999;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+
+body.bg-img-visible::before {
+  opacity: 1;
+}
+
+.widget-content:not(.widget-content-frameless), .widget-content-frame {
+  transition:
+    background-color .5s ease,
+    color .5s ease;
+}
