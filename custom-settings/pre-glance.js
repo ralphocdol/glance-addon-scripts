@@ -87,11 +87,6 @@
   function generateTemplateFunction(events) {
     const body = [];
     for (const [event, handler] of Object.entries(events)) {
-      if (['key'].includes(event)) {
-        console.error(`Reserved function: ${event}`);
-        continue;
-      }
-
       if (event === 'setup') {
         body.push(
           handler.toString()
@@ -101,19 +96,20 @@
         continue;
       }
 
-      if (event === 'onload') {
+      if (event === 'ready') {
         body.push(`(${handler.toString()})(_PARENT_ELEMENT_);`);
         continue;
       }
 
-      const domEvent = event.startsWith('on') ? event.slice(2).toLowerCase() : event;
       body.push(`
-        if (!_PARENT_ELEMENT_.dataset['has_${domEvent}']) {
-          _PARENT_ELEMENT_.dataset['has_${domEvent}'] = '1';
-          _PARENT_ELEMENT_.addEventListener('${domEvent}', e => {
-            if (e.target.dataset['${domEvent}'] === undefined) return;
+        if (!_PARENT_ELEMENT_.dataset['has_${event}']) {
+          _PARENT_ELEMENT_.dataset['has_${event}'] = '1';
+          const _LISTENER_${event}_ = e => {
+            if (e.target.dataset['${event}'] === undefined) return;
             (${handler.toString()})(e);
-          });
+          }
+          _PARENT_ELEMENT_.addEventListener('${event}', _LISTENER_${event}_);
+          _CLEANUP_LISTENER_.push(['${event}', _LISTENER_${event}_]);
         }
       `);
     }
@@ -121,7 +117,16 @@
     return function (key) {
       const _PARENT_ELEMENT_ = key && document.querySelector('.' + key);
       if (!_PARENT_ELEMENT_) return;
+      const _CLEANUP_LISTENER_ = [];
+
       /*__BODY__*/
+
+      return () => {
+        _CLEANUP_LISTENER_.forEach(([ev, fn]) => {
+          delete _PARENT_ELEMENT_.dataset['has_' + ev];
+          _PARENT_ELEMENT_.removeEventListener(ev, fn)
+        });
+      };
     }
     .toString()
     .replace('/*__BODY__*/', body.join('\n'));

@@ -113,7 +113,7 @@
           const cardElement = type => Array.from(_PARENT_ELEMENT_.childNodes).filter(e => e.classList.contains(type));
           const findElementByCardAndName = (card, name) => cardElement(card).find(e => e.querySelector(`[name="${name}"]`));
         },
-        onload: () => {
+        ready: () => {
           getKeyedElement('glanceSearch.searchUrl').value = storedGlimpseConfig.glanceSearch.searchUrl;
           getKeyedElement('searchSuggestEndpoint').value = storedGlimpseConfig.searchSuggestEndpoint;
           getKeyedElement('glanceSearch.target').value = storedGlimpseConfig.glanceSearch.target;

@@ -158,7 +158,7 @@
           setValuesWithConfig(newConfig);
         }
       },
-      onload: () => {
+      ready: () => {
         const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
         if (!storedThemesConfig.overrideTheming) return;
         getKeyedElement('theme-configuration-url').value = localStorage.getItem(configPathKey);

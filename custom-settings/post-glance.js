@@ -19,6 +19,7 @@
       const mainItems = main.querySelectorAll('div[data-content]');
       mainItems.forEach(c => c.style.display = c.classList.contains('show') ? 'block' : 'none');
 
+      let activeScriptCleanup = null;
       nav.addEventListener('click', e => {
         const el = e.target.closest('div[role="button"][data-target]');
         if (!el) return;
@@ -29,6 +30,11 @@
           c.classList.remove('show')
           setTimeout(() => c.style.display = 'none', 300);
         });
+
+        if (activeScriptCleanup) {
+          activeScriptCleanup();
+          activeScriptCleanup = null;
+        }
 
         const targetItem = Array.from(mainItems).find(c => c.dataset.content === keyTarget);
         if (!targetItem) return;
@@ -42,9 +48,8 @@
         const scriptText = scriptElement.content.textContent.trim();
         if (!scriptText) return;
         const scriptFn = new Function(`return (${scriptText})`)();
-        scriptFn(keyTarget);
+        activeScriptCleanup = scriptFn(keyTarget);
       });
-
     }, 100);
   }
 })();
