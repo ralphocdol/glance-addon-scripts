@@ -107,8 +107,8 @@
           setBorderRadius,
         } = newThemePropertiesManager();
 
-        const getKeyedElement = key => _PARENT_ELEMENT_.querySelector(`[name="${key}"]`);
-        const sliderLabelElement = key => _PARENT_ELEMENT_.querySelector(`[data-slider-label="${key}"]`);
+        const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
+        const sliderLabelElement = key => _SETTING_ELEMENT_.querySelector(`[data-slider-label="${key}"]`);
 
         function setValuesWithConfig(config) {
           getKeyedElement('override-theming').checked = config.overrideTheming;
@@ -305,7 +305,7 @@
         };
         const setter = setters[target.dataset.key];
         if (setter && storedThemesConfig.overrideTheming) {
-          const sliderLabelEl = _PARENT_ELEMENT_.querySelector(`[data-slider-label="${target.dataset.key}"]`);
+          const sliderLabelEl = _SETTING_ELEMENT_.querySelector(`[data-slider-label="${target.dataset.key}"]`);
           if (target.dataset.key === 'border-radius') {
             setter(`${target.value}px` || '5px');
             sliderLabelEl.textContent = `${target.value}px`;

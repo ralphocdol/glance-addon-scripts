@@ -37,12 +37,8 @@
   });
   navBottom.appendChild(aboutButton);
 
-
   const closeButton = createElementFn({
-    attrs: {
-      role: 'button',
-      onClick: 'window.closeModal();'
-    },
+    attrs: { role: 'button' },
     classes: 'exit-btn',
     innerText: 'Exit',
   });
@@ -61,6 +57,7 @@
   settingsElementBody.appendChild(sidebarElement);
 
   const contentElement = createElementFn({ tag: 'main' });
+  contentElement.id = 'custom-settings';
   contentElement.innerHTML = `
     <div data-content="about" class="show">
       <div style="display: block;">
@@ -85,51 +82,56 @@
   document.body.appendChild(settingsElement);
 
   function generateTemplateFunction(events) {
+    const replaceHeaderFn = fn => fn.toString().replace(/^\s*(?:function\s*\(\s*\)\s*|(?:async\s*)?\(\s*\)\s*=>\s*)\s*{/, '').replace(/\}$/, '');
     const body = [];
+    const cleanupBody = [];
     for (const [event, handler] of Object.entries(events)) {
       if (event === 'setup') {
-        body.push(
-          handler.toString()
-            .replace(/^\s*(?:function\s*\(\s*\)\s*|(?:async\s*)?\(\s*\)\s*=>\s*)\s*{/, '')
-            .replace(/\}$/, '')
-        );
+        body.push(replaceHeaderFn(handler));
+        continue;
+      }
+
+      if (event === 'cleanup') {
+        cleanupBody.push(replaceHeaderFn(handler));
         continue;
       }
 
       if (event === 'ready') {
-        body.push(`(${handler.toString()})(_PARENT_ELEMENT_);`);
+        body.push(`(${handler.toString()})(_SETTING_ELEMENT_);`);
         continue;
       }
 
       body.push(`
-        if (!_PARENT_ELEMENT_.dataset['has_${event}']) {
-          _PARENT_ELEMENT_.dataset['has_${event}'] = '1';
+        if (!_SETTING_ELEMENT_.dataset['has_${event}']) {
+          _SETTING_ELEMENT_.dataset['has_${event}'] = '1';
           const _LISTENER_${event}_ = e => {
             if (e.target.dataset['${event}'] === undefined) return;
             (${handler.toString()})(e);
           }
-          _PARENT_ELEMENT_.addEventListener('${event}', _LISTENER_${event}_);
+          _SETTING_ELEMENT_.addEventListener('${event}', _LISTENER_${event}_);
           _CLEANUP_LISTENER_.push(['${event}', _LISTENER_${event}_]);
         }
       `);
     }
 
-    return function (key) {
-      const _PARENT_ELEMENT_ = key && document.querySelector('.' + key);
-      if (!_PARENT_ELEMENT_) return;
+    return function (_KEY_) {
+      const _SETTING_ELEMENT_ = _KEY_ && document.querySelector('#custom-settings .'+ _KEY_);
+      if (!_SETTING_ELEMENT_) return;
       const _CLEANUP_LISTENER_ = [];
 
       /*__BODY__*/
 
       return () => {
+        /*__CLEANUP_BODY__*/
         _CLEANUP_LISTENER_.forEach(([ev, fn]) => {
-          delete _PARENT_ELEMENT_.dataset['has_' + ev];
-          _PARENT_ELEMENT_.removeEventListener(ev, fn)
+          delete _SETTING_ELEMENT_.dataset['has_' + ev];
+          _SETTING_ELEMENT_.removeEventListener(ev, fn)
         });
       };
     }
     .toString()
-    .replace('/*__BODY__*/', body.join('\n'));
+    .replace('/*__BODY__*/', body.join('\n'))
+    .replace('/*__CLEANUP_BODY__*/', cleanupBody.join('\n'));
   }
 
 

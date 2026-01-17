@@ -97,7 +97,7 @@
           const toastNotification = typeof window.showToast === 'function' ? window.showToast : (msg => alert(msg));
           const configKey = 'glimpse-search-config';
           const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
-          const getKeyedElement = key => _PARENT_ELEMENT_.querySelector(`[name="${key}"]`);
+          const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
 
           function setAndSave(config, name, value) {
             try {
@@ -110,7 +110,7 @@
             }
           }
 
-          const cardElement = type => Array.from(_PARENT_ELEMENT_.childNodes).filter(e => e.classList.contains(type));
+          const cardElement = type => Array.from(_SETTING_ELEMENT_.childNodes).filter(e => e.classList.contains(type));
           const findElementByCardAndName = (card, name) => cardElement(card).find(e => e.querySelector(`[name="${name}"]`));
         },
         ready: () => {
