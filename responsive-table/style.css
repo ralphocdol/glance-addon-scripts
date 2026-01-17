@@ -240,6 +240,7 @@
     grid-template-columns: 1fr;
     background: none;
     border: none;
+    box-shadow: none;
   }
 
   [responsive-table] [table-row] {
