@@ -20,9 +20,24 @@
       mainItems.forEach(c => c.style.display = c.classList.contains('show') ? 'block' : 'none');
 
       let activeScriptCleanup = null;
+      const triggerCleanup = () => {
+        if (activeScriptCleanup) {
+          activeScriptCleanup();
+          activeScriptCleanup = null;
+        }
+      }
+
       nav.addEventListener('click', e => {
+        if (e.target.closest('div[role="button"].exit-btn')) {
+          triggerCleanup();
+          window.closeModal();
+          return;
+        }
+
         const el = e.target.closest('div[role="button"][data-target]');
         if (!el) return;
+
+        triggerCleanup();
 
         const keyTarget = el.dataset.target;
         navItems.forEach(b => b.classList.toggle('active', b === el));
@@ -30,11 +45,6 @@
           c.classList.remove('show')
           setTimeout(() => c.style.display = 'none', 300);
         });
-
-        if (activeScriptCleanup) {
-          activeScriptCleanup();
-          activeScriptCleanup = null;
-        }
 
         const targetItem = Array.from(mainItems).find(c => c.dataset.content === keyTarget);
         if (!targetItem) return;

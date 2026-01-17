@@ -37,14 +37,11 @@
     if (datasets !== null) {
       for (const [k, v] of Object.entries(datasets)) {
         if (v == null) continue;
-        e.dataset[k] = safeAttr(v);
+        e.dataset[k] = safeValue(v);
       }
     }
 
-    if (attrs !== null)
-      for (const [k, v] of Object.entries(attrs))
-        e.setAttribute(k, safeAttr(v));
-
+    if (attrs !== null) safeAttr(e, attrs);
 
     if (events !== null)
       for (const [event, handler] of Object.entries(events))
@@ -53,7 +50,14 @@
     return e;
   }
 
-  function safeAttr(v) {
+  function safeAttr(e, a) {
+    for (const [k, v] of Object.entries(a)) {
+      if (typeof k === 'string' && k.startsWith('on')) continue;
+      e.setAttribute(k, safeValue(v));
+    }
+  }
+
+  function safeValue(v) {
     if (v == null) return '';
     return String(v)
       .replace(/&/g, '&amp;')     // escape &
@@ -67,15 +71,15 @@
     if (!props) return {};
     const safe = {};
     for (const [key, value] of Object.entries(props)) {
-      if (typeof key === 'string' && key.startsWith('on')) continue; // block event handlers
+      if (typeof key === 'string' && key.startsWith('on')) continue;
       safe[key] = value;
     }
     return safe;
   }
 
   function sanitizeHTML(htmlString) {
-    const wrapper = document.createElement('div');       // temporary wrapper
-    wrapper.innerHTML = htmlString || '';                // works for empty strings
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = htmlString || '';
 
     // Remove unsafe tags
     wrapper.querySelectorAll('script, foreignObject').forEach(el => el.remove());
