@@ -9,15 +9,6 @@ This simply adds a custom menu to the navigation bar. And will be used for other
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 - [Toast Message](../toast-message) *(optional)*
 
-# Note
-`post-glance.js` is loaded a bit differently as it needs to have a delay before it is executed.
-
-```js
-setTimeout(() => {
-  $include: custom-menu/post-glance.js
-}, 50);
-```
-
 # Usage
 ```js
 window.createCustomMenuItemElement?.({

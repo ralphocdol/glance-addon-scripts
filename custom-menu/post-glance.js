@@ -1,11 +1,24 @@
 (() => {
-  const customMenus = document.querySelectorAll('.custom-menu');
-  if (!customMenus) return;
+  setTimeout(() => {
+    let customMenuItems = document.querySelectorAll('.custom-menu-items');
+    if (!customMenuItems) return;
 
-  customMenus.forEach(customMenu => {
-    const customMenuItems = customMenu.querySelectorAll('.custom-menu-item');
-    const columns = Array.from(customMenuItems).length;
-    customMenu.style.display = columns > 0 ? 'flex' : 'none';
-    customMenu.querySelector('.custom-menu-items').style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns)
-  })
+    let hasColumns = false;
+    customMenuItems.forEach(menu => {
+      let columns = menu.style.getPropertyValue('--custom-menu-columns');
+      if (columns === '' || isNaN(columns)) columns = 0;
+      if (!hasColumns) hasColumns = Number(columns) > 0;
+      Object.assign(menu.closest('.custom-menu').style, {
+        pointerEvents: '',
+        display: hasColumns ? 'flex' : 'none'
+      });
+
+    });
+    const glanceNativeToTopEl = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
+    if (hasColumns) {
+      glanceNativeToTopEl.remove();
+    } else {
+      glanceNativeToTopEl.style.display = 'flex';
+    }
+  }, 100);
 })();
