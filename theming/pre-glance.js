@@ -40,9 +40,24 @@
 
     const limitValue = (value, min, max) => {
       const floatValue = parseFloat(value);
-      if (isNaN(floatValue)) throw new TypeError('Expected a number.');
-      if (floatValue < min) return min;
-      if (floatValue > max) return max;
+      let msg = '';
+      if (isNaN(floatValue)) {
+        msg = 'Expected a number, got ' + floatValue + ' instead.';
+        window.showToast?.(msg);
+        throw new TypeError(msg);
+      }
+      if (floatValue < min) {
+        msg = 'Exceeded minimum limit of ' + min + ', using it instead.';
+        window.showToast?.(msg);
+        console.warn(msg);
+        return min;
+      }
+      if (floatValue > max) {
+        msg = 'Exceeded maximum limit of ' + max + ', using it instead.';
+        window.showToast?.(msg);
+        console.warn(msg);
+        return max;
+      }
       return value;
     }
 
@@ -175,8 +190,15 @@
         setRootVars({ '--color-popover-background': `hsla(var(--bgh), calc(var(--bgs) + 3%), calc(var(--bgl) + 3%), var(--color-popover-background-alpha))` });
       },
       setBorderRadius: function (value = '5px') {
-        themeProperties.borderRadius = value;
-        setRootVars({ '--border-radius': value });
+        const valueNumber = Number(value.replace('px', ''));
+        if (isNaN(valueNumber)) {
+          window.showToast?.('Expected a pixel format, got ' + value + ' instead.');
+          console.warn('Expected a pixel format, got ' + value + ' instead.');
+          return;
+        }
+        const newValue = limitValue(valueNumber, 0, 30);
+        themeProperties.borderRadius = newValue + 'px';
+        setRootVars({ '--border-radius': newValue + 'px' });
       },
     };
 

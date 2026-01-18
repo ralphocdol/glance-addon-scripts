@@ -39,7 +39,7 @@
 }
 
 [data-theming] .popover-content .auto-theme-toggle-container ~ .theme-choices:has(.theme-preset) {
-  margin-top: 1.3rem;
+  padding: 1.5rem 1rem 1rem;
 }
 
 [data-theming] .popover-content .auto-theme-toggle-container {
@@ -47,6 +47,7 @@
   justify-content: space-between;
   color: var(--color-text-base);
   min-width: 140px;
+  padding: .5rem 1rem;
 }
 
 [data-theming] .popover-content .toggle {
