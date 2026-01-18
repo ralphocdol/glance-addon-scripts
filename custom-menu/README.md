@@ -27,3 +27,6 @@ window.createCustomMenuItemElement?.({
   actionFn: () => {} //on icon click function
 });
 ```
+
+# Credits
+Vectors and icons by [SVG Repo](https://www.svgrepo.com).
