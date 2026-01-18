@@ -1,26 +1,110 @@
-.popover-frame {
+[data-theming] .popover-frame {
   border-radius: var(--border-radius);
 }
 
-body::before {
+[data-theming] .widget-content:not(.widget-content-frameless), .widget-content-frame {
+  transition:
+    background-color .5s ease,
+    border-color .5s ease,
+    color .5s ease;
+}
+
+/* region: body background theming */
+[data-theming] body {
+  background-color: unset;
+  transition: background-color .5s ease;
+}
+
+[data-theming] body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: linear-gradient(
-    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)),
-    hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1))
-  ), var(--background-image-url-body, none) center/cover no-repeat fixed;
+  background: var(--background-gradient-overlay, none), var(--background-image-url-body, var(--color-background)) center/cover no-repeat fixed;
   z-index: -9999;
   opacity: 0;
-  transition: opacity 1s ease-in;
-}
-
-body.bg-img-visible::before {
-  opacity: 1;
-}
-
-.widget-content:not(.widget-content-frameless), .widget-content-frame {
   transition:
     background-color .5s ease,
+    opacity 1s ease-in,
     color .5s ease;
 }
+
+[data-theming] body.bg-img-visible::before {
+  opacity: 1;
+}
+/* endregion */
+
+/* region: theme selector override */
+[data-theming] .popover-content .theme-choices {
+  --presets-per-row: 3;
+}
+
+[data-theming] .popover-content .auto-theme-toggle-container ~ .theme-choices:has(.theme-preset) {
+  margin-top: 1.3rem;
+}
+
+[data-theming] .popover-content .auto-theme-toggle-container {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-base);
+  min-width: 140px;
+}
+
+[data-theming] .popover-content .toggle {
+  display: inline-block;
+}
+
+[data-theming] .popover-content .toggle input {
+  display: none;
+}
+
+[data-theming] .popover-content .toggle-switch {
+  --toggle-width: 38px;
+  --toggle-height: 20px;
+  --toggle-padding: 2px;
+  --toggle-circle-size: calc(var(--toggle-height) - var(--toggle-padding) * 2);
+  --toggle-active-color: var(--color-positive);
+  --toggle-inactive-color: var(--color-negative);
+
+  display: block;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: calc(var(--toggle-height) / 2);
+  background: var(--toggle-inactive-color);
+  position: relative;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+[data-theming] .popover-content input[disabled] + .toggle-switch {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+[data-theming] .popover-content .toggle-switch::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  top: var(--toggle-padding);
+  left: var(--toggle-padding);
+  width: var(--toggle-circle-size);
+  height: var(--toggle-circle-size);
+  border-radius: 50%;
+  background: var(--color-widget-background);
+  transition: transform 0.3s;
+}
+
+/* 🔁 active → checked */
+[data-theming] .popover-content .toggle input:checked + .toggle-switch {
+  background: var(--toggle-active-color);
+}
+
+[data-theming] .popover-content .toggle input:checked + .toggle-switch::after {
+  transform: translateX(
+    calc(
+      var(--toggle-width)
+      - var(--toggle-circle-size)
+      - var(--toggle-padding) * 2
+    )
+  );
+}
+/* endregion */
