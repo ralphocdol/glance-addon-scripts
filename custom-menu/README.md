@@ -19,5 +19,8 @@ window.createCustomMenuItemElement?.({
 });
 ```
 
+# Note
+Although there is a `setTimeout` added for delay, it's still a good idea to load the `post-glance.js` to the bottom.
+
 # Credits
 Vectors and icons by [SVG Repo](https://www.svgrepo.com).
