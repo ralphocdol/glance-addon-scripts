@@ -121,6 +121,10 @@
   align-items: center;
 }
 
+#modal.custom-settings .custom-settings-content-card:has(textarea[disabled], input[disabled], select[disabled]) {
+  opacity: .5;
+}
+
 #modal.custom-settings .custom-settings-content-card:not(.frameless) {
   padding: 1rem;
   background: var(--color-widget-background);

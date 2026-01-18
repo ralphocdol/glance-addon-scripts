@@ -10,11 +10,13 @@
     console.error('CREATE_ELEMENT not found');
     return;
   }
+
   const configKey = 'glance-theme-storage';
+  // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
   const { themeProperties, setAll } = newThemePropertiesManager();
   const glanceThemeConfig = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : { themeProperties };
 
-  if (glanceThemeConfig?.overrideTheming) setAll(glanceThemeConfig.themeProperties);
+  if (glanceThemeConfig?.overrideTheming) followSystemSchemeFn(glanceThemeConfig?.followSystemScheme);
 
   function newThemePropertiesManager() {
     const root = document.querySelector(':root');
@@ -36,8 +38,46 @@
       style.getPropertyValue('--bgl'),
     );
 
+    const limitValue = (value, min, max) => {
+      const floatValue = parseFloat(value);
+      if (isNaN(floatValue)) throw new TypeError('Expected a number.');
+      if (floatValue < min) return min;
+      if (floatValue > max) return max;
+      return value;
+    }
+
+    const setRootVars = vars => {
+      const currentVars = {};
+      (styleElement.textContent.match(/--[\w-]+:\s*[^;]+;/g) || []).forEach(line => {
+        const match = line.match(/(--[\w-]+):\s*([^;]+);/);
+        if (match) currentVars[match[1]] = match[2];
+      });
+      for (const [key, value] of Object.entries(vars)) {
+        currentVars[key] = value;
+      }
+      styleElement.textContent = `:root { ${Object.entries(currentVars).map(([k, v]) => `${k}: ${v};`).join(' ')} }`;
+    }
+
+    const applyBackgroundImage = (fadeImage = true) => {
+      const isValid = themeProperties.backgroundImage !== '' || isUrlOrPath(themeProperties.backgroundImage);
+      if (fadeImage) document.body.classList.remove('bg-img-visible');
+      setRootVars({
+        '--background-gradient-overlay': isValid
+          ? `linear-gradient(hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)),
+            hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)))`
+          : 'none'
+      });
+      setTimeout(() => {
+        setRootVars({
+          '--background-image-url-body': isValid ? `url(${themeProperties.backgroundImage})` : 'var(--color-background)'
+        });
+        document.body.classList.add('bg-img-visible');
+      }, 1000);
+    }
+
     const themeProperties = {
       themeName: documentRoot.dataset.theme,
+      isDefault: documentRoot.dataset.defaultTheme === 'true',
       isLight: documentRoot.dataset.scheme === 'light',
       backgroundColor: [
         backgroundHue,
@@ -62,27 +102,15 @@
       borderRadius: style.getPropertyValue('--border-radius'),
     };
 
-    const applyBackgroundImage = async () => {
-      const isValid = !themeProperties.backgroundImage || isUrlOrPath(themeProperties.backgroundImage);
-      document.body.classList.remove('bg-img-visible');
-      setTimeout(() => {
-        document.body.classList.add('bg-img-visible')
-        setRootVars({ '--background-image-url-body': isValid ? `url(${themeProperties.backgroundImage})` : 'none' });
-      }, 1000);
-    }
-
-    const limitValue = (value, min, max) => {
-      const floatValue = parseFloat(value);
-      if (isNaN(floatValue)) throw new TypeError('Expected a number.');
-      if (floatValue < min) return min;
-      if (floatValue > max) return max;
-      return value;
-    }
-
     const obj = {
       themeProperties,
       setThemeName: function (value) {
         documentRoot.dataset.theme = value;
+        documentRoot.dataset.theming = '';
+      },
+      setIsDefault: function (value = false) {
+        themeProperties.isDefault = value;
+        documentRoot.dataset.defaultTheme = value;
       },
       setIsLight: function (value) {
         themeProperties.isLight = value;
@@ -123,9 +151,10 @@
         setRootVars({ '--tsm': newValue });
       },
       setBackgroundImage: function (value = '') {
+        const fadeImage = themeProperties.backgroundImage !== value;
         themeProperties.backgroundImage = value;
         setRootVars({ '--background-image-url': value });
-        applyBackgroundImage();
+        applyBackgroundImage(fadeImage);
       },
       setBackgroundImageAlpha: function (value = 1) {
         const newValue = limitValue(value, 0, 1);
@@ -145,25 +174,11 @@
         setRootVars({ '--color-popover-background-alpha': newValue });
         setRootVars({ '--color-popover-background': `hsla(var(--bgh), calc(var(--bgs) + 3%), calc(var(--bgl) + 3%), var(--color-popover-background-alpha))` });
       },
-      setBorderRadius: function (value) {
+      setBorderRadius: function (value = '5px') {
         themeProperties.borderRadius = value;
         setRootVars({ '--border-radius': value });
-      }
+      },
     };
-
-    function setRootVars(vars) {
-      const currentVars = {};
-      (styleElement.textContent.match(/--[\w-]+:\s*[^;]+;/g) || []).forEach(line => {
-        const match = line.match(/(--[\w-]+):\s*(.+);/);
-        if (match) {
-          currentVars[match[1]] = match[2];
-        }
-      });
-      for (const [key, value] of Object.entries(vars)) {
-        currentVars[key] = value;
-      }
-      styleElement.textContent = `:root { ${Object.entries(currentVars).map(([k, v]) => `${k}: ${v};`).join(' ')} }`;
-    }
 
     obj.setAll = function (values) {
       for (const [key, value] of Object.entries(values)) {
@@ -182,27 +197,6 @@
     } catch {
       return input.startsWith('/');
     }
-  }
-
-  function generateRandomHSLColor(forPrimary = false, isLight = true) {
-    const h = Math.floor(Math.random() * 360);
-
-    const s = forPrimary
-      ? Math.floor(Math.random() * 65) + 35
-      : isLight
-        ? Math.floor(Math.random() * 30) + 10
-        : Math.floor(Math.random() * 40) + 10;
-
-    let l;
-    if (forPrimary) {
-      l = Math.floor(Math.random() * 40) + 30;
-    } else if (isLight) {
-      l = Math.floor(Math.random() * 30) + 60;
-    } else {
-      l = Math.floor(Math.random() * 12) + 8;
-    }
-
-    return [h, s, l];
   }
 
   function hslValuesToThemeString([h, s, l]) {
@@ -278,42 +272,149 @@
     return [Math.round(h), Math.round(s), Math.round(l)];
   }
 
+  function updateConfiguration() {
+    const { themeProperties } = newThemePropertiesManager();
+    const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
+    const presets = storedThemesConfig?.preset;
+
+    const current = presets?.find(p => p.themeName === themeProperties.themeName);
+    if (current) Object.assign(current, themeProperties);
+
+    [true, false].forEach(isLight => {
+      const group = presets?.filter(p => p.isLight === isLight);
+      if (!group) return;
+      if (current && current.isLight === isLight && current.isDefault) {
+        group.forEach(p => (p.isDefault = p === current));
+        return;
+      }
+
+      if (!group?.some(p => p.isDefault) && group.length) group[0].isDefault = true;
+    });
+
+    const syncedPreset = presets?.find(p => p.themeName === themeProperties.themeName);
+    if (syncedPreset) Object.assign(themeProperties, syncedPreset);
+
+    const newConfig = { ...storedThemesConfig, themeProperties };
+    localStorage.setItem(configKey, JSON.stringify(newConfig));
+    return newConfig;
+  }
+
+  function prefersColorSchemeChange(callback = null) {
+    const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
+    const preset = storedThemesConfig?.preset || [];
+
+    const currentThemeIsLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const selectedTheme = preset.find(p => p?.isLight === currentThemeIsLight && p?.isDefault);
+
+    if (selectedTheme) {
+      const newConfig = {...storedThemesConfig, themeProperties: selectedTheme };
+      localStorage.setItem(configKey, JSON.stringify(newConfig));
+      setAll(selectedTheme);
+      regenerateThemePicker(newConfig);
+    } else {
+      setAll(storedThemesConfig.themeProperties);
+    }
+    if (typeof callback === 'function') callback();
+  }
+
+  function followSystemSchemeFn(enabled, callback) {
+    const matchScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (!matchScheme._listener) matchScheme._listener = () => prefersColorSchemeChange(callback);
+    if (typeof matchScheme._listener === 'function') matchScheme._listener();
+
+    if (enabled && !matchScheme._hasChangeListener) {
+      matchScheme.addEventListener('change', matchScheme._listener);
+      matchScheme._hasChangeListener = true;
+    } else if (!enabled && matchScheme._hasChangeListener) {
+      matchScheme.removeEventListener('change', matchScheme._listener);
+      matchScheme._hasChangeListener = false;
+    }
+  }
+
   function regenerateThemePicker(config) {
     if (!config?.overrideTheming) return;
     document.querySelectorAll('.theme-picker').forEach(t => {
       generateThemeChoices({ el: t, config });
-    })
+      attachAutoThemeToggle({ el: t, config });
+    });
   }
   regenerateThemePicker(glanceThemeConfig);
 
+  function attachAutoThemeToggle({ el, config } = {}) {
+    let popoverEl = el?.querySelector('[data-popover-html]');
+    if (!popoverEl) popoverEl = document.querySelector('.popover-content:has(.auto-theme-toggle-container)');
+    if (!popoverEl) return;
+
+    if (!popoverEl.querySelector('.theme-choices:has(.theme-preset-light):has(.theme-preset-dark)')) return;
+
+    const toggleElFrag = createElementFn({ isFragment: true });
+    const toggleContainer = createElementFn({ classes: 'auto-theme-toggle-container' });
+    const toggleLabel = createElementFn({ tag: 'label', textContent: 'FOLLOW SYSTEM' });
+
+    const toggleEl = createElementFn({ tag: 'label', classes: 'toggle' });
+    const toggleSwitch = createElementFn({ tag: 'span', classes: 'toggle-switch' });
+    const toggleInput = createElementFn({
+      tag: 'input',
+      props: { type: 'checkbox', name: 'auto-follow-system', checked: config?.followSystemScheme },
+    });
+
+    const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
+    const eventFn = e => {
+      storedThemesConfig.followSystemScheme = e.target.checked;
+      localStorage.setItem(configKey, JSON.stringify(storedThemesConfig));
+      regenerateThemePicker(storedThemesConfig);
+      followSystemSchemeFn(e.target.checked);
+    }
+
+    toggleInput.removeEventListener('click', eventFn);
+    toggleInput.addEventListener('click', eventFn);
+
+    toggleEl.appendChild(toggleInput);
+    toggleEl.appendChild(toggleSwitch);
+
+    if (popoverEl.querySelector('.auto-theme-toggle-container')) {
+      toggleElFrag.appendChild(toggleLabel);
+      toggleElFrag.appendChild(toggleEl);
+      toggleContainer.replaceChildren(toggleElFrag);
+    } else {
+      toggleContainer.appendChild(toggleLabel);
+      toggleContainer.appendChild(toggleEl);
+      popoverEl.prepend(toggleContainer);
+    }
+  }
+
   function generateThemeChoices({ el, config } = {}) {
-    const themeChoices = el.querySelector('.theme-choices');
+    let themeChoices = el.querySelector('.theme-choices');
+    if (!themeChoices) themeChoices = document.querySelector('.popover-content .theme-choices');
+    if (!themeChoices) return;
+
     const themePreview = el.querySelector('.current-theme-preview');
     const newPresetFragment = createElementFn({ isFragment: true });
     const newProperties = config?.themeProperties;
-    const configThemePresets = config?.preset;
+    if (!newProperties) return;
+
     const resetCurrentClasses = () => themeChoices.childNodes.forEach(presetEl => presetEl.classList.remove('current'));
-    configThemePresets?.forEach(p => {
-      if (newProperties.themeName === p.themeName) {
-        themePreview.innerHTML = `
-          <button class="theme-preset current${newProperties.isLight ? ' theme-preset-light' : ''}"
-            style="--color: ${hslValuesToCSSString(newProperties.backgroundColor)}" data-key="${newProperties.themeName}" title="${newProperties.themeName}">
-            <div class="theme-color" style="--color: ${hslValuesToCSSString(newProperties.primaryColor)}"></div>
-            <div class="theme-color" style="--color: ${hslValuesToCSSString(newProperties.positiveColor)}"></div>
-            <div class="theme-color" style="--color: ${hslValuesToCSSString(newProperties.negativeColor)}"></div>
-          </button>
-        `;
-      }
+
+    const themePresetContent = p => `
+      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.primaryColor)}"></div>
+      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.positiveColor)}"></div>
+      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.negativeColor)}"></div>
+    `;
+
+    const themePreviewHTML = `
+      <button class="theme-preset current theme-preset-${newProperties.isLight ? 'light' : 'dark'}"
+        style="--color: ${hslValuesToCSSString(newProperties.backgroundColor)}" data-key="${newProperties.themeName}" title="${newProperties.themeName}">
+          ${themePresetContent(newProperties)}
+      </button>
+    `;
+
+    const createPresetEl = p => {
       const presetEl = createElementFn({
         tag: 'button',
-        classes: `theme-preset${p.isLight ? ' theme-preset-light' : ''}${newProperties.themeName === p.themeName ? ' current' : ''}`,
+        classes: `theme-preset theme-preset-${p.isLight ? 'light' : 'dark'}${newProperties.themeName === p.themeName ? ' current' : ''}`,
         datasets: { key: p.themeName },
         attrs: { title: p.themeName },
-        htmlContent: `
-          <div class="theme-color" style="--color: ${hslValuesToCSSString(p.primaryColor)}"></div>
-          <div class="theme-color" style="--color: ${hslValuesToCSSString(p.positiveColor)}"></div>
-          <div class="theme-color" style="--color: ${hslValuesToCSSString(p.negativeColor)}"></div>
-        `,
+        htmlContent: themePresetContent(p),
         events: {
           click: () => {
             const newTheme = p;
@@ -326,9 +427,26 @@
           }
         }
       });
-      presetEl.style.setProperty('--color', hslValuesToCSSString(p.backgroundColor));
+      return presetEl;
+    }
+
+    const configThemePresets = config?.preset;
+    if (configThemePresets) {
+      configThemePresets
+        ?.filter(p => !config?.followSystemScheme || p.isLight === config.themeProperties.isLight)
+        ?.forEach(p => {
+          if (newProperties?.themeName === p.themeName) themePreview.innerHTML = themePreviewHTML;
+          const presetEl = createPresetEl(p);
+          presetEl.style.setProperty('--color', hslValuesToCSSString(p.backgroundColor));
+          newPresetFragment.appendChild(presetEl);
+      });
+    } else {
+      themePreview.innerHTML = themePreviewHTML;
+      const presetEl = createPresetEl(newProperties);
+      presetEl.style.setProperty('--color', hslValuesToCSSString(newProperties.backgroundColor));
       newPresetFragment.appendChild(presetEl);
-    });
+    }
+
     themeChoices.replaceChildren(newPresetFragment);
   }
 
@@ -339,5 +457,7 @@
     hslValuesToThemeString,
     hslValuesToCSSString,
     regenerateThemePicker,
+    updateConfiguration,
+    followSystemSchemeFn,
   };
 })();

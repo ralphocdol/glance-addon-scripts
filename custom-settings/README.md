@@ -60,3 +60,6 @@ Needs to be in the `post-glance.js` of your widget. See other widgets that used 
     }
   });
 ```
+
+# Credits
+Vectors and icons by [SVG Repo](https://www.svgrepo.com).
