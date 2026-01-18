@@ -20,5 +20,12 @@ Just enable `Override Theming` in `custom-settings` as shown in the preview abov
 
 To get started, just copy the [sample-themes.json](sample-themes.json) to your `assets-path` and enter that path in the `Load Theme Config From Path/URL`.
 
+# Broken after update?
+Clear your local configuration in `localStorage` or just uncomment this line of code in your [pre-glance.js](pre-glance.js).
+```js
+  localStorage.setItem(configKey, '');
+```
+Refresh your Glance page. Remember to comment it back if that fixed your issue.
+
 # Credits
 [svilenmarkov](https://github.com/svilenmarkov) - https://github.com/glanceapp/glance/discussions/184
