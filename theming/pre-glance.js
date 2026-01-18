@@ -306,7 +306,7 @@
     const currentThemeIsLight = window.matchMedia("(prefers-color-scheme: light)").matches;
     const selectedTheme = preset.find(p => p?.isLight === currentThemeIsLight && p?.isDefault);
 
-    if (selectedTheme) {
+    if (storedThemesConfig.followSystemScheme && selectedTheme) {
       const newConfig = {...storedThemesConfig, themeProperties: selectedTheme };
       localStorage.setItem(configKey, JSON.stringify(newConfig));
       setAll(selectedTheme);
