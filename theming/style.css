@@ -108,4 +108,17 @@
     )
   );
 }
+
+@media (max-width: 1190px) {
+  [data-theming] .popover-content > div {
+    display: flex;
+    flex-direction: column;
+  }
+  [data-theming] .popover-content > div .theme-choices {
+    order: 1;
+  }
+  [data-theming] .popover-content > div .auto-theme-toggle-container {
+    order: 2;
+  }
+}
 /* endregion */
