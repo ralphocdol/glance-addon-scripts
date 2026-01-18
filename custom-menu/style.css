@@ -1,6 +1,5 @@
 .custom-menu {
   --custom-menu-columns: 3;
-  display: none;
 }
 
 .custom-menu-button, /* Nav only */

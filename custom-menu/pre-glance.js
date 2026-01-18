@@ -33,12 +33,14 @@
 
   mobileSearchNav.querySelector('.custom-menu-items').appendChild(newCustomMenuItem);
   mobileNav.prepend(mobileSearchNav);
-  mobileNav.querySelector('a[href="#top"]:not(.custom-menu-top)').remove(); // This removes the scroll to top
+
+  document.querySelector('a[href="#top"]:not(.custom-menu-top)').style.display = 'none';
 
   function createCustomMenuElement(mobile = false) {
     let properties = `data-popover-position="below"`;
     if (mobile) properties = `data-popover-position="above" data-popover-hide-delay="100" data-popover-anchor=".custom-menu-button" data-popover-trigger="click"`;
     const newElement = document.createElement('div');
+    newElement.style.pointerEvents = 'none';
     newElement.classList.add('custom-menu');
     newElement.innerHTML = `
       <div class="custom-menu-popover" data-popover-type="html" data-popover-show-delay="0" ${properties}>
@@ -55,12 +57,6 @@
     return newElement;
   }
 
-  function createCustomMenuItemContainerElement(appendElement) {
-    const newElement = createElementFn({ classes: 'custom-menu-item' });
-    newElement.append(appendElement);
-    return newElement;
-  }
-
   function createCustomMenuItemElement({ className, tooltip, icon, actionFn, status }) {
     if (!className || !tooltip || !icon || !actionFn) {
       window.showToast?.('Missing required parameters, see logs.', { title: 'CUSTOM MENU', type: 'error' })
@@ -69,26 +65,23 @@
     }
 
     const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
-    const navElement = createElementFn({
-      classes: `${className}${newStatus}`,
-      props: { title: tooltip },
-      htmlContent: icon,
+    const customMenuItems = document.querySelectorAll('.custom-menu-items');
+    if (!customMenuItems) return;
+
+    customMenuItems.forEach(menu => {
+      const customItemEl = createElementFn({ classes: 'custom-menu-item' });
+      const navElement = createElementFn({
+        classes: `${className}${newStatus}`,
+        props: { title: tooltip },
+        htmlContent: icon,
+      });
+      customItemEl.appendChild(navElement);
+      customItemEl.addEventListener('click', actionFn);
+      menu.appendChild(customItemEl);
+
+      const columns = Array.from(menu.querySelectorAll('.custom-menu-item')).length
+      menu.style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns);
     });
-
-    const customMenuDesktopElement = headerNav.querySelector('.custom-menu .custom-menu-items');
-    const customMenuMobileElement = mobileNav.querySelector('.custom-menu .custom-menu-items');
-
-    if (customMenuDesktopElement) {
-      const customMenuDesktopItem = createCustomMenuItemContainerElement(navElement);
-      customMenuDesktopItem.addEventListener('click', actionFn);
-      customMenuDesktopElement.append(customMenuDesktopItem);
-    }
-
-    if (customMenuMobileElement) {
-      const customMenuMobileItem = createCustomMenuItemContainerElement(navElement.cloneNode(true));
-      customMenuMobileItem.addEventListener('click', actionFn);
-      customMenuMobileElement.append(customMenuMobileItem);
-    }
   }
 
   window.createCustomMenuItemElement = createCustomMenuItemElement;
