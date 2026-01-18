@@ -206,7 +206,7 @@
           const toggleSwitch = createElementFn({ tag: 'span', classes: 'toggle-switch' });
           const toggleInput = createElementFn({
             tag: 'input',
-            props: { type: 'checkbox', name: widget.key, checked: !!widget.value },
+            props: { type: 'checkbox', name: widget.key, checked: !!widget.value, disabled: widget.disabled || false },
             datasets: { click: '', key: widget.key },
           });
           toggleEl.appendChild(toggleInput);
@@ -226,6 +226,7 @@
             props: { type: 'text', name: widget.key,
               placeholder: ' ', value: widget.value,
               maxlength: widget.maxLength,
+              disabled: widget.disabled || false,
             }
           });
           inputGroup.appendChild(inputText);
@@ -242,13 +243,13 @@
           const selectGroupEl = createElementFn({ classes: 'select-group' });
           const selectEl = createElementFn({
             tag: 'select',
-            props: { name: widget.key },
+            props: { name: widget.key, disabled: widget.disabled || false },
             datasets: { change: '', key: widget.key }
           });
           widget.options.forEach(o => {
             const optionEl = createElementFn({
               tag: 'option',
-              props: { value: o, selected: o === widget.value },
+              props: { value: o, selected: o === widget.value, disabled: widget.disabled || false },
               textContent: o
             });
             selectEl.appendChild(optionEl);
@@ -272,7 +273,8 @@
               name: widget.key,
               placeholder: ' ',
               value: (widget.value || []).join(','),
-              maxlength: widget.maxLength
+              maxlength: widget.maxLength,
+              disabled: widget.disabled || false,
             }
           });
           inputGroup.appendChild(inputEl);
@@ -312,6 +314,7 @@
               tag: 'button',
               classes: 'flex btn',
               attrs: { title: b.tooltip },
+              props: { disabled: b.disabled || false },
               datasets: { click: '', key: b.key },
               htmlContent: b.name,
             });
@@ -321,6 +324,7 @@
           const btnEl = createElementFn({
             tag: 'button',
             classes: 'flex btn',
+            props: { disabled: widget.disabled || false },
             datasets: { click: '', key: widget.key },
             htmlContent: widget?.customButton || `<svg><use href="#svg-icon-save"></use></svg> SAVE`,
           });
@@ -345,6 +349,7 @@
             const btn = createElementFn({
               tag: 'button',
               classes: 'btn',
+              props: { disabled: widget.disabled || false },
               attrs: { title: b.tooltip },
               datasets: { click: '', key: b.key },
               style: { background: b.negative ? 'var(--color-negative)' : '' },
@@ -364,7 +369,8 @@
               type: 'color',
               placeholder: ' ',
               value: widget.value
-            }
+            },
+            props: { disabled: widget.disabled || false },
           });
           widgetElement.appendChild(labelEl);
           widgetElement.appendChild(colorEl);
@@ -397,7 +403,8 @@
               max: widget.max || 1,
               step: widget.step || 0.1,
               value: widget.value || 1,
-            }
+            },
+            props: { disabled: widget.disabled || false },
           });
 
           widgetElement.appendChild(sliderLabelEl);
@@ -425,7 +432,7 @@
   }
 
   // Just a simple dialog box
-  function ask(message) {
+  function ask(message, { confirmText = 'CONFIRM', cancelText = 'CANCEL'} = {}) {
     return new Promise(resolve => {
       const overlay = createElementFn({
         style: {
@@ -457,8 +464,8 @@
         htmlContent: `
           <p style="margin:0 0 1rem">${message}</p>
           <div style="display:flex;gap:1rem;justify-content:flex-end">
-            <button data-v="no" style="background:var(--color-negative);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);">CANCEL</button>
-            <button data-v="yes" autofocus style="background:var(--color-positive);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);" autofocus>CONFIRM</button>
+            <button data-v="no" style="background:var(--color-negative);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);">${cancelText}</button>
+            <button data-v="yes" autofocus style="background:var(--color-positive);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);" autofocus>${confirmText}</button>
           </div>
         `,
       });
@@ -478,7 +485,27 @@
     });
   }
 
+  function customJSONStringify(obj) {
+    const json = JSON.stringify(obj, null, 2);
+    return json.replace(/\[\s*([\d\s,]+?)\s*\]/g, (_, p1) => {
+      const compact = p1.split(/\s*,\s*|\s+/).filter(Boolean).join(',');
+      return `[${compact}]`;
+    });
+  }
+
+  function buildFetchUrl(target) {
+    try {
+      const isFullUrl = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(target);
+      return isFullUrl ? new URL(target).href : new URL(target, window.location.origin).href;
+    } catch (e) {
+      window?.showToast('Invalid URL, see logs.', { title: 'Theming', type: 'error' });
+      console.error('Invalid URL:', e);
+      return null;
+    }
+  }
+
   window.customSettingsFunctions = {
-    ask, createCustomSettingsItem, setValueByPath
+    ask, createCustomSettingsItem, setValueByPath,
+    customJSONStringify, buildFetchUrl,
   }
 })();
