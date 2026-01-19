@@ -79,16 +79,25 @@
   });
 
   const attachEl = (target, source, attribute) => {
-    const placeholder = document.createComment('');
-    target.replaceWith(placeholder);
-    source.replaceChildren(target);
+    const start = document.createComment('');
+    const end = document.createComment('');
+
+    target.replaceWith(start, ...target.childNodes, end);
+    const nodes = [];
+    for (let n = start.nextSibling; n !== end; n = n.nextSibling) nodes.push(n);
+
+    source.replaceChildren(...nodes);
     target.removeAttribute(attribute);
+
     cleanUpModalClose.push(() => {
+      const restore = [...source.childNodes];
+      start.replaceWith(target);
+      target.append(...restore);
+      end.remove();
       target.setAttribute(attribute, '');
-      placeholder.replaceWith(target);
-      placeholder.remove();
     });
-  }
+  };
+
 
   function openModal(targetElement) {
     if (!targetElement) return;
