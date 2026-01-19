@@ -27,6 +27,7 @@ Until then, this will have to do.
 | --------- | -------- | ------- | ------- | ----------- |
 | custom-modal | Yes | - | - | Will be used as a modal container |
 | dismiss-on-outside-click | No | false | true, false | will allow the modal to be closed when clicked anywhere outside the modal |
+| no-dismiss-on-escape-key | No | false | true, false | will prevent the modal to be closed with an `Escape` key |
 | modal-no-background | No | false | true, false | will remove the background of the modal |
 | width | No | wide-auto | small, medium, wide, full | Sets the width of the modal. Append `-auto` to make it dynamic up to the selected width. |
 | height | No | tall-auto | short, medium, tall, full | Sets the "maximum" height of the modal, will automatically use the height depending on the content. Append `-auto` to make it dynamic up to the selected height. |
