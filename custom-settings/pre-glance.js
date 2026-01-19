@@ -12,7 +12,7 @@
   }
 
   const settingsElement = createElementFn({
-    tag: 'div',
+    tag: 'template',
     classes: 'custom-settings',
     attrs: {
       'custom-modal': 'custom-settings',
