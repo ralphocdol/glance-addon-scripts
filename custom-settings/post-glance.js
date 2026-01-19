@@ -19,6 +19,17 @@
       const mainItems = main.querySelectorAll('div[data-content]');
       mainItems.forEach(c => c.style.display = c.classList.contains('show') ? 'block' : 'none');
 
+      const resetElementData = () => {
+        navItems.forEach(e => {
+          e.classList[e.dataset.target === 'about' ? 'add' : 'remove']('active');
+        });
+        mainItems.forEach(e => {
+          const isAbout = e.dataset.content === 'about';
+          e.style.display = isAbout ? 'block' : 'none';
+          e.classList[isAbout ? 'add' : 'remove']('show');
+        });
+      }
+
       let activeScriptCleanup = null;
       const triggerCleanup = () => {
         if (activeScriptCleanup) {
@@ -27,9 +38,11 @@
         }
       }
 
-      nav.addEventListener('click', e => {
+      function handler(e) {
         if (e.target.closest('div[role="button"].exit-btn')) {
+          e.currentTarget.removeEventListener('click', handler);
           triggerCleanup();
+          resetElementData();
           window.closeModal();
           return;
         }
@@ -39,13 +52,13 @@
 
         triggerCleanup();
 
-        const keyTarget = el.dataset.target;
         navItems.forEach(b => b.classList.toggle('active', b === el));
         mainItems.forEach(c => {
           c.classList.remove('show')
           setTimeout(() => c.style.display = 'none', 300);
         });
 
+        const keyTarget = el.dataset.target;
         const targetItem = Array.from(mainItems).find(c => c.dataset.content === keyTarget);
         if (!targetItem) return;
         setTimeout(() => {
@@ -59,7 +72,9 @@
         if (!scriptText) return;
         const scriptFn = new Function(`return (${scriptText})`)();
         activeScriptCleanup = scriptFn(keyTarget);
-      });
+      }
+
+      nav.addEventListener('click', handler);
     }, 100);
   }
 })();

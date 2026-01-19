@@ -17,6 +17,7 @@
     attrs: {
       'custom-modal': 'custom-settings',
       'modal-no-background': '',
+      'no-dismiss-on-escape-key': '',
       'width': 'medium',
       'height': 'medium',
     }

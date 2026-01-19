@@ -19,10 +19,13 @@
 }
 
 #modal.custom-settings .modal-body {
+  padding: 0;
   border: 1px solid var(--color-popover-border);
   border-radius: var(--border-radius);
   background: var(--color-widget-background);
-  padding: 0;
+}
+
+#modal.custom-settings .modal-body > div {
   display: flex;
   justify-content: space-between;
   width: 100%;
