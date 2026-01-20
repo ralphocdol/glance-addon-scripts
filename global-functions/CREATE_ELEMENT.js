@@ -1,6 +1,7 @@
 /*
  * Boilerplate for creating HTML element
  */
+ 'use strict';
 (() => {
   window.CREATE_ELEMENT = function ({
     tag = 'div',
