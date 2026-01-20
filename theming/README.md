@@ -15,6 +15,14 @@ This will replace Glance's default theming and will do more than just change col
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 - [Custom Settings](../custom-settings) *(required)* — where the configuration can be modified, `inherits dependency`.
 
+# How to load
+```html
+  <!-- Dependencies -->
+  
+  <link rel="preload" href="/assets/path-to-addon-script/theming/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/theming/script.js?v=1"></script>
+```
+
 # Get started
 Just enable `Override Theming` in `custom-settings` as shown in the preview above.
 
