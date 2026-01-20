@@ -7,6 +7,12 @@ Until then, this will have to do.
 ![preview1](preview/preview1.png)
 ![preview2](preview/preview2.png)
 
+# How to load
+```html
+  <link rel="preload" href="/assets/path-to-addon-script/modal/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/modal/script.js?v=1"></script>
+```
+
 # Usage
 ```html
 <div custom-modal>

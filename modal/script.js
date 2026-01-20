@@ -1,4 +1,5 @@
-(() => {
+'use strict';
+document.addEventListener('DOMContentLoaded', async () => {
   const ENUM_WIDTH = {
     SMALL: 'small',
     MEDIUM: 'medium',
@@ -152,4 +153,4 @@
   }
 
   window.launchModalByAttributeValue = launchModalByAttributeValue;
-})();
+});
