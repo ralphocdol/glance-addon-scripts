@@ -93,12 +93,12 @@
       ...configForOverride,
       { type: 'custom-html', contentHTML: `
         <div style="width: 100%;">
-          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/theming">
+          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/theming">
             Project Repository
           </a>
         </div>
         <div style="width: 100%;">
-          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/theming/README.md">
+          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/theming/README.md">
             Glance Scripts
           </a>
         </div>

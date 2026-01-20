@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 This loads images when they're in view and unloads them when they're not, freeing memory and reducing overall resource usage.
 Better used in pages with a plenty of thumbnails that you had to scroll the entire page like Glance's [Video widget](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#videos)'s `grid-cards` style.

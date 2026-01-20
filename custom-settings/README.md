@@ -1,6 +1,6 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
-Will be used for other scripts that may need a custom settings like [Glimpse](../glimpse).
+Will be used for other addon-scripts that may need a custom settings like [Glimpse](../glimpse).
 
 ![desktop](preview/preview1.png)
 ![mobile](preview/preview2.png)

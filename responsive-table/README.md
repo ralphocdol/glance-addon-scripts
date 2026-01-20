@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 ### Desktop
 ![preview1](preview/preview1.webp)

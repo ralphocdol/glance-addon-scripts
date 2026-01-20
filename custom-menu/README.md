@@ -1,6 +1,6 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
-This simply adds a custom menu to the navigation bar. And will be used for other micro-scripts in future that may have user interactable elements like [Glimpse](../glimpse).
+This simply adds a custom menu to the navigation bar. And will be used for other addon-scripts in future that may have user interactable elements like [Glimpse](../glimpse).
 
 ![1](preview/preview1.png)
 ![2](preview/preview2.png)

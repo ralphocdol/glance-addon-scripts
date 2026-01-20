@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
 
@@ -15,7 +15,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 - Popovers and similar elements do not work on searched widgets. The scripts have already been initialized and cannot be reinitialized unless you manually copy and reinitialize them with each search—which adds overhead.
 
 # File explanations
-_Read the main [README](../#micro-scripts) to learn how this should be `$include`d._
+_Read the main [README](../#addon-scripts) to learn how this should be `$include`d._
 - `pre-glance.js` - must be added after the DOM is loaded
 - `post-glance.js` - must be added after Glance is loaded
 - `config.js` - the user configuration

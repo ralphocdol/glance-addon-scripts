@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 Adding `<script></script>` in the `custom-api` template property or in the `html` source property does not work as of now, as the script will not load. Additionally, there is currently no way to automatically refresh widgets independently, with this, you can now load a script.
 
