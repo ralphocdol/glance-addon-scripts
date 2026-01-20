@@ -10,7 +10,7 @@
 > 
 > With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts.
 >
-> If you still need the `include` method, see the [include-method-script-loading](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading) branch, but just know that I will no longer be updating that.
+> If you still need the `$include` method, see the [include-method-script-loading](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading) branch, but just know that I will no longer be updating that.
 
 ## ⚠️ Disclaimer
 
@@ -25,21 +25,19 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 
 ### Addon Scripts
 
-| Script | Pre-DOM | Post-DOM/Pre-Glance | Post-Glance | Tested Version |
-| ------ | :--------: | :--------: | :--------: | :--------: |
-| [HTML Script Loader](html-script-loader/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Swipe Left and Right](swipe-left-and-right/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Modal](modal/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Tab Notification](tab-notification/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Glimpse](glimpse/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Responsive Table](responsive-table/README.md) | - | - | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Lazy Unloader](lazy-unloader/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Custom Menu](custom-menu/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Toast Message](toast-message/README.md) | - | :white_check_mark: | - | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Custom Settings](custom-settings/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Theming](theming/README.md) | - | :white_check_mark: | :white_check_mark: | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-
-*see [main.js](#inside-mainjs) for info regarding pre/post*
+| Script | Tested Version |
+| ------ | :--------: |
+| [HTML Script Loader](html-script-loader/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Swipe Left and Right](swipe-left-and-right/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Modal](modal/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Tab Notification](tab-notification/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Glimpse](glimpse/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Responsive Table](responsive-table/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Lazy Unloader](lazy-unloader/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Custom Menu](custom-menu/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Toast Message](toast-message/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Custom Settings](custom-settings/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Theming](theming/README.md) | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
