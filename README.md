@@ -8,9 +8,8 @@
 > [!NOTE]
 > **Rewrite Notice**
 > 
-> With how the scripts got larger hence the need to rename this repository, I will have to rewrite the method of loading the scripts too.
+> With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts.
 >
-> I'm going to use the traditional way of doing `<script defer src="/assets-path/script.js?v=1"></script>`, the cache busting will have to be handle manually by you.
 > If you still need the `include` method, see the [include-method-script-loading](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading) branch, but just know that I will no longer be updating that.
 
 ## ⚠️ Disclaimer
@@ -46,52 +45,32 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
 ### Loading Script
-Issues with loading the scripts are mostly because of the lack of [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) for JavaScript. To address this, we can use `$include` to load the script BUT doing so will not cache the script and will just append them directly to the DOM which may not be ideal.
-
-The [old method](https://github.com/ralphocdol/glance-js-loader?tab=readme-ov-file#modules) I used to use was using a `module.json` and have a script loader which was complicated. See https://github.com/ralphocdol/glance-js-loader/blob/main/assets/custom.js
+We will use the Glance's served assets path at `/assets/`.
 
 #### in the `document` config:
 ```yaml
 document:
-    head: |
-        <script>
-            $include: path-to-js/main.js
-        </script>
-```
-
-#### inside `main.js`
-```javascript
-// Pre-DOM
-// Add here for global-functions
-
-// Add here if the script doesn't need both DOM and Glance to be ready
-
-document.addEventListener('DOMContentLoaded', async () => {
-    console.info("DOM is ready...");
-
-    // Post-DOM/Pre-Glance
-    // Add here if the script needs the DOM to be loaded 
-    // but doesn't need the Glance to be ready
-
-    // example since 1 part of Glimpse can be loaded before Glance is ready
-    $include: glimpse/pre-glance.js
-
-    console.info("Waiting for Glance...");
-    while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
-    console.info("Glance is ready...");
+  head: | #html
+    <script async src="/assets/path-to-addon-script/global-functions/CREATE_ELEMENT.js?v=1"></script>
     
-    // Post-Glance
-    // Add here if the script needs the Glance to be ready
-    // example since 1 part of Glimpse can be loaded after Glance is ready
-    $include: glimpse/post-glance.js
-});
+    <link rel="preload" href="/assets/path-to-addon-script/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer src="/assets/path-to-addon-script/toast-message/script.js?v=1"></script>
 ```
-
-> [!NOTE]
->
-> Doing it this way will make the JS file follow the Glance's configuration template for the `document` `head`. Like how the a `${LOCAL_VARIABLE}` will be treated as an environment variable and needs to be escaped with `\` and become `\${LOCAL_VARIABLE}`. See https://github.com/glanceapp/glance/blob/v0.8.3/docs/configuration.md#environment-variables.
     
+#### Know issue
+Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) Issue. You, the user, will have to do things manually.
 
+Here are several method to do so:
+- By Force loading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically its just `Ctrl+Shift+R`
+- By updating all the instance of `?v=1` to `?v=2` and so on each addon-script update.
+- If you want to disable caching entirely and don't care about bandwidth or any other issue that may come with it (*careful, this is for those who knows what they are doing*). You can do so by disabling the caching in the Glance's `/assets/`. If you are using Nginx to proxy Glance, you can add this location block
+```nginx
+  location /assets/ {
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    add_header Pragma 'no-cache';
+    add_header Expires 0;
+  }
+```
 
 
 
