@@ -1,7 +1,17 @@
-## Rename Notice
-Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
+> [!NOTE]
+> **Rename Notice**
+> 
+> Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
+>
+> This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
 
-This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
+> [!NOTE]
+> **Rewrite Notice**
+> 
+> With how the scripts got larger hence the need to rename this repository, I will have to rewrite the method of loading the scripts too.
+>
+> I'm going to use the traditional way of doing `<script defer src="/assets-path/script.js?v=1"></script>`, the cache busting will have to be handle manually by you.
+> If you still need the `include` method, see the [include-method-script-loading](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading) branch, but just know that I will no longer be updating that.
 
 ## ⚠️ Disclaimer
 
@@ -81,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 >
 > Doing it this way will make the JS file follow the Glance's configuration template for the `document` `head`. Like how the a `${LOCAL_VARIABLE}` will be treated as an environment variable and needs to be escaped with `\` and become `\${LOCAL_VARIABLE}`. See https://github.com/glanceapp/glance/blob/v0.8.3/docs/configuration.md#environment-variables.
     
+
 
 
 
