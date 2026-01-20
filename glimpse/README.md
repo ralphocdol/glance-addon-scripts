@@ -27,7 +27,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration.
 
 ## Search Suggestion
-Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you’ll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
+Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you'll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
 
 For `searchSuggestEndpoint`, use the URL of your proxy endpoint. If you're using something like [Whoogle-Search](https://github.com/benbusby/whoogle-search), the endpoint would be `/autocomplete?q=`, so you would set it like this: `https://your-whoogle-domain.com/autocomplete?q=`.
 
@@ -38,7 +38,7 @@ Slugs are used instead of titles or page names since they can be [custom-defined
 
 > [!NOTE]
 >
-> This may lead to performance issues or unreliable behavior due to how it’s implemented.
+> This may lead to performance issues or unreliable behavior due to how it's implemented.
 >
 > The implementation uses `iframe`s to load additional pages. If widgets on those pages exceed the default timeout, their associated resources may not be released in a timely manner, leading to accumulated overhead—the more pages you include, the more it adds up.
 >
@@ -76,7 +76,7 @@ css-class: glimpsable-hidden
 ```
 
 ## Duplicate Handling
-If you reuse widgets with Glimpse support across multiple pages with `$include` that is within `pagesSlug`, they may appear more than once in your Glimpse results. To avoid duplicates, add this to your widget’s `css-class` property:
+If you reuse widgets with Glimpse support across multiple pages with `$include` that is within `pagesSlug`, they may appear more than once in your Glimpse results. To avoid duplicates, add this to your widget's `css-class` property:
 ```yml
 css-class: glimpse-unique-some-unique-name
 ```
