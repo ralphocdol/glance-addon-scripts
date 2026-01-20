@@ -72,12 +72,12 @@
         { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), colOffset: 1 },
         { type: 'custom-html', contentHTML: `
           <div style="width: 100%;">
-            <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/glimpse">
+            <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/glimpse">
               Project Repository
             </a>
           </div>
           <div style="width: 100%;">
-            <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/glimpse/README.md">
+            <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/glimpse/README.md">
               Project README.md
             </a>
           </div>

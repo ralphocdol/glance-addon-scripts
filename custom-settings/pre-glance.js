@@ -62,7 +62,7 @@
   contentElement.innerHTML = `
     <div data-content="about" class="show">
       <div style="display: block;">
-        See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/custom-settings" target="_blank">Repository</a>
+        See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/custom-settings" target="_blank">Repository</a>
       </div>
       <div style="display: block;">
         Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>

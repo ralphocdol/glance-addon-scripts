@@ -1,3 +1,8 @@
+# Rename Notice
+Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
+
+This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
+
 ## ⚠️ Disclaimer
 
 This repository provides an **unofficial add-on script** for [Glance](https://github.com/glanceapp/glance).  
@@ -9,7 +14,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 
 *Check the [Widget Repository](https://github.com/ralphocdol/glance-custom-widgets) that uses these scripts.*
 
-### Micro-Scripts
+### Addon Scripts
 
 | Script | Pre-DOM | Post-DOM/Pre-Glance | Post-Glance | Tested Version |
 | ------ | :--------: | :--------: | :--------: | :--------: |

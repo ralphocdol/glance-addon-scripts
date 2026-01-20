@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 No native modal in Glance at the moment though there was a request for it: https://github.com/glanceapp/glance/discussions/190
 

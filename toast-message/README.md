@@ -1,6 +1,6 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
-Adds a toast notification and is optionally used by some micro-scripts.
+Adds a toast notification and is optionally used by some addon-scripts.
 
 ![1](preview/preview1.png)
 ![2](preview/preview2.png)

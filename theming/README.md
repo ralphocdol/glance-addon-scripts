@@ -1,4 +1,4 @@
-[⇐ Micro-script list](../#micro-scripts)
+[⇐ addon-script list](../#addon-scripts)
 
 This will replace Glance's default theming and will do more than just change colors.
 
