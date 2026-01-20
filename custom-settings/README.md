@@ -1,21 +1,34 @@
 [⇐ addon-script list](../#addon-scripts)
 
-Will be used for other addon-scripts that may need a custom settings like [Glimpse](../glimpse).
+On its own it does nothing, this will be used for other addon-scripts that may need a custom settings like [Glimpse](../glimpse).
 
 ![desktop](preview/preview1.png)
 ![mobile](preview/preview2.png)
 
 # Dependency
-- [Toast Message](../toast-message) *(required)*
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
+- [Toast Message](../toast-message) *(required)*
 - [Custom Menu](../custom-menu) *(required)* — adds the launch button
 - [Modal](../modal) *(required)* - Used as the element to add contents to
 
+# How to load
+```html
+  <!-- CREATE_ELEMENT goes here -->
+  <!-- TOAST MESSAGE goes here -->
+  <!-- CUSTOM MENU goes here -->
+  <!-- MODAL goes here -->
+  
+  <link rel="preload" href="/assets/path-to-addon-script/custom-settings/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/custom-settings/script.js?v=1"></script>
+```
+
 # Usage
-Needs to be in the `post-glance.js` of your widget. See other widgets that used this as this can be complicated.
+Needs to be in loaded after the Glance is completely loaded. See other widgets that used this as this can be complicated.
 
 ## Structure
 ```javascript
+  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+  
   window.createCustomSettingsItem?.({
     nameHTML: 'Name of Settings',
     contentObject: [
@@ -28,8 +41,8 @@ Needs to be in the `post-glance.js` of your widget. See other widgets that used 
       // _KEY_ = the key of the element, mainly used for class of the parent element
       // 
       // Every function cannot access anything outside of window.createCustomSettingsItem
-      // 
-      // 
+       
+      
       
       setup: () => {
         // a custom function
