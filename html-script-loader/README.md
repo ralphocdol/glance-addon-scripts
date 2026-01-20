@@ -15,7 +15,7 @@ Adding `<script></script>` in the `custom-api` template property or in the `html
 The template should have the attribute `html-script`.
 
 Add a script like so below your `custom-api`'s template property or `html`'s source property.
-```javascript
+```html
 <script html-script>
   // your script should be in here
 </script>
