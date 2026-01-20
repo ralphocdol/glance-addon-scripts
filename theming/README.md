@@ -19,7 +19,7 @@ This will replace Glance's default theming and will do more than just change col
 ```html
   <!-- Dependencies -->
   
-  <link rel="preload" href="/assets/path-to-addon-script/theming/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="stylesheet" href="/assets/scripts/theming/style.css?v=1">
   <script defer src="/assets/path-to-addon-script/theming/script.js?v=1"></script>
 ```
 
