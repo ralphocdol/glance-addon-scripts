@@ -63,18 +63,32 @@
   const bodyOverflowState = document.body.style.overflow;
   let closeBtn = null;
 
+  const cleanUpModalClose = [];
+
   document.addEventListener('click', (e) => {
     openModal(e.target.closest('[custom-modal]'));
     if (e.target === closeBtn || (modal.hasAttribute('dismiss-on-outside-click') && e.target === modal)) {
-      closeModal();
+      closeModal(cleanUpModalClose);
     }
   });
 
   document.addEventListener('keydown', (e) => {
-    if (modal.classList.contains('show') && e.key === 'Escape') {
-      closeModal();
+    if (modal.classList.contains('show') && e.key === 'Escape' && !modal.hasAttribute('no-dismiss-on-escape-key')) {
+      closeModal(cleanUpModalClose);
     }
   });
+
+  const attachEl = (target, source, attribute) => {
+    const placeholder = document.createComment('');
+    target.replaceWith(placeholder);
+    source.replaceChildren(target);
+    target.removeAttribute(attribute);
+    cleanUpModalClose.push(() => {
+      target.setAttribute(attribute, '');
+      placeholder.replaceWith(target);
+      placeholder.remove();
+    });
+  }
 
   function openModal(targetElement) {
     if (!targetElement) return;
@@ -84,35 +98,16 @@
     const bodyElement = targetElement.querySelector('[modal-body]');
     const footerElement = targetElement.querySelector('[modal-footer]');
 
-    if (headerElement) {
-      modalHeaderContent.innerHTML = headerElement.innerHTML.trim();
-      modalHeaderContent.classList.add(...headerElement.classList);
-      if (headerElement.hasAttribute('style')) modalHeader.style.cssText = headerElement.style.cssText;
-    }
-
     modalHeader.appendChild(closeBtnElement);
     closeBtn = modal.querySelector('.close')
 
-    if (bodyElement) {
-      modalBody.innerHTML = bodyElement.innerHTML.trim();
-      modalBody.classList.add(...bodyElement.classList);
-      if (bodyElement.hasAttribute('style')) modalBody.style.cssText = bodyElement.style.cssText;
-    }
+    if (headerElement) attachEl(headerElement, modalHeaderContent, 'modal-header');
+    if (bodyElement) attachEl(bodyElement, modalBody, 'modal-body');
+    if (footerElement) attachEl(footerElement, modalFooter, 'modal-footer');
 
-    if (footerElement) {
-      modalFooter.innerHTML = footerElement.innerHTML.trim();
-      modalFooter.classList.add(...footerElement.classList);
-      if (footerElement.hasAttribute('style')) modalFooter.style.cssText = footerElement.style.cssText;
-    }
-
-    if (targetElement.hasAttribute('dismiss-on-outside-click')) {
-      modal.setAttribute('dismiss-on-outside-click', '');
-    }
-
-    if (targetElement.hasAttribute('modal-no-background')) {
-      modal.setAttribute('modal-no-background', '')
-    }
-
+    if (targetElement.hasAttribute('dismiss-on-outside-click')) modal.setAttribute('dismiss-on-outside-click', '');
+    if (targetElement.hasAttribute('no-dismiss-on-escape-key')) modal.setAttribute('no-dismiss-on-escape-key', '');
+    if (targetElement.hasAttribute('modal-no-background')) modal.setAttribute('modal-no-background', '');
     if (targetElement.className) modal.classList.add(targetElement.className);
 
     modalContainer.classList.remove(
@@ -134,9 +129,10 @@
       modal.classList.add('show', 'fade-in');
     }, 10);
     document.body.style.overflow = 'hidden';
+    window.closeModal = () => closeModal(cleanUpModalClose);
   }
 
-  function closeModal() {
+  function closeModal(cleanUp) {
     const targetModal = document.querySelector('#modal');
     const targetModalBody = targetModal.querySelector('.modal-body');
     targetModal.hidden = true;
@@ -145,6 +141,10 @@
     targetModalBody.innerHTML = '';
     document.body.style.overflow = bodyOverflowState;
     initializeModalProperties(targetModal);
+    setTimeout(() => {
+      for (const fn of cleanUp) fn();
+      cleanUp.length = 0;
+    }, 10);
   }
 
   function launchModalByAttributeValue(targetAttribute) {
@@ -152,5 +152,4 @@
   }
 
   window.launchModalByAttributeValue = launchModalByAttributeValue;
-  window.closeModal = closeModal;
 })();

@@ -23,8 +23,10 @@
   border-radius: var(--border-radius);
   background: var(--color-widget-background);
   padding: 0;
+}
+
+#modal.custom-settings .modal-body > div {
   display: flex;
-  justify-content: space-between;
   width: 100%;
 }
 
@@ -145,10 +147,14 @@
 }
 
 #modal.custom-settings button.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 5px 10px;
   background: var(--color-primary);
   color: var(--color-background);
   border-radius: var(--border-radius);
+  word-spacing: -0.15em;
 }
 
 #modal.custom-settings button.btn.btn-float {

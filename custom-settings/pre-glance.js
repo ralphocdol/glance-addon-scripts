@@ -17,6 +17,7 @@
     attrs: {
       'custom-modal': 'custom-settings',
       'modal-no-background': '',
+      'no-dismiss-on-escape-key': '',
       'width': 'medium',
       'height': 'medium',
     }
@@ -69,15 +70,7 @@
     </div>`,
   settingsElementBody.appendChild(contentElement);
 
-  const svgSaveElement = createElementFn({
-    tag: 'svg',
-    style: { display: 'none' },
-    htmlContent: `
-      <symbol id="svg-icon-save" viewBox="0 0 24 24">
-        <path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zM12 19a3 3 0 1 1 0-6zM6 5h9v4H6z"/>
-      </symbol>`
-  });
-  settingsElementBody.appendChild(svgSaveElement);
+  const btnSaveSvg = `<svg fill="currentColor" viewBox="0 0 24 24"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M21,20V8.414a1,1,0,0,0-.293-.707L16.293,3.293A1,1,0,0,0,15.586,3H4A1,1,0,0,0,3,4V20a1,1,0,0,0,1,1H20A1,1,0,0,0,21,20ZM9,8h4a1,1,0,0,1,0,2H9A1,1,0,0,1,9,8Zm7,11H8V15a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1Z"></path></g></svg>`;
 
   document.body.appendChild(settingsElement);
 
@@ -195,7 +188,7 @@
         tag: 'button',
         classes: 'btn btn-float',
         datasets: { click: '', key: widget.key },
-        htmlContent: widget?.icon || '<svg><use href="#svg-icon-save"></use></svg>',
+        htmlContent: widget?.icon || btnSaveSvg,
       });
 
       switch (widget.type){
@@ -312,7 +305,7 @@
           widget.moreButtons && widget.moreButtons.forEach(b => {
             const moreButtons = createElementFn({
               tag: 'button',
-              classes: 'flex btn',
+              classes: 'btn',
               attrs: { title: b.tooltip },
               props: { disabled: b.disabled || false },
               datasets: { click: '', key: b.key },
@@ -323,10 +316,10 @@
 
           const btnEl = createElementFn({
             tag: 'button',
-            classes: 'flex btn',
+            classes: 'btn',
             props: { disabled: widget.disabled || false },
             datasets: { click: '', key: widget.key },
-            htmlContent: widget?.customButton || `<svg><use href="#svg-icon-save"></use></svg> SAVE`,
+            htmlContent: widget?.customButton || `${btnSaveSvg} SAVE`,
           });
           btnContainer.appendChild(btnEl);
 
