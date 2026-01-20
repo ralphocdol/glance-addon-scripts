@@ -1,8 +1,3 @@
-## Rename Notice
-Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
-
-This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
-
 ## ⚠️ Disclaimer
 
 This repository provides an **unofficial add-on script** for [Glance](https://github.com/glanceapp/glance).  
@@ -81,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 >
 > Doing it this way will make the JS file follow the Glance's configuration template for the `document` `head`. Like how the a `${LOCAL_VARIABLE}` will be treated as an environment variable and needs to be escaped with `\` and become `\${LOCAL_VARIABLE}`. See https://github.com/glanceapp/glance/blob/v0.8.3/docs/configuration.md#environment-variables.
     
+
 
 
 
