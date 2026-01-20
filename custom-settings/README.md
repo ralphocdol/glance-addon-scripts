@@ -13,10 +13,7 @@ On its own it does nothing, this will be used for other addon-scripts that may n
 
 # How to load
 ```html
-  <!-- CREATE_ELEMENT goes here -->
-  <!-- TOAST MESSAGE goes here -->
-  <!-- CUSTOM MENU goes here -->
-  <!-- MODAL goes here -->
+  <!-- Dependencies goes here -->
   
   <link rel="preload" href="/assets/path-to-addon-script/custom-settings/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <script defer src="/assets/path-to-addon-script/custom-settings/script.js?v=1"></script>
