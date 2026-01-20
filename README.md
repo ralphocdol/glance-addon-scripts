@@ -8,9 +8,11 @@
 > [!NOTE]
 > **Rewrite Notice**
 > 
-> With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts.
+> With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts. Previously with the `$include`, everything is loaded to the DOM and not *cached* by default.
 >
-> If you still need the `$include` method, see the [include-method-script-loading](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading) branch, but just know that I will no longer be updating that.
+> If you still need the `$include` method:
+> - see the [include-method-script-loading branch](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading), but just know that I will no longer be updating that.
+> - or check [below](#still-want-to-use-include).
 
 ## ⚠️ Disclaimer
 
@@ -54,7 +56,8 @@ document:
     <link rel="preload" href="/assets/path-to-addon-script/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <script defer src="/assets/path-to-addon-script/toast-message/script.js?v=1"></script>
 ```
-If for some reason you really want to use the `$include` method then:
+#### still want to use $include?
+If for some reason you really want to use the `$include` method, I will not be supporting it but you should be able to:
 ```yaml
   head: | #gohtml
     <script>
@@ -80,6 +83,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
