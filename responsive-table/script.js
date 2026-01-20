@@ -1,4 +1,7 @@
-(() => {
+'use strict';
+document.addEventListener('DOMContentLoaded', async () => {
+  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+
   // Sort stuff
   const colSorted = [];
   const colSortedDirection = [];
@@ -429,4 +432,4 @@
     container.appendChild(nextBtn);
   }
   // #endregion-----------------------------------------------------------------------------------
-})();
+});

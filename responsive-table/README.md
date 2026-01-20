@@ -1,10 +1,13 @@
 [⇐ addon-script list](../#addon-scripts)
 
-### Desktop
 ![preview1](preview/preview1.webp)
-
-### Mobile
 ![preview2](preview/preview2.webp)
+
+# How to load
+```html
+  <link rel="preload" href="/assets/path-to-addon-script/responsive-table/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/responsive-table/script.js?v=1"></script>
+```
 
 # Limitations
 This is a client-only implementation—**no server-side support**—because of how Glance is structured and how scripts are delivered.
