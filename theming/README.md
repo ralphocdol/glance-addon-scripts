@@ -29,7 +29,7 @@ Just enable `Override Theming` in `custom-settings` as shown in the preview abov
 To get started, just copy the [sample-themes.json](sample-themes.json) to your `assets-path` and enter that path in the `Load Theme Config From Path/URL`.
 
 # Broken after update?
-Clear your local configuration in `localStorage` or just uncomment this line of code in your [pre-glance.js](pre-glance.js).
+Clear your local configuration in `localStorage` or just uncomment this line of code.
 ```js
   localStorage.setItem(configKey, '');
 ```

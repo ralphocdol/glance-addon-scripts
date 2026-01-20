@@ -27,7 +27,7 @@ By default, this is setup to be applied manually, simply add the `css-class`:
   # ...
 ```
 
-If you want to apply this globally, just remove every instance of `.lazy-unloader-parent` class in `style.css` and modify the `post-glance.js` to
+If you want to apply this globally, just remove every instance of `.lazy-unloader-parent` class in `style.css` and modify the className inside `script.js`
 ```js
 const className = 'lazy-unloader-parent';
 // to
