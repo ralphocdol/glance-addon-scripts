@@ -9,18 +9,25 @@ This simply adds a custom menu to the navigation bar. And will be used for other
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 - [Toast Message](../toast-message) *(optional)*
 
+# How to load
+```html
+  <!-- CREATE_ELEMENT goes here -->
+  <!-- TOAST MESSAGE goes here -->
+  
+  <link rel="preload" href="/assets/path-to-addon-script/custom-menu/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/custom-menu/script.js?v=1"></script>
+```
+
 # Usage
 ```js
 window.createCustomMenuItemElement?.({
   className: 'class-of-the-menu',
   tooltip: 'Tooltip on icon hover',
   icon: '', // <img> or <svg>
-  actionFn: () => {} //on icon click function
+  actionFn: () => {}, //on icon click function
+  // order: 9, // By default, items are sorted alphabetically by className. Menu with `order` will be prioritized and sorted first.
 });
 ```
-
-# Note
-Although there is a `setTimeout` added for delay, it's still a good idea to load the `post-glance.js` to the bottom.
 
 # Credits
 Vectors and icons by [SVG Repo](https://www.svgrepo.com).
