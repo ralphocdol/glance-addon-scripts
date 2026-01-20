@@ -6,11 +6,16 @@ Adding `<script></script>` in the `custom-api` template property or in the `html
 >
 > Using API queries like `fetch` with API keys within the script is possible but it WILL expose them in the browser.
 
+# How to load
+```html
+  <script defer src="/assets/path-to-addon-script/html-script-loader/script.js?v=1"></script>
+```
+
 # Usage
 The template should have the attribute `html-script`.
 
 Add a script like so below your `custom-api`'s template property or `html`'s source property.
-```javascript
+```html
 <script html-script>
   // your script should be in here
 </script>

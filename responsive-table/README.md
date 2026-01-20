@@ -1,10 +1,13 @@
 [⇐ addon-script list](../#addon-scripts)
 
-### Desktop
 ![preview1](preview/preview1.webp)
-
-### Mobile
 ![preview2](preview/preview2.webp)
+
+# How to load
+```html
+  <link rel="preload" href="/assets/path-to-addon-script/responsive-table/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/responsive-table/script.js?v=1"></script>
+```
 
 # Limitations
 This is a client-only implementation—**no server-side support**—because of how Glance is structured and how scripts are delivered.
@@ -13,7 +16,7 @@ This is a client-only implementation—**no server-side support**—because of h
 >
 > Large datasets are **strongly discouraged**. All data is initially rendered into the DOM before this Script removes and stores it in memory.
 >
-> Pagination limits what’s shown, but the full dataset remains in your browser. This can lead to major slowdowns or even browser crashes.
+> Pagination limits what's shown, but the full dataset remains in your browser. This can lead to major slowdowns or even browser crashes.
 >
 > Performance is acceptable with up to ~50–100 entries on most systems. Beyond that, behavior may vary depending on device and data complexity.
 
@@ -47,7 +50,7 @@ A lightweight component for rendering responsive, paginated data tables using cu
 
     **Attributes (per column)**
     - `sortable`: Enables sorting on the column.
-    - `data-width`: Defines the column’s proportional width (e.g., `3` for `3fr`).
+    - `data-width`: Defines the column's proportional width (e.g., `3` for `3fr`).
     - `sort-default-asc` / `sort-default-desc`: Sets the default sort order to ascending or descending, respectively. These are mutually exclusive—only one of them should be used. If both are present, only the first column with either attribute takes effect.
 
 - `table-body`: Contains the list of data rows.
@@ -57,7 +60,7 @@ A lightweight component for rendering responsive, paginated data tables using cu
 
         **Attributes (per cell)**
         - `data-show-on-mobile`: By default, every cell is collapsed on mobile. Set this to make them visible instead.
-        - `data-as-mobile-title`: Marks this cell as the row’s title on mobile views.
+        - `data-as-mobile-title`: Marks this cell as the row's title on mobile views.
         - `data-as-collapsed-column`: Moves this cell into a collapsible section on desktop views.
         - `data-to-sort`: Useful when a cell contains complex DOM that interferes with normal sorting behavior.
 

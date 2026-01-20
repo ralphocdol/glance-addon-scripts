@@ -1,4 +1,7 @@
-(() => {
+'use strict';
+document.addEventListener('DOMContentLoaded', async () => {
+  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+
   const tabNotificationClass = 'tab-notification';
   const tabNotificationCountAttribute = `${tabNotificationClass}-count`;
   const tabNotificationErrorAttribute = `${tabNotificationClass}-error`
@@ -46,4 +49,4 @@
     document.head.appendChild(style);
     e.remove();
   });
-})();
+});

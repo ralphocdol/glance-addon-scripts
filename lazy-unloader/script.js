@@ -1,4 +1,7 @@
-(() => {
+'use strict';
+document.addEventListener('DOMContentLoaded', async () => {
+  const className = 'lazy-unloader-parent';
+
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       const img = e.target;
@@ -11,7 +14,7 @@
       }
     });
   });
-  
+
   window.lazyUnloader = obs;
   window.lazyUnloaderInit = img => {
     if (img.src) {
@@ -20,4 +23,8 @@
     }
     obs.observe(img);
   }
-})();
+
+  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+
+  document.querySelectorAll(className ? `.${className} img` : 'img').forEach(window.lazyUnloaderInit);
+});

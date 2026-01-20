@@ -6,6 +6,11 @@
 
 This is mainly for `custom-api` and/or "probably" `extension` too. This does not work on native Glance widget.
 
+# How to load
+```html
+  <script defer src="/assets/path-to-addon-script/tab-notification/script.js?v=1"></script>
+```
+
 # Usage
 1. Add this the template config
     ```html

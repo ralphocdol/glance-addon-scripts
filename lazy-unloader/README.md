@@ -12,6 +12,12 @@ Example below is using the [youtube-embedded-player](https://github.com/glanceap
 >
 > One way to check is by opening DevTools with F12 > Select the `Network` tab > Select `Images` then reload/refresh the page. In a Chrome-based browser, the `Size` tab should show `(memory cache)` and in Firefox, the `Transferred` tab should show `cached`. If it still shows the file size (e.g. 51.32 kB) even after refreshing the page again, there's a good chance it is NOT cached and you should not use this script on that.
 
+# How to load
+```html
+  <link rel="preload" href="/assets/path-to-addon-script/lazy-unloader/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/lazy-unloader/script.js?v=1"></script>
+```
+
 # Usage
 By default, this is setup to be applied manually, simply add the `css-class`:
 
@@ -21,7 +27,7 @@ By default, this is setup to be applied manually, simply add the `css-class`:
   # ...
 ```
 
-If you want to apply this globally, just remove every instance of `.lazy-unloader-parent` class in `style.css` and modify the `post-glance.js` to
+If you want to apply this globally, just remove every instance of `.lazy-unloader-parent` class in `style.css` and modify the className inside `script.js`
 ```js
 const className = 'lazy-unloader-parent';
 // to

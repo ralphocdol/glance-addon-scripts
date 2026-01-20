@@ -15,13 +15,21 @@ This will replace Glance's default theming and will do more than just change col
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 - [Custom Settings](../custom-settings) *(required)* — where the configuration can be modified, `inherits dependency`.
 
+# How to load
+```html
+  <!-- Dependencies -->
+  
+  <link rel="preload" href="/assets/path-to-addon-script/theming/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/theming/script.js?v=1"></script>
+```
+
 # Get started
 Just enable `Override Theming` in `custom-settings` as shown in the preview above.
 
 To get started, just copy the [sample-themes.json](sample-themes.json) to your `assets-path` and enter that path in the `Load Theme Config From Path/URL`.
 
 # Broken after update?
-Clear your local configuration in `localStorage` or just uncomment this line of code in your [pre-glance.js](pre-glance.js).
+Clear your local configuration in `localStorage` or just uncomment this line of code.
 ```js
   localStorage.setItem(configKey, '');
 ```

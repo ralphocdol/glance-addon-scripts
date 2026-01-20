@@ -1,4 +1,5 @@
-(() => {
+'use strict';
+document.addEventListener('DOMContentLoaded', async () => {
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
@@ -40,10 +41,10 @@
     let properties = `data-popover-position="below"`;
     if (mobile) properties = `data-popover-position="above" data-popover-hide-delay="100" data-popover-anchor=".custom-menu-button" data-popover-trigger="click"`;
     const newElement = document.createElement('div');
-    newElement.style.pointerEvents = 'none';
+    newElement.style.cursor = 'progress';
     newElement.classList.add('custom-menu');
     newElement.innerHTML = `
-      <div class="custom-menu-popover" data-popover-type="html" data-popover-show-delay="0" ${properties}>
+      <div class="custom-menu-popover" style="pointer-events: none;" data-popover-type="html" data-popover-show-delay="0" ${properties}>
         <div data-popover-html>
           <div class="custom-menu-items"></div>
         </div>
@@ -57,32 +58,67 @@
     return newElement;
   }
 
-  function createCustomMenuItemElement({ className, tooltip, icon, actionFn, status }) {
+  let menuList = [];
+  function createCustomMenuItemElement(params) {
+    const { className, tooltip, icon, actionFn } = params
     if (!className || !tooltip || !icon || !actionFn) {
       window.showToast?.('Missing required parameters, see logs.', { title: 'CUSTOM MENU', type: 'error' })
       console.error('Missing required parameters:', { className, tooltip, icon, actionFn });
       return;
     }
 
-    const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
-    const customMenuItems = document.querySelectorAll('.custom-menu-items');
-    if (!customMenuItems) return;
-
-    customMenuItems.forEach(menu => {
-      const customItemEl = createElementFn({ classes: 'custom-menu-item' });
-      const navElement = createElementFn({
-        classes: `${className}${newStatus}`,
-        props: { title: tooltip },
-        htmlContent: icon,
-      });
-      customItemEl.appendChild(navElement);
-      customItemEl.addEventListener('click', actionFn);
-      menu.appendChild(customItemEl);
-
-      const columns = Array.from(menu.querySelectorAll('.custom-menu-item')).length
-      menu.style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns);
-    });
+    menuList.push(params);
   }
 
   window.createCustomMenuItemElement = createCustomMenuItemElement;
-})();
+
+  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+
+  setTimeout(() => {
+    let customMenuItems = document.querySelectorAll('.custom-menu-items');
+    if (!customMenuItems) return;
+
+    menuList
+      .sort((a, b) => (Number.isFinite(a.order) ? a.order : Infinity) - (Number.isFinite(b.order) ? b.order : Infinity) || a.className.localeCompare(b.className))
+      .forEach(({ className, tooltip, icon, actionFn, status }) => {
+        const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
+
+        customMenuItems.forEach(menu => {
+          const customItemEl = createElementFn({ classes: 'custom-menu-item' });
+          const navElement = createElementFn({
+            classes: `${className}${newStatus}`,
+            props: { title: tooltip },
+            htmlContent: icon,
+          });
+          customItemEl.appendChild(navElement);
+          customItemEl.addEventListener('click', actionFn);
+          menu.appendChild(customItemEl);
+
+          const columns = Array.from(menu.querySelectorAll('.custom-menu-item')).length
+          menu.style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns);
+        });
+      });
+
+
+    let hasColumns = false;
+    customMenuItems.forEach(menu => {
+      let columns = menu.style.getPropertyValue('--custom-menu-columns');
+      if (columns === '' || isNaN(columns)) columns = 0;
+      if (!hasColumns) hasColumns = Number(columns) > 0;
+      Object.assign(menu.closest('.custom-menu').style, {
+        cursor: 'pointer',
+        display: hasColumns ? 'flex' : 'none'
+      });
+      Object.assign(menu.closest('.custom-menu-popover').style, {
+        pointerEvents: '',
+      });
+    });
+
+    const glanceNativeToTopEl = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
+    if (hasColumns) {
+      glanceNativeToTopEl.remove();
+    } else {
+      glanceNativeToTopEl.style.display = 'flex';
+    }
+  }, 500);
+});
