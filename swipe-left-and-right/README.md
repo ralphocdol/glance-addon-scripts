@@ -1,3 +1,8 @@
 [⇐ addon-script list](../#addon-scripts)
 
 Temporary, change until https://github.com/glanceapp/glance/pull/684 is accepted and merged. See that PR for more details.
+
+# How to load
+```html
+  <script defer src="/assets/path-to-addon-script/swipe-left-and-right/script.js?v=1"></script>
+```
