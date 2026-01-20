@@ -9,37 +9,22 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 - [Custom Menu](../custom-menu) *(optional)* — adds the launch button inside the custom menu instead
 - [Custom Settings](../custom-settings) *(optional)* — adds a custom-settings, must have the `Custom Menu` to work. Your modified configurations are ONLY available in wherever browser you modified them to, it does NOT have a sync functionality. This utilizes your browser's `localStorage` and will based its configuration by default from [config.js](config.js).
 
+# How to load
+```html
+  <!-- Dependencies goes here -->
+  
+  <link rel="preload" href="/assets/path-to-addon-script/glimpse/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/path-to-addon-script/glimpse/script.js?v=1"></script>
+```
+
 # Limitations
 - Only the Docker, Monitor, and recurring HTML structure widgets like RSS are supported. 
 - If you have a `custom-api`, `extension`, or `html` widget that uses the same HTML structure, you can simply add the property `css-class: glimpsable`.
 - Popovers and similar elements do not work on searched widgets. The scripts have already been initialized and cannot be reinitialized unless you manually copy and reinitialize them with each search—which adds overhead.
 
-# File explanations
-_Read the main [README](../#addon-scripts) to learn how this should be `$include`d._
-- `pre-glance.js` - must be added after the DOM is loaded
-- `post-glance.js` - must be added after Glance is loaded
-- `config.js` - the user configuration
-- `spawn.js` - a shared function that launches Glimpse
-- `style.css` - the...uhm... css, you have to load this with either the [default method](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#custom-css-file) or if you already use the default then you can import it inside:
-    ```css
-    @import url('/assets/glimpse.css');
-    ```
-
 # Configurations
 ## Setting up
-Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration except for `newTab`. Here's a quick configuration to get you started:
-```javascript
-  const glanceSearch = { 
-    searchUrl: 'https://duckduckgo.com/?q={QUERY}',
-    autofocus: false,
-    target: '_blank',
-    placeholder: 'Type here to search…',
-    bangs: [
-      { title: 'Google', shortcut: '!g', url: 'https://www.google.com/search?q={QUERY}' },
-      { title: 'Bing', shortcut: '!b', url: 'https://www.bing.com/search?q={QUERY}' },
-    ]
-  };
-```
+Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration.
 
 ## Search Suggestion
 Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you’ll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
