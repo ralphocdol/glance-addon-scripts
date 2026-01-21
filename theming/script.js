@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           '--background-image-url-body': isValid ? `url(${themeProperties.backgroundImage})` : 'var(--color-background)'
         });
         document.body.classList.add('bg-img-visible');
-      }, 1000);
+      }, 500);
     }
 
     const themeProperties = {
@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             )
             .map(o => {
               const selected = o.themeName === configThemeProperties.themeName;
-              return new Option(o.themeName, o.themeName, selected, selected);
+              return new Option(`${(o.isLight ? '☀️' : '🌙')} ${o.themeName}`, o.themeName, selected, selected);
             })
           || []);
           getKeyedElement('is-default').checked = configThemeProperties.isDefault;

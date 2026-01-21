@@ -24,7 +24,7 @@
   opacity: 0;
   transition:
     background-color .5s ease,
-    opacity 1s ease-in,
+    opacity .5s ease-in,
     color .5s ease;
 }
 
