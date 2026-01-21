@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dataPageLimit = [];
   const isPaginate = [];
 
+  let paginationBtnControllers = [];
+
   document.querySelectorAll('[responsive-table]').forEach((t, t_index) => {
     const header = t.querySelector('[table-header]');
     if (!header) return console.error('Missing Required: table-header');
@@ -288,10 +290,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     label.htmlFor = 'responsive-table-mobile-sort-select-' + t_index;
 
     let locked = false; // Just need to prevent spam glitches -_-
-    const directionBtn = createMobileSortBtn(colSortedDirection[t_index], t_index, e => {
+    const directionBtn = createMobileSortBtn(colSortedDirection[t_index], t_index, () => {
       if (locked) return;
       locked = true;
-      const target = e.currentTarget;
       const direction = colSortedDirection[t_index] === 'asc' ? 'desc' : 'asc';
       colSortedDirection[t_index] = direction;
       directionBtn.dataset.sortDirection = direction;
@@ -368,15 +369,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (totalPages <= 1) return;
 
+    paginationBtnControllers[t_index]?.abort();
+    paginationBtnControllers[t_index] = new AbortController();
+
+    const btnHandler = e => {
+      if (!e.target.classList.contains('page-btn')) return;
+      const btn = e.target.textContent;
+      if (!isNaN(btn)) dataPage[t_index] = Number(btn);
+      else if (btn === '←' && current > 1) dataPage[t_index]--;
+      else if (btn === '→' && current < totalPages) dataPage[t_index]++;
+      else return;
+      updatePage({ t, t_index, header, headerCells, body, template });
+    }
+    container.addEventListener('click', btnHandler, { signal: paginationBtnControllers[t_index].signal });
+
     function createBtn(page, isActive = false) {
       const btn = document.createElement('button');
       btn.textContent = page;
       btn.className = 'page-btn';
       if (isActive) btn.classList.add('active');
-      btn.addEventListener('click', () => {
-        dataPage[t_index] = page;
-        updatePage({ t, t_index, header, headerCells, body, template });
-      });
       return btn;
     }
 
@@ -392,26 +403,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     backBtn.textContent = '←';
     backBtn.className = 'page-btn';
     backBtn.disabled = current === 1;
-    backBtn.addEventListener('click', () => {
-      if (current > 1) {
-        dataPage[t_index]--;
-        updatePage({ t, t_index, header, headerCells, body, template });
-      }
-    });
     container.appendChild(backBtn);
 
     // Page Buttons
     const pages = [];
 
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else if (current <= 4) {
-      pages.push(1, 2, 3, 4, 5, '...', totalPages);
-    } else if (current >= totalPages - 3) {
-      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-    } else {
-      pages.push(1, '...', current - 1, current, current + 1, '...', totalPages);
-    }
+    if (totalPages <= 7) for (let i = 1; i <= totalPages; i++) pages.push(i);
+    else if (current <= 4) pages.push(1, 2, 3, 4, 5, '...', totalPages);
+    else if (current >= totalPages - 3) pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    else pages.push(1, '...', current - 1, current, current + 1, '...', totalPages);
 
     for (const p of pages) {
       if (p === '...') addEllipsis();
@@ -423,12 +423,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     nextBtn.textContent = '→';
     nextBtn.className = 'page-btn';
     nextBtn.disabled = current === totalPages;
-    nextBtn.addEventListener('click', () => {
-      if (current < totalPages) {
-        dataPage[t_index]++;
-        updatePage({ t, t_index, header, headerCells, body, template });
-      }
-    });
     container.appendChild(nextBtn);
   }
   // #endregion-----------------------------------------------------------------------------------
