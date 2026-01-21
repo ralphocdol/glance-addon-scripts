@@ -1,0 +1,40 @@
+.popover-content:has(.nav-page-links) > div > div.nav-page-links  {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.popover-content:has(.nav-page-links) .nav-item {
+  padding: .5rem 1rem;
+  margin: .1rem 0;
+  border-bottom: unset;
+  transition:
+    background-color .2s ease,
+    border-radius .2s ease;
+}
+
+.popover-content:has(.nav-page-links) .nav-item.nav-item-expand-themes .nav-item-text {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.popover-content:has(.nav-page-links) .nav-item.nav-item-expand-themes:hover {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  border-radius: var(--border-radius);
+}
+
+.popover-content:has(.nav-page-links) .nav-item:not(.nav-item-current, .nav-item-expand-themes):hover {
+  border-bottom-color: unset;
+  color: var(--color-primary);
+}
+
+.popover-content:has(.nav-page-links) .nav-item.nav-item-current {
+  border-bottom-color: unset;
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  border-radius: var(--border-radius);
+}
