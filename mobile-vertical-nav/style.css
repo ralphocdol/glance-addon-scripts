@@ -26,8 +26,7 @@
 }
 
 .popover-content:has(.nav-page-links) .nav-item.nav-item-expand-themes:hover {
-  background-color: var(--color-primary);
-  color: var(--color-background);
+  color: var(--color-primary);
   border-radius: var(--border-radius);
 }
 
