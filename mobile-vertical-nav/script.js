@@ -35,11 +35,20 @@
   `;
 
   mobilePageLinks.remove();
-  const mobileNav = document.querySelector('.mobile-navigation')
+
+  const mobileNav = document.querySelector('.mobile-navigation');
+  const expandOffset = 70;
   hamburgerMenu.querySelector('.nav-item-expand-themes').addEventListener('click', e => {
     e.preventDefault();
+    const popoverContainer = document.querySelector('.popover-container:has(.nav-page-links)');
     const targetDataset = e.currentTarget.dataset;
     targetDataset.expanded = targetDataset.expanded === 'true' ? 'false' : 'true';
-    mobileNav.style.transform = targetDataset.expanded === 'true' ? 'translateY(0)' : '';
+
+    const targetExpanded = targetDataset.expanded === 'true';
+    mobileNav.style.transform = targetExpanded ? 'translateY(0)' : '';
+
+    const currentTop = parseFloat(getComputedStyle(popoverContainer).top) || 409.167;
+    const newTop = `${targetExpanded ? currentTop - expandOffset : currentTop + expandOffset}px`;
+    popoverContainer.style.top = newTop;
   });
 })();

@@ -1,3 +1,7 @@
+.popover-container:has(.nav-page-links) {
+  transition: top .3s;
+}
+
 .popover-content:has(.nav-page-links) > div > div.nav-page-links  {
   display: flex;
   flex-direction: column;
