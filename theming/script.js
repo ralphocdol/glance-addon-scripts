@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const configKey = 'glance-theme-storage';
   // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
   const { themeProperties, setAll } = newThemePropertiesManager();
+  if (!localStorage.getItem(configKey)) localStorage.setItem(configKey, JSON.stringify({ themeProperties }));
   const glanceThemeConfig = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : { themeProperties };
 
   if (glanceThemeConfig?.overrideTheming) followSystemSchemeFn(glanceThemeConfig?.followSystemScheme);
