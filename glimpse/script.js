@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const closeBtnElement = document.createElement('span');
   closeBtnElement.className = 'close';
-  closeBtnElement.addEventListener('click', e => closeGlimpse());
+  closeBtnElement.addEventListener('click', () => closeGlimpse());
   glimpseSearch.querySelector('.widget-header').appendChild(closeBtnElement);
 
   const searchInput = glimpse.querySelector('.search-input');
@@ -650,6 +650,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentEventListener: {
         setup: () => {
           const toastNotification = typeof window.showToast === 'function' ? window.showToast : (msg => alert(msg));
+
+          const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
+
           const configKey = 'glimpse-search-config';
           const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
           const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
@@ -707,14 +710,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             if (target.dataset.key === 'restore-defaults') {
-              if (await customSettingsFunctions.ask('Restoring configuration to default, are you sure about this?')) {
+              if (await confirmDialog('Restoring configuration to default, are you sure about this?')) {
                 localStorage.removeItem(configKey);
                 location.reload();
               }
             }
 
             if (target.dataset.key === 'reload-page') {
-              if (await customSettingsFunctions.ask('Reload page?')) location.reload();
+              if (await confirmDialog('Reload page?')) location.reload();
             }
           } catch(e) {
             toastNotification('Error in configuration: ' + keyEl?.name + ', see logs for more info.`', { type: 'error' });

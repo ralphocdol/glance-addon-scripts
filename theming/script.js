@@ -3,11 +3,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
-    if (typeof window.showToast === 'function') {
-      window.showToast?.(msg, { title: 'THEMING', type: 'error' });
-    } else {
-      alert(msg);
-    }
+
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'THEMING', type: 'error' });
+    else alert(msg);
+
     console.error('CREATE_ELEMENT not found');
     return;
   }
@@ -619,6 +618,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           setBorderRadius,
         } = newThemePropertiesManager();
 
+        const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
+
         const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
         const sliderLabelElement = key => _SETTING_ELEMENT_.querySelector(`[data-slider-label="${key}"]`);
 
@@ -685,7 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const keyEl = getKeyedElement(target.dataset.key);
 
         if (target.dataset.key === 'override-theming') {
-          if (await customSettingsFunctions.ask(target.checked ? 'This will override the built one rendering it useless, proceed and reload?' : 'Disable and reload?')) {
+          if (await confirmDialog(target.checked ? 'This will override the built one rendering it useless, proceed and reload?' : 'Disable and reload?')) {
             customSettingsFunctions.setValueByPath(storedThemesConfig, 'overrideTheming', target.checked);
             localStorage.setItem(configKey, JSON.stringify({...storedThemesConfig }));
             location.reload();
@@ -703,7 +704,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (target.dataset.key === 'theme-configuration-url') {
-          if (keyEl.value && await customSettingsFunctions.ask('Downloading configuration, this will replace your existing one, proceed?')) {
+          if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
             try {
               localStorage.setItem(configPathKey, keyEl.value);
               const getUrlConfig = await fetch(customSettingsFunctions.buildFetchUrl(keyEl.value));
@@ -731,13 +732,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (target.dataset.key === 'restore-defaults') {
-          if (await customSettingsFunctions.ask('Restoring theme configuration to default, are you sure about this?')) {
+          if (await confirmDialog('Restoring theme configuration to default, are you sure about this?')) {
             localStorage.removeItem(configKey);
             location.reload();
           }
         }
 
-        if (target.dataset.key === 'reload-page' && await customSettingsFunctions.ask('Reload page?')) location.reload();
+        if (target.dataset.key === 'reload-page' && await confirmDialog('Reload page?', { parentElement: document.getElementById('modalDescription') })) location.reload();
         if (target.dataset.key === 'background-image-path') {
           setBackgroundImage(getKeyedElement('background-image-path').value);
           updateConfig();
