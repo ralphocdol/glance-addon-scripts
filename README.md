@@ -29,19 +29,19 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 
 | Script | Short Description | Tested Version |
 | ------ | :---------------: | :------------: |
-| [HTML Script Loader](html-script-loader/README.md) | Adds the ability to add `<script>` inside `custom-api` | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [HTML Script Loader](html-script-loader/README.md) | Adds the ability to load `<script>` inside `custom-api` | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Swipe Left and Right](swipe-left-and-right/README.md) | Swipe left/right on Mobile | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Modal](modal/README.md) | A modal popup | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Tab Notification](tab-notification/README.md) | Show notification count on `group` tabs | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Glimpse](glimpse/README.md) | Search widget that searches widgets | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Glimpse](glimpse/README.md) | A `search` widget that searches other widgets | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Responsive Table](responsive-table/README.md) | A table widget | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Lazy Unloader](lazy-unloader/README.md) | Unloads image when not in view | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Custom Menu](custom-menu/README.md) | Menu grid for Addon Script | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Toast Message](toast-message/README.md) | Custom notification message display | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Custom Settings](custom-settings/README.md) | Custom settings for Addon Script | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Custom Settings](custom-settings/README.md) | Custom settings manager for Addon Script | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Theming](theming/README.md) | Theme editor/manager for Glance | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Mobile Vertical Navigation](mobile-vertical-nav/README.md) | Replaces horizontal navigation | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Custom Dialog](custom-dialog/README.md) | A dialog box | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Custom Dialog](custom-dialog/README.md) | A basic dialog box | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
@@ -85,6 +85,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
