@@ -2,18 +2,21 @@
 (() => {
   const mobilePageLinks = document.querySelector('.mobile-navigation-page-links');
   const hamburgerMenu = document.querySelector('.mobile-navigation-icons > :last-child:has(.hamburger-icon)');
+  hamburgerMenu.innerHTML = '';
+  const verticalPageLink = document.createElement('div');
+  verticalPageLink.classList.add('vertical-page-link');
+  hamburgerMenu.appendChild(verticalPageLink);
 
-  Object.assign(hamburgerMenu.dataset, {
+  Object.assign(verticalPageLink.dataset, {
     popoverType: 'html',
     popoverShowDelay: '0',
     popoverHideDelay: '100',
     popoverPosition: 'above',
-    popoverAnchor: '.hamburger-icon',
+    popoverAnchor: '.hamburger-icon-container',
     popoverTrigger: 'click',
-    popoverMargin: '18px',
   });
 
-  hamburgerMenu.innerHTML = `
+  verticalPageLink.innerHTML = `
     <div data-popover-html>
       <div class="nav-page-links">
         ${mobilePageLinks.innerHTML}
@@ -30,7 +33,9 @@
       </div>
     </div>
     <div class="pointer-events-none">
-      <div class="hamburger-icon"></div>
+      <div class="hamburger-icon-container">
+        <div class="hamburger-icon"></div>
+      </div>
     </div>
   `;
 
@@ -38,7 +43,7 @@
 
   const mobileNav = document.querySelector('.mobile-navigation');
   const expandOffset = 70;
-  hamburgerMenu.querySelector('.nav-item-expand-themes').addEventListener('click', e => {
+  verticalPageLink.querySelector('.nav-item-expand-themes').addEventListener('click', e => {
     e.preventDefault();
     const popoverContainer = document.querySelector('.popover-container:has(.nav-page-links)');
     const targetDataset = e.currentTarget.dataset;

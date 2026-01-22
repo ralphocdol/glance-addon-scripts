@@ -1,5 +1,14 @@
-.popover-container:has(.nav-page-links) {
-  transition: top .3s;
+.mobile-navigation-label .vertical-page-link,
+.mobile-navigation-label .vertical-page-link .pointer-events-none,
+.mobile-navigation-label .vertical-page-link .pointer-events-none .hamburger-icon-container {
+  height: inherit;
+  aspect-ratio: 1;
+}
+
+.mobile-navigation-label .vertical-page-link .pointer-events-none .hamburger-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .popover-content:has(.nav-page-links) > div > div.nav-page-links  {
