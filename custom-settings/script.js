@@ -3,11 +3,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
-    if (typeof window.showToast === 'function') {
-      window.showToast?.(msg, { title: 'CUSTOM SETTINGS', type: 'error' });
-    } else {
-      alert(msg);
-    }
+
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CUSTOM SETTINGS', type: 'error' });
+    else alert(msg);
+
     console.error('CREATE_ELEMENT not found');
     return;
   }
@@ -136,60 +135,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, obj);
   }
 
-  // Just a simple dialog box
-  function ask(message, { confirmText = 'CONFIRM', cancelText = 'CANCEL'} = {}) {
-    return new Promise(resolve => {
-      const overlay = createElementFn({
-        style: {
-          position: 'fixed',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(0,0,0,.4)',
-          zIndex: 9999
-        },
-        events: {
-          click: e => { if (e.target === overlay) close(false); }
-        }
-      });
-
-      const box = createElementFn({
-        style: {
-          background: 'var(--color-popover-background)',
-          color: 'var(--color-text-paragraph)',
-          padding: '1rem',
-          borderRadius: 'var(--border-radius)',
-          border: '1px solid var(--color-popover-border)',
-          maxWidth: '40vw',
-          minWidth: '280px',
-          boxSizing: 'border-box',
-          boxShadow: '0px 3px 0px 0px hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%))',
-        },
-        htmlContent: `
-          <p style="margin:0 0 1rem">${message}</p>
-          <div style="display:flex;gap:1rem;justify-content:flex-end">
-            <button data-v="no" style="background:var(--color-negative);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);">${cancelText}</button>
-            <button data-v="yes" autofocus style="background:var(--color-positive);color:var(--color-separator);padding:.2rem 1rem;border-radius:var(--border-radius);" autofocus>${confirmText}</button>
-          </div>
-        `,
-      });
-
-      box.querySelectorAll('button').forEach(b => {
-        b.onclick = () => close(b.dataset.v === 'yes')
-      });
-
-      function close(val) {
-        resolve(val);
-        overlay.remove();
-      }
-
-      overlay.appendChild(box);
-      document.getElementById('modal').appendChild(overlay);
-      box.querySelector('button[data-v="yes"]').focus();
-    });
-  }
-
   function customJSONStringify(obj) {
     const json = JSON.stringify(obj, null, 2);
     return json.replace(/\[\s*([\d\s,]+?)\s*\]/g, (_, p1) => {
@@ -215,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   window.customSettingsFunctions = {
-    ask, createCustomSettingsItem, setValueByPath,
+    createCustomSettingsItem, setValueByPath,
     customJSONStringify, buildFetchUrl,
   }
 

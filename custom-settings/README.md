@@ -10,6 +10,7 @@ On its own it does nothing, this will be used for other addon-scripts that may n
 - [Toast Message](../toast-message) *(required)*
 - [Custom Menu](../custom-menu) *(required)* — adds the launch button
 - [Modal](../modal) *(required)* - Used as the element to add contents to
+- [Custom Dialog](../custom-dialog) *(optional)* - Falls back to `window.confirm` dialog
 
 # How to load
 ```html
