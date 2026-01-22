@@ -2,6 +2,12 @@
   --custom-menu-columns: 3;
 }
 
+.custom-menu .custom-menu-popover {
+  pointer-events: none;
+  color: var(--color-text-subdue);
+  transition: color .3s;
+}
+
 .custom-menu-button, /* Nav only */
 .popover-content .custom-menu-items .custom-menu-item {
   cursor: pointer;

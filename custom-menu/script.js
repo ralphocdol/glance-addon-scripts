@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     newElement.style.cursor = 'progress';
     newElement.classList.add('custom-menu');
     newElement.innerHTML = `
-      <div class="custom-menu-popover" style="pointer-events: none;" data-popover-type="html" data-popover-show-delay="0" ${properties}>
+      <div class="custom-menu-popover" data-popover-type="html" data-popover-show-delay="0" ${properties}>
         <div data-popover-html>
           <div class="custom-menu-items"></div>
         </div>
@@ -110,15 +110,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         display: hasColumns ? 'flex' : 'none'
       });
       Object.assign(menu.closest('.custom-menu-popover').style, {
-        pointerEvents: '',
+        pointerEvents: 'inherit',
+        color: 'inherit',
       });
     });
 
     const glanceNativeToTopEl = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
-    if (hasColumns) {
-      glanceNativeToTopEl.remove();
-    } else {
-      glanceNativeToTopEl.style.display = 'flex';
-    }
+    if (hasColumns) glanceNativeToTopEl.remove();
+    else glanceNativeToTopEl.style.display = 'flex';
   }, 500);
 });
