@@ -52,6 +52,10 @@
     const targetExpanded = targetDataset.expanded === 'true';
     mobileNav.style.transform = targetExpanded ? 'translateY(0)' : '';
 
+    const hamburgerIcon = document.querySelector('.hamburger-icon');
+    hamburgerIcon.style.setProperty('--spacing', targetExpanded ? '7px' : '4px');
+    hamburgerIcon.style.color = targetExpanded ? 'var(--color-primary)' : 'inherit';
+
     const currentTop = parseFloat(getComputedStyle(popoverContainer).top) || 409.167;
     const newTop = `${targetExpanded ? currentTop - expandOffset : currentTop + expandOffset}px`;
     popoverContainer.style.top = newTop;
