@@ -40,6 +40,9 @@
   display: grid;
   grid-template-columns: repeat(var(--custom-menu-columns), 1fr);
   gap: 2rem;
+  max-height: min(500px, 50vh);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .popover-content .custom-menu-items .custom-menu-item {
