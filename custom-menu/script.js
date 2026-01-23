@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     <a href="#top" class="custom-menu-top">
       <svg class="custom-menu-item-icon" viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 20L12 4M12 4L18 10M12 4L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
     </a>
+    <label>Top</label>
   `;
 
   mobileSearchNav.querySelector('.custom-menu-items').appendChild(newCustomMenuItem);
@@ -80,17 +81,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     menuList
       .sort((a, b) => (Number.isFinite(a.order) ? a.order : Infinity) - (Number.isFinite(b.order) ? b.order : Infinity) || a.className.localeCompare(b.className))
-      .forEach(({ className, tooltip, icon, actionFn, status }) => {
+      .forEach(({ className, tooltip, icon, actionFn, status, label }) => {
         const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
 
         customMenuItems.forEach(menu => {
-          const customItemEl = createElementFn({ classes: 'custom-menu-item' });
+          const customItemEl = createElementFn({
+            classes: 'custom-menu-item',
+            props: { title: tooltip },
+          });
+
           const navElement = createElementFn({
             classes: `${className}${newStatus}`,
-            props: { title: tooltip },
             htmlContent: icon,
           });
           customItemEl.appendChild(navElement);
+
+          const navLabelElement = createElementFn({
+            tag: 'label',
+            htmlContent: label || tooltip,
+          });
+          customItemEl.appendChild(navLabelElement);
+
           customItemEl.addEventListener('click', actionFn);
           menu.appendChild(customItemEl);
 

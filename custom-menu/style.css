@@ -2,6 +2,10 @@
   --custom-menu-columns: 3;
 }
 
+.custom-menu:hover {
+  opacity: 1;
+}
+
 .custom-menu .custom-menu-popover {
   pointer-events: none;
   color: var(--color-text-subdue);
@@ -32,30 +36,47 @@
   opacity: 1;
 }
 
-.popover-content .custom-menu-items .custom-menu-item {
-  border-radius: var(--border-radius);
-  aspect-ratio: 1 / 1;
-  padding: 0.8rem;
-  width: 4.2rem;
-}
-
-.custom-menu:hover {
-  opacity: 1;
-}
-
 .popover-content .custom-menu-items {
   display: grid;
   grid-template-columns: repeat(var(--custom-menu-columns), 1fr);
   gap: 2rem;
 }
 
+.popover-content .custom-menu-items .custom-menu-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  border-radius: var(--border-radius);
+  aspect-ratio: 1 / 1;
+  padding: 1.3rem;
+  width: 5.2rem;
+}
+
 .popover-content .custom-menu-items .custom-menu-item:hover {
   opacity: 1;
   background-color: var(--color-primary);
+  color: var(--color-background);
+}
+
+.popover-content .custom-menu-items .custom-menu-item label {
+  cursor: pointer;
+  height: 2.4em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-align: center;
+  padding: 0 0.8rem;
+  font-size: 0.7em;
+  font-weight: bold;
+  color: var(--color-text-paragraph);
+}
+
+.popover-content .custom-menu-items .custom-menu-item:hover label {
+  color: inherit;
 }
 
 .popover-content .custom-menu-items .custom-menu-item img,
-.popover-content .custom-menu-items .custom-menu-item svg:not(.search-icon) {
+.popover-content .custom-menu-items .custom-menu-item svg {
   width: 100%;
   height: 100%;
   display: block;
