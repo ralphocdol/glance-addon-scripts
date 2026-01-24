@@ -39,29 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       style.getPropertyValue('--bgl'),
     );
 
-    const limitValue = (value, min, max) => {
-      const floatValue = parseFloat(value);
-      let msg = '';
-      if (isNaN(floatValue)) {
-        msg = 'Expected a number, got ' + floatValue + ' instead.';
-        window.showToast?.(msg);
-        throw new TypeError(msg);
-      }
-      if (floatValue < min) {
-        msg = 'Exceeded minimum limit of ' + min + ', using it instead.';
-        window.showToast?.(msg);
-        console.warn(msg);
-        return min;
-      }
-      if (floatValue > max) {
-        msg = 'Exceeded maximum limit of ' + max + ', using it instead.';
-        window.showToast?.(msg);
-        console.warn(msg);
-        return max;
-      }
-      return value;
-    }
-
     const setRootVars = vars => {
       const currentVars = {};
       (styleElement.textContent.match(/--[\w-]+:\s*[^;]+;/g) || []).forEach(line => {
@@ -157,12 +134,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         setRootVars({ '--color-negative': hslValuesToCSSString(value) });
       },
       setContrastMultiplier: function (value) {
-        const newValue = limitValue(value, 0.3, 2);
+        const newValue = clamp(value, 0.3, 2);
+        if (isNaN(newValue)) return errorMessage('Invalid contrast multiplier value:', value);
         themeProperties.contrastMultiplier = newValue;
         setRootVars({ '--cm': newValue });
       },
       setTextSaturationMultiplier: function (value) {
-        const newValue = limitValue(value, 0.3, 5);
+        const newValue = clamp(value, 0.3, 5);
+        if (isNaN(newValue)) return errorMessage('Invalid text saturation multiplier value:', value);
         themeProperties.textSaturationMultiplier = newValue;
         setRootVars({ '--tsm': newValue });
       },
@@ -173,31 +152,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyBackgroundImage(fadeImage);
       },
       setBackgroundImageAlpha: function (value = 1) {
-        const newValue = limitValue(value, 0, 1);
+        const newValue = clamp(value, 0, 1);
+        if (isNaN(newValue)) return errorMessage('Invalid background image alpha value:', value);
         themeProperties.backgroundImageAlpha = newValue;
         setRootVars({ '--background-image-url-alpha': newValue });
       },
       setColorWidgetBackgroundAlpha: function (value = 1) {
-        const newValue = limitValue(value, 0.1, 1);
+        const newValue = clamp(value, 0.1, 1);
+        if (isNaN(newValue)) return errorMessage('Invalid color widget background alpha value:', value);
         themeProperties.colorWidgetBackgroundAlpha = newValue;
         setRootVars({ '--color-widget-background-alpha': newValue });
         setRootVars({ '--color-widget-background': `hsla(var(--color-widget-background-hsl-values), var(--color-widget-background-alpha, 1))` });
         setRootVars({ '--color-widget-background-highlight': `hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)), var(--color-widget-background-alpha, 1))` });
       },
       setColorPopoverBackgroundAlpha: function (value = 1) {
-        const newValue = limitValue(value, 0.1, 1);
+        const newValue = clamp(value, 0.1, 1);
+        if (isNaN(newValue)) return errorMessage('Invalid color popover background alpha value:', value);
         themeProperties.colorPopoverBackgroundAlpha = newValue;
         setRootVars({ '--color-popover-background-alpha': newValue });
         setRootVars({ '--color-popover-background': `hsla(var(--bgh), calc(var(--bgs) + 3%), calc(var(--bgl) + 3%), var(--color-popover-background-alpha))` });
       },
       setBorderRadius: function (value = '5px') {
         const valueNumber = Number(value.replace('px', ''));
-        if (isNaN(valueNumber)) {
-          window.showToast?.('Expected a pixel format, got ' + value + ' instead.');
-          console.warn('Expected a pixel format, got ' + value + ' instead.');
-          return;
-        }
-        const newValue = limitValue(valueNumber, 0, 30);
+        if (isNaN(valueNumber)) return errorMessage('Invalid border radius value:', value);
+        const newValue = clamp(valueNumber, 0, 30);
         themeProperties.borderRadius = newValue + 'px';
         setRootVars({ '--border-radius': newValue + 'px' });
       },
@@ -211,6 +189,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     return obj;
+  }
+
+  function clamp (value, min, max) {
+    return Math.min(Math.max(parseFloat(value), min), max);
+  }
+
+  function errorMessage (msg) {
+    window.showToast?.(msg, { type: 'error' });
+    throw new Error(msg);
   }
 
   function isUrlOrPath(input) {
