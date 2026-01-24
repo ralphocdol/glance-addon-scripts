@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
 
   const navItems = Array.from(document.querySelectorAll('nav.desktop-navigation .nav-item'));
-  console.log({navItems})
   if (navItems.length <= 1) return;
 
   const keyCodeMap = {
