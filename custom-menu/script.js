@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     newElement.style.cursor = 'progress';
     newElement.classList.add('custom-menu');
     newElement.innerHTML = `
-      <div class="custom-menu-popover" data-popover-type="html" data-popover-show-delay="0" ${properties}>
+      <div class="custom-menu-popover" data-popover-type="html" data-popover-show-delay="0" data-popover-max-width="500px" ${properties}>
         <div data-popover-html>
           <div class="custom-menu-items"></div>
         </div>
