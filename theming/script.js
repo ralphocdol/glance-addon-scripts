@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       backgroundImage: style.getPropertyValue('--background-image-url') || '',
       backgroundImageAlpha: style.getPropertyValue('--background-image-url-alpha') || 1,
       colorWidgetBackgroundAlpha: style.getPropertyValue('--color-widget-background-alpha') || 1,
+      widgetBackgroundBlur: style.getPropertyValue('--widget-background-blur-value') || 0,
       colorPopoverBackgroundAlpha: style.getPropertyValue('--color-popover-background-alpha') || 1,
       borderRadius: style.getPropertyValue('--border-radius'),
     };
@@ -165,6 +166,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         setRootVars({ '--color-widget-background': `hsla(var(--color-widget-background-hsl-values), var(--color-widget-background-alpha, 1))` });
         setRootVars({ '--color-widget-background-highlight': `hsla(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl) + 4%)), var(--color-widget-background-alpha, 1))` });
       },
+      setWidgetBackgroundBlur: function (value = '0px') {
+        const valueNumber = isNaN(value) ? Number(value.replace('px', '')) : value;
+        if (isNaN(valueNumber)) return errorMessage('Invalid widget background blur value:', value);
+        const newValue = clamp(valueNumber, 0, 12);
+        themeProperties.widgetBackgroundBlur = newValue;
+        setRootVars({ '--widget-background-blur-value': newValue });
+        setRootVars({ '--widget-background-blur': newValue === 0 ? 'none' : `blur(${newValue}px)` });
+      },
       setColorPopoverBackgroundAlpha: function (value = 1) {
         const newValue = clamp(value, 0.1, 1);
         if (isNaN(newValue)) return errorMessage('Invalid color popover background alpha value:', value);
@@ -175,9 +184,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       setBorderRadius: function (value = '5px') {
         const valueNumber = Number(value.replace('px', ''));
         if (isNaN(valueNumber)) return errorMessage('Invalid border radius value:', value);
-        const newValue = clamp(valueNumber, 0, 30);
-        themeProperties.borderRadius = newValue + 'px';
-        setRootVars({ '--border-radius': newValue + 'px' });
+        const newValue = `${clamp(valueNumber, 0, 30)}px`;
+        themeProperties.borderRadius = newValue;
+        setRootVars({ '--border-radius': newValue });
       },
     };
 
@@ -526,12 +535,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       min: 0.1, max: 1, step: 0.05,
       value: glanceThemeConfig.themeProperties.colorWidgetBackgroundAlpha,
     },
+    { type: 'slider', name: 'Widget Background Blur', key: 'widget-background-blur',
+      min: 0, max: 12, step: 1,
+      value: glanceThemeConfig.themeProperties.widgetBackgroundBlur,
+      tooltip: 'WARNING! GPU-intensive, set to 0px to disable.',
+    },
     { type: 'slider', name: 'Color Popover Alpha', key: 'color-popover-background-alpha',
       min: 0.1, max: 1, step: 0.05,
       value: glanceThemeConfig.themeProperties.colorPopoverBackgroundAlpha,
     },
     { type: 'textarea', name: 'Current JSON Configuration', key: 'current-configuration',
-      value: JSON.stringify(glanceThemeConfig.themeProperties, null, 2), colOffset: 1, height: '293px',
+      value: JSON.stringify(glanceThemeConfig.themeProperties, null, 2), colOffset: 1, height: '310px',
       moreButtons: [
         { name: 'Copy this configuration', key: 'copy-this-json-configuration' },
       ]
@@ -602,6 +616,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           setTextSaturationMultiplier,
           setColorWidgetBackgroundAlpha,
           setBackgroundImageAlpha,
+          setWidgetBackgroundBlur,
           setColorPopoverBackgroundAlpha,
           setBorderRadius,
         } = newThemePropertiesManager();
@@ -643,6 +658,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           getKeyedElement('background-image-path').value = configThemeProperties.backgroundImage || '';
           getKeyedElement('background-image-url-alpha').value = configThemeProperties.backgroundImageAlpha || 1;
           getKeyedElement('color-widget-background-alpha').value = configThemeProperties.colorWidgetBackgroundAlpha || 1;
+          getKeyedElement('widget-background-blur').value = configThemeProperties.widgetBackgroundBlur || 0;
           getKeyedElement('color-popover-background-alpha').value = configThemeProperties.colorPopoverBackgroundAlpha || 1;
           getKeyedElement('current-configuration').value = customSettingsFunctions.customJSONStringify(configThemeProperties);
 
@@ -651,6 +667,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           sliderLabelElement('border-radius').textContent = configThemeProperties.borderRadius || '5px';
           sliderLabelElement('background-image-url-alpha').textContent = configThemeProperties.backgroundImageAlpha || 1;
           sliderLabelElement('color-widget-background-alpha').textContent = configThemeProperties.colorWidgetBackgroundAlpha || 1;
+          sliderLabelElement('widget-background-blur').textContent = (configThemeProperties.widgetBackgroundBlur || 0) + 'px';
           sliderLabelElement('color-popover-background-alpha').textContent = configThemeProperties.colorPopoverBackgroundAlpha || 1;
 
           isLightEl.disabled = config.followSystemScheme;
@@ -817,19 +834,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           'text-saturation-multiplier': setTextSaturationMultiplier,
           'background-image-url-alpha': setBackgroundImageAlpha,
           'color-widget-background-alpha': setColorWidgetBackgroundAlpha,
+          'widget-background-blur': setWidgetBackgroundBlur,
           'color-popover-background-alpha': setColorPopoverBackgroundAlpha,
           'border-radius': setBorderRadius,
         };
         const setter = setters[target.dataset.key];
         if (setter && storedThemesConfig.overrideTheming) {
           const sliderLabelEl = _SETTING_ELEMENT_.querySelector(`[data-slider-label="${target.dataset.key}"]`);
-          if (target.dataset.key === 'border-radius') {
-            setter(`${target.value}px` || '5px');
-            sliderLabelEl.textContent = `${target.value}px`;
-          } else {
-            setter(target.value || 1);
-            sliderLabelEl.textContent = target.value;
-          }
+          let targetValue = target.value || 1;
+          if (target.dataset.key === 'border-radius') targetValue = `${target.value || 5}px`;
+          setter(targetValue);
+          sliderLabelEl.textContent = targetValue;
           updateConfig();
         }
       }

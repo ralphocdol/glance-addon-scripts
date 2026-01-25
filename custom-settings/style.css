@@ -23,6 +23,7 @@
   border-radius: var(--border-radius);
   background: var(--color-widget-background);
   padding: 0;
+  margin: 0;
 }
 
 #modal.custom-settings .modal-body > div {
@@ -137,13 +138,14 @@
 
 #modal.custom-settings .custom-settings-content-card .info {
   position: absolute;
-  top: -2px;
-  left: 2px;
-  font-size: 0.85em;
+  top: 3px;
+  left: 3px;
   display: inline-flex;
   align-items: center;
   cursor: help;
   opacity: .7;
+  width: .9rem;
+  color: var(--color-text-base-muted);
 }
 
 #modal.custom-settings button.btn {
@@ -269,7 +271,7 @@
 #modal.custom-settings .card-text .input-group input:not(:placeholder-shown) + label {
   top: 0;
   font-size: 0.85em;
-  background: var(--color-widget-background);
+  background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   color: var(--color-primary);
 }
@@ -300,7 +302,7 @@
   top: 0;
   left: 8px;
   font-size: 0.85em;
-  background: var(--color-widget-background);
+  background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   pointer-events: none;
   transform: translateY(-50%);
@@ -362,7 +364,7 @@
 #modal.custom-settings .card-multi-text .input-group input:not(:placeholder-shown) + label {
   top: 0;
   font-size: 0.85em;
-  background: var(--color-widget-background);
+  background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   color: var(--color-primary);
 }

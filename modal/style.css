@@ -46,6 +46,7 @@
   display: flex;
   margin: 3rem;
   transition: width 0.3s ease, height 0.3s ease;
+  backdrop-filter: var(--widget-background-blur, none);
 }
 
 #modal .modal-height-short { height: 30vh; }
