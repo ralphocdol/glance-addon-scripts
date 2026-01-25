@@ -14,6 +14,7 @@
     "backgroundImage": "",
     "backgroundImageAlpha": "0.55",
     "colorWidgetBackgroundAlpha": "0.7",
+    "widgetBackgroundBlur": "0",
     "colorPopoverBackgroundAlpha": "0.8",
     "borderRadius": "10px"
   },
@@ -31,6 +32,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "0.55",
       "colorWidgetBackgroundAlpha": "0.7",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "0.8",
       "borderRadius": "10px"
     },
@@ -47,6 +49,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "1",
       "colorWidgetBackgroundAlpha": "0.7",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "0.75",
       "borderRadius": "8px"
     },
@@ -63,6 +66,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "1",
       "colorWidgetBackgroundAlpha": "1",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "1",
       "borderRadius": "5px"
     },
@@ -79,6 +83,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "1",
       "colorWidgetBackgroundAlpha": "1",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "1",
       "borderRadius": "5px"
     },
@@ -95,6 +100,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "1",
       "colorWidgetBackgroundAlpha": "0.9",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "0.7",
       "borderRadius": "12px"
     },
@@ -111,6 +117,7 @@
       "backgroundImage": "",
       "backgroundImageAlpha": "1",
       "colorWidgetBackgroundAlpha": "0.9",
+      "widgetBackgroundBlur": "0",
       "colorPopoverBackgroundAlpha": "0.7",
       "borderRadius": "12px"
     }
