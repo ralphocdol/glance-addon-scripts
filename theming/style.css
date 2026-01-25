@@ -1,8 +1,10 @@
 [data-theming] .popover-frame {
   border-radius: var(--border-radius);
+  backdrop-filter: var(--widget-background-blur, none);
 }
 
 [data-theming] .widget-content:not(.widget-content-frameless), .widget-content-frame {
+  backdrop-filter: var(--widget-background-blur, none);
   transition:
     background-color .5s ease,
     border-color .5s ease,
