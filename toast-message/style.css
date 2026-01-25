@@ -4,6 +4,7 @@
   background: var(--color-popover-background);
   border: 1px solid var(--color-popover-border);
   border-radius: var(--border-radius);
+  backdrop-filter: var(--widget-background-blur, none);
 
   display: flex;
   align-items: center;
