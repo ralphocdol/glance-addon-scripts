@@ -11,6 +11,11 @@ This will replace Glance's default theming and will do more than just change col
 > 2. There is no syncing, you can only fetch a configuration.
 > 3. Config fetching using URL will mostly not work unless you proxy it or have full control over it.
 
+
+> [!WARNING]
+>
+> Using the Widget Background Blur is GPU-intensive!
+
 # Dependency
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 - [Custom Settings](../custom-settings) *(required)* — where the configuration can be modified, `inherits dependency`.
