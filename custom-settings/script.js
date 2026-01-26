@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const navBottom = createElementFn({ classes: 'nav-bottom' });
 
   const aboutButton = createElementFn({
+    tag: 'button',
     attrs: { role: 'button' },
     datasets: { target: 'about' },
     classes: 'active',
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   navBottom.appendChild(aboutButton);
 
   const closeButton = createElementFn({
+    tag: 'button',
     attrs: { role: 'button' },
     classes: 'exit-btn',
     innerText: 'Exit',
@@ -61,10 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   contentElement.id = 'custom-settings';
   contentElement.innerHTML = `
     <div data-content="about" class="show">
-      <div style="display: block;">
+      <div class="block">
         See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/custom-settings" target="_blank">Repository</a>
       </div>
-      <div style="display: block;">
+      <div class="block">
         Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
       </div>
     </div>`,
@@ -179,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const contentPair = 'custom-settings-menu-' + Array.from(navTop.children).length;
 
         const btn = createElementFn({
+          tag: 'button',
           attrs: { role: 'button' },
           datasets: { target: contentPair },
           textContent: name
@@ -205,7 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     key = '',
     contentObject = [],
   }) {
-    const widgetContainer = createElementFn({ classes: key });
+    const widgetContainer = createElementFn({ tag: 'section', classes: key });
 
     contentObject.forEach(widget => {
       widget.maxLength = widget.maxLength || null;
@@ -474,7 +477,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const nav = container.querySelector('nav');
       const main = container.querySelector('main');
 
-      const navItems = nav.querySelectorAll('div[role="button"]');
+      const navItems = nav.querySelectorAll('button[role="button"]');
       const mainItems = main.querySelectorAll('div[data-content]');
       mainItems.forEach(c => c.style.display = c.classList.contains('show') ? 'block' : 'none');
 
@@ -498,7 +501,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       function handler(e) {
-        if (e.target.closest('div[role="button"].exit-btn')) {
+        if (e.target.closest('button[role="button"].exit-btn')) {
           e.currentTarget.removeEventListener('click', handler);
           triggerCleanup();
           resetElementData();
@@ -506,7 +509,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return;
         }
 
-        const el = e.target.closest('div[role="button"][data-target]');
+        const el = e.target.closest('button[role="button"][data-target]');
         if (!el) return;
 
         triggerCleanup();

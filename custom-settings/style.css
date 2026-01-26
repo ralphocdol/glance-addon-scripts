@@ -40,39 +40,47 @@
   box-shadow: 0.2rem 0 0.5rem hsl(var(--bghs), calc(var(--scheme) (var(--scheme) var(--bgl)) - 0.5%));
 }
 
+#modal.custom-settings nav .nav-top,
+#modal.custom-settings nav .nav-bottom {
+  display: grid;
+}
+
 #modal.custom-settings nav .nav-bottom {
   margin-top: auto;
 }
 
-#modal.custom-settings nav div[role="button"] {
+#modal.custom-settings nav button[role="button"] {
   position: relative;
   cursor: pointer;
   user-select: none;
   padding: 1rem;
   max-height: 7.7rem;
   transition: background 0.3s;
+  justify-self: stretch;
+  align-self: stretch;
+  text-align: left;
 }
 
-#modal.custom-settings nav div[role="button"].exit-btn:hover {
+#modal.custom-settings nav button[role="button"].exit-btn:hover {
   background: linear-gradient(to right, var(--color-negative) 0%, var(--color-negative) 65%, transparent 100%);
   color: var(--color-background);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  #modal.custom-settings nav div[role="button"]:hover,
-  #modal.custom-settings nav div[role="button"].active:hover {
+  #modal.custom-settings nav button[role="button"]:hover,
+  #modal.custom-settings nav button[role="button"].active:hover {
     background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) 0%, transparent 100%);
     color: var(--color-background);
   }
 }
 
-#modal.custom-settings nav div[role="button"].active {
+#modal.custom-settings nav button[role="button"].active {
   cursor: default;
   color: var(--color-primary);
   font-weight: bold;
 }
 
-#modal.custom-settings nav div[role="button"].active::after {
+#modal.custom-settings nav button[role="button"].active::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -91,12 +99,12 @@
   overflow-y: auto;
 }
 
-#modal.custom-settings main > div .custom-settings-title {
+#modal.custom-settings main > div[data-content] .custom-settings-title {
   user-select: none;
   padding-bottom: 1rem;
 }
 
-#modal.custom-settings main > div {
+#modal.custom-settings main > div[data-content] {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
@@ -105,12 +113,12 @@
     opacity 180ms ease;
 }
 
-#modal.custom-settings main > div.show {
+#modal.custom-settings main > div[data-content].show {
   max-height: 1000vh;
   opacity: 1;
 }
 
-#modal.custom-settings main > div > div {
+#modal.custom-settings main > div[data-content] > section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
