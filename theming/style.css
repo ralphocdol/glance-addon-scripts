@@ -11,6 +11,10 @@
     color .5s ease;
 }
 
+[data-theming] .mobile-navigation {
+  backdrop-filter: var(--widget-background-blur, none);
+}
+
 /* region: body background theming */
 [data-theming] body {
   background-color: unset;
