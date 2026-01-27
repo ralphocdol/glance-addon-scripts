@@ -352,15 +352,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function regenerateThemePicker(config) {
     if (!config?.overrideTheming) return;
-    document.querySelectorAll('.theme-picker').forEach(t => {
-      generateThemeChoices({ el: t, config });
-      attachAutoThemeToggle({ el: t, config });
+    document.querySelectorAll('.theme-picker').forEach(el => {
+      generateThemeChoices({ el, config });
+      attachAutoThemeToggle({ el, config });
     });
   }
   regenerateThemePicker(glanceThemeConfig);
 
   function attachAutoThemeToggle({ el, config } = {}) {
     let popoverEl = el?.querySelector('[data-popover-html]');
+    if (popoverEl) popoverEl.classList.add('theme-choices-popover');
     if (!popoverEl) popoverEl = document.querySelector('.popover-content:has(.auto-theme-toggle-container)');
     if (!popoverEl) return;
 
