@@ -30,8 +30,9 @@
 }
 
 .custom-menu .custom-menu-button {
-  padding: 1rem;
+  padding: 1.1rem 1rem 1rem;
 }
+
 .custom-menu .custom-menu-button:hover {
   opacity: 1;
 }
@@ -104,5 +105,9 @@
 @media (max-width: 550px) {
   .custom-menu-button {
     width: calc(var(--mobile-navigation-height, 50px) - 10px);
+  }
+
+  .custom-menu .custom-menu-button {
+    padding: 1.3rem;
   }
 }
