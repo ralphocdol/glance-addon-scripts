@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }) : createElementFn({ isFragment : true});
       widgetElement.appendChild(toolTipEl);
 
-      const labelEl = createElementFn({ tag: 'label', textContent: widget.name });
+      const labelEl = createElementFn({ tag: 'label', classes: 'input-floating-label', textContent: widget.name });
 
       const buttonEl = createElementFn({
         tag: 'button',

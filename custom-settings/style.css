@@ -9,6 +9,7 @@
 
 #modal.custom-settings {
   --custom-settings-border: 1px solid color-mix(in hsl, var(--color-primary) 70%, transparent);
+  --input-padding: 5px 40px 5px 8px;
 }
 #modal.custom-settings::before {
   opacity: 0.4;
@@ -187,6 +188,30 @@
   pointer-events: none;
 }
 
+#modal.custom-settings .input-group .input-floating-label {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  pointer-events: none;
+  border-radius: var(--border-radius);
+  transform: translateY(-50%);
+  transition: .3s;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: calc(100% - 16px); /* 16px from left*2 */
+  padding: var(--input-padding);
+}
+
+#modal.custom-settings .input-group input:focus + label,
+#modal.custom-settings .input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.85em;
+  background: hsl(var(--color-widget-background-hsl-values));
+  padding: 0 5px;
+  color: var(--color-primary);
+}
+
 /* region: Toggle switch */
 #modal.custom-settings .card-toggle .toggle {
   display: inline-block;
@@ -258,30 +283,11 @@
 
 #modal.custom-settings .card-text .input-group input {
   outline: none;
-  padding: 5px 40px 5px 8px;
+  padding: var(--input-padding);
 }
 
 #modal.custom-settings .card-text .input-group input:focus-within {
   border-color: var(--color-primary);
-}
-
-#modal.custom-settings .card-text .input-group label {
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  pointer-events: none;
-  border-radius: var(--border-radius);
-  transform: translateY(-50%);
-  transition: .3s;
-}
-
-#modal.custom-settings .card-text .input-group input:focus + label,
-#modal.custom-settings .card-text .input-group input:not(:placeholder-shown) + label {
-  top: 0;
-  font-size: 0.85em;
-  background: hsl(var(--color-widget-background-hsl-values));
-  padding: 0 5px;
-  color: var(--color-primary);
 }
 /* endregion */
 
@@ -346,7 +352,7 @@
 
 #modal.custom-settings .card-multi-text .input-group input {
   outline: none;
-  padding: 5px 40px 5px 8px;
+  padding: var(--input-padding);
 }
 
 #modal.custom-settings .card-multi-text .input-group input[disabled] {
@@ -356,25 +362,6 @@
 
 #modal.custom-settings .card-multi-text .input-group input:focus-within {
   border-color: var(--color-primary);
-}
-
-#modal.custom-settings .card-multi-text .input-group label {
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  pointer-events: none;
-  border-radius: var(--border-radius);
-  transform: translateY(-50%);
-  transition: .3s;
-}
-
-#modal.custom-settings .card-multi-text .input-group input:focus + label,
-#modal.custom-settings .card-multi-text .input-group input:not(:placeholder-shown) + label {
-  top: 0;
-  font-size: 0.85em;
-  background: hsl(var(--color-widget-background-hsl-values));
-  padding: 0 5px;
-  color: var(--color-primary);
 }
 /* endregion */
 
@@ -402,16 +389,6 @@
 
 #modal.custom-settings .card-textarea .input-group textarea:focus-within {
   border-color: var(--color-primary);
-}
-
-#modal.custom-settings .card-textarea .input-group label {
-  position: absolute;
-  top: 50%;
-  left: 8px;
-  pointer-events: none;
-  border-radius: var(--border-radius);
-  transform: translateY(-50%);
-  transition: .3s;
 }
 
 #modal.custom-settings .card-textarea .input-group textarea:focus + label,
