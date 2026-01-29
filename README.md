@@ -64,7 +64,11 @@ document:
     <link rel="preload" href="/assets/path-to-addon-script/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <script defer src="/assets/path-to-addon-script/toast-message/script.js?v=1"></script>
 ```
-#### still want to use $include?
+#### Still want to use $include?
+<details>
+  <summary>Click to expand</summary>
+  <br>
+  
 If for some reason you really want to use the `$include` method, I will not be supporting it but you should be able to:
 ```yaml
   head: | #gohtml
@@ -76,7 +80,9 @@ If for some reason you really want to use the `$include` method, I will not be s
     </script>
 ```
 you can retain the css in import url or copy the one above
-    
+
+</details>
+
 #### Know issue
 Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) Issue. You, the user, will have to do things manually.
 
@@ -91,6 +97,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
