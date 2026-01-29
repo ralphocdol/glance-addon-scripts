@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const newConfig = { ...storedThemesConfig, themeProperties };
     localStorage.setItem(configKey, JSON.stringify(newConfig));
+    regenerateThemePicker(newConfig);
     return newConfig;
   }
 
@@ -415,11 +416,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const resetCurrentClasses = () => themeChoices.childNodes.forEach(presetEl => presetEl.classList.remove('current'));
 
-    const themePresetContent = p => `
-      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.primaryColor)}"></div>
-      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.positiveColor)}"></div>
-      <div class="theme-color" style="--color: ${hslValuesToCSSString(p.negativeColor)}"></div>
-    `;
+    const themePresetContent = p => {
+      const borderRadiusIcon = `calc(${p.borderRadius} / 4)`;
+      return `
+        <div class="theme-color" style="--color: ${hslValuesToCSSString(p.primaryColor)}; border-radius: ${borderRadiusIcon};"></div>
+        <div class="theme-color" style="--color: ${hslValuesToCSSString(p.positiveColor)}; border-radius: ${borderRadiusIcon};"></div>
+        <div class="theme-color" style="--color: ${hslValuesToCSSString(p.negativeColor)}; border-radius: ${borderRadiusIcon};"></div>
+      `;
+    }
 
     const themePreviewHTML = `
       <button class="theme-preset current theme-preset-${newProperties.isLight ? 'light' : 'dark'}"
@@ -791,7 +795,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (storedThemesConfig?.overrideTheming) setAll(textConfig);
             setValuesWithConfig(storedThemesConfig);
             localStorage.setItem(configKey, JSON.stringify(storedThemesConfig));
-            regenerateThemePicker(storedThemesConfig);
             updateConfig();
             window.showToast?.('Theme Configuration successfully loaded.', { type: 'success' });
           } catch (err) {

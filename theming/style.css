@@ -40,6 +40,10 @@
 /* endregion */
 
 /* region: theme selector override */
+[data-theming] .theme-preset {
+  border-radius: var(--border-radius);
+}
+
 [data-theming] .popover-content .theme-choices {
   --presets-per-row: 3;
 }
