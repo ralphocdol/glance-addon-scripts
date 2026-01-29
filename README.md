@@ -1,18 +1,23 @@
-> [!NOTE]
-> **Rename Notice**
-> 
-> Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
->
-> This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
+<details>
+  <summary><strong>Rename Notice</strong></summary>
+  <br>
+  
+  Yes, this repository was renamed from `glance-micro-scripts` to `glance-addon-scripts`.
+  
+  This repository started with only a few scripts like [HTML Script Loader](html-script-loader/README.md) and [Swipe Left and Right](swipe-left-and-right/README.md) hence why it's previously named `glance-micro-scripts`. Then I started adding [Modal](modal/README.md), [Glimpse](glimpse/README.md) and [Responsive Table](responsive-table/README.md) which quickly made the previous name irrelevant.
 
-> [!NOTE]
-> **Rewrite Notice**
-> 
-> With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts. Previously with the `$include`, everything is loaded to the DOM and not *cached* by default.
->
-> If you still need the `$include` method:
-> - see the [include-method-script-loading branch](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading), but just know that I will no longer be updating that.
-> - or check [below](#still-want-to-use-include).
+</details>
+
+<details>
+  <summary><strong>Rewrite Notice</strong></summary>
+  <br>
+  
+  With how the scripts got larger hence the need to rename this repository, I have rewritten the method of loading the scripts. Previously with the `$include`, everything is loaded to the DOM and not *cached* by default.
+  If you still need the `$include` method:
+  - see the [include-method-script-loading branch](https://github.com/ralphocdol/glance-addon-scripts/tree/include-method-script-loading), but just know that I will no longer be updating that.
+  - or check [below](#still-want-to-use-include).
+
+</details>
 
 ## ⚠️ Disclaimer
 
@@ -86,6 +91,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
