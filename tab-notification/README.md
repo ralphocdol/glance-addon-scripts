@@ -8,7 +8,7 @@ This is mainly for `custom-api` and/or "probably" `extension` too. This does not
 
 # How to load
 ```html
-  <script defer src="/assets/path-to-addon-script/tab-notification/script.js?v=1"></script>
+  <script defer src="/assets/glance-addon-scripts/tab-notification/script.js?v=1"></script>
 ```
 
 # Usage

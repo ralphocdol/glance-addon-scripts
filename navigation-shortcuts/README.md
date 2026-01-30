@@ -4,5 +4,5 @@ Temporary, remove when https://github.com/glanceapp/glance/pull/726 is accepted 
 
 # How to load
 ```html
-  <script defer src="/assets/path-to-addon-script/mobile-navigations/script.js?v=1"></script>
+  <script defer src="/assets/glance-addon-scripts/mobile-navigations/script.js?v=1"></script>
 ```

@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
       { name: 'Reload Page', key: 'reload-page' },
       { name: 'Copy this YAML Config', key: 'copy-glance-theme-config', tooltip: 'This is for Glance default theme yaml properties.' },
-      { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance's assets-path.` },
+      { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance assets-path.` },
     ], colOffset: 1 },
   ] : [
     { type: 'buttons', buttons: [

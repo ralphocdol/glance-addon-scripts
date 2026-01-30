@@ -16,8 +16,8 @@ On its own it does nothing, this will be used for other addon-scripts that may n
 ```html
   <!-- Dependencies goes here -->
   
-  <link rel="preload" href="/assets/path-to-addon-script/custom-settings/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script defer src="/assets/path-to-addon-script/custom-settings/script.js?v=1"></script>
+  <link rel="preload" href="/assets/glance-addon-scripts/custom-settings/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/glance-addon-scripts/custom-settings/script.js?v=1"></script>
 ```
 
 # Usage

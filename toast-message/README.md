@@ -7,8 +7,8 @@ Adds a toast notification and is optionally used by some addon-scripts.
 
 # How to load
 ```html
-  <link rel="preload" href="/assets/path-to-addon-script/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script defer src="/assets/path-to-addon-script/toast-message/script.js?v=1"></script>
+  <link rel="preload" href="/assets/glance-addon-scripts/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/glance-addon-scripts/toast-message/script.js?v=1"></script>
 ```
 
 # Usage

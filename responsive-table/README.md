@@ -5,8 +5,8 @@
 
 # How to load
 ```html
-  <link rel="preload" href="/assets/path-to-addon-script/responsive-table/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script defer src="/assets/path-to-addon-script/responsive-table/script.js?v=1"></script>
+  <link rel="preload" href="/assets/glance-addon-scripts/responsive-table/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/glance-addon-scripts/responsive-table/script.js?v=1"></script>
 ```
 
 # Limitations

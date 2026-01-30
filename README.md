@@ -53,16 +53,16 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
 ### Loading Script
-We will use the Glance's served assets path at `/assets/`.
+We will use the Glance's served assets path at `/assets/`. You can also clone the entire project in there.
 
 #### in the `document` config:
 ```yaml
 document:
   head: | #gohtml
-    <script async src="/assets/path-to-addon-script/global-functions/CREATE_ELEMENT.js?v=1"></script>
+    <script async src="/assets/glance-addon-scripts/global-functions/CREATE_ELEMENT.js?v=1"></script>
     
-    <link rel="preload" href="/assets/path-to-addon-script/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <script defer src="/assets/path-to-addon-script/toast-message/script.js?v=1"></script>
+    <link rel="preload" href="/assets/glance-addon-scripts/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer src="/assets/glance-addon-scripts/toast-message/script.js?v=1"></script>
 ```
 #### Still want to use $include?
 <details>
@@ -73,10 +73,10 @@ If for some reason you really want to use the `$include` method, I will not be s
 ```yaml
   head: | #gohtml
     <script>
-      $include: /app/assets/path-to-addon-script/global-functions/CREATE_ELEMENT.js
+      $include: /app/assets/glance-addon-scripts/global-functions/CREATE_ELEMENT.js
     </script>
     <script>
-      $include: /app/assets/path-to-addon-script/toast-message/style.css
+      $include: /app/assets/glance-addon-scripts/toast-message/style.css
     </script>
 ```
 you can retain the css in import url or copy the one above

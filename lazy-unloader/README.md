@@ -14,8 +14,8 @@ Example below is using the [youtube-embedded-player](https://github.com/glanceap
 
 # How to load
 ```html
-  <link rel="preload" href="/assets/path-to-addon-script/lazy-unloader/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script defer src="/assets/path-to-addon-script/lazy-unloader/script.js?v=1"></script>
+  <link rel="preload" href="/assets/glance-addon-scripts/lazy-unloader/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/glance-addon-scripts/lazy-unloader/script.js?v=1"></script>
 ```
 
 # Usage

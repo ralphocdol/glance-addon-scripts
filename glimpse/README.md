@@ -13,8 +13,8 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 ```html
   <!-- Dependencies goes here -->
   
-  <link rel="preload" href="/assets/path-to-addon-script/glimpse/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script defer src="/assets/path-to-addon-script/glimpse/script.js?v=1"></script>
+  <link rel="preload" href="/assets/glance-addon-scripts/glimpse/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <script defer src="/assets/glance-addon-scripts/glimpse/script.js?v=1"></script>
 ```
 
 # Limitations

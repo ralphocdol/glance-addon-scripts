@@ -25,8 +25,8 @@ This will replace Glance's default theming and will do more than just change col
 ```html
   <!-- Dependencies -->
   
-  <link rel="stylesheet" href="/assets/scripts/theming/style.css?v=1">
-  <script defer src="/assets/path-to-addon-script/theming/script.js?v=1"></script>
+  <link rel="stylesheet" href="/assets/glance-addon-scripts/theming/style.css?v=1">
+  <script defer src="/assets/glance-addon-scripts/theming/script.js?v=1"></script>
 ```
 
 # Get started

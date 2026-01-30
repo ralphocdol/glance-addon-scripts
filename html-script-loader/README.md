@@ -8,7 +8,7 @@ Adding `<script></script>` in the `custom-api` template property or in the `html
 
 # How to load
 ```html
-  <script defer src="/assets/path-to-addon-script/html-script-loader/script.js?v=1"></script>
+  <script defer src="/assets/glance-addon-scripts/html-script-loader/script.js?v=1"></script>
 ```
 
 # Usage
