@@ -210,6 +210,7 @@
   background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   color: var(--color-primary);
+  max-width: calc(100% - 40px); /* 40px from left*2 + 24 to account for the button width */
 }
 
 /* region: Toggle switch */
@@ -371,6 +372,7 @@
 }
 
 #modal.custom-settings .card-textarea .input-group {
+  display: flex;
   position: relative;
   width: 100%;
   border: var(--custom-settings-border);
@@ -381,10 +383,12 @@
   border: none;
   outline: none;
   padding: 10px;
-  width: 100%;
   background: none;
   resize: vertical;
   color: var(--color-text-paragraph);
+  field-sizing: content;
+  min-height: 100px;
+  flex: 1;
 }
 
 #modal.custom-settings .card-textarea .input-group textarea:focus-within {

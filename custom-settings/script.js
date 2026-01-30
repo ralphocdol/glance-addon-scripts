@@ -72,7 +72,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="block">
         Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>
       </div>
-    </div>`,
+    </div>
+  `;
   settingsElementBody.appendChild(contentElement);
 
   const btnSaveSvg = `<svg fill="currentColor" viewBox="0 0 24 24"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M21,20V8.414a1,1,0,0,0-.293-.707L16.293,3.293A1,1,0,0,0,15.586,3H4A1,1,0,0,0,3,4V20a1,1,0,0,0,1,1H20A1,1,0,0,0,21,20ZM9,8h4a1,1,0,0,1,0,2H9A1,1,0,0,1,9,8Zm7,11H8V15a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1Z"></path></g></svg>`;
