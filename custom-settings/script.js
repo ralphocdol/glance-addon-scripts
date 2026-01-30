@@ -64,7 +64,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   contentElement.innerHTML = `
     <div data-content="about" class="show">
       <div class="block">
-        See the <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/custom-settings" target="_blank">Repository</a>
+        <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/custom-settings" target="_blank">Project Repository</a>
+      </div>
+      <div class="block">
+        <a class="color-primary visited-indicator" href="https://github.com/ralphocdol/glance-addon-scripts" target="_blank">Glance Addon Scripts</a>
       </div>
       <div class="block">
         Vectors and icons by <a class="color-primary visited-indicator" href="https://www.svgrepo.com" target="_blank">SVG Repo</a>

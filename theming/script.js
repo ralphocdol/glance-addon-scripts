@@ -576,20 +576,31 @@ document.addEventListener('DOMContentLoaded', async () => {
       },
       ...configForOverride,
       { type: 'custom-html', contentHTML: `
-        <div style="width: 100%;">
-          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/theming">
+        <div class="flex-1">
+          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/theming">
             Project Repository
           </a>
         </div>
-        <div style="width: 100%;">
-          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-micro-scripts/tree/main/theming/README.md">
-            Glance Scripts
+        <div class="flex-1">
+          <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts">
+            Glance Addon Scripts
+          </a>
+        </div>
+        <div class="flex-1">
+          Based on
+          <a class="color-primary" target="_blank" rel="noreferrer" href="https://github.com/glanceapp/glance/discussions/184">
+            Theme editor
+          </a>
+          by
+          <a class="color-primary" target="_blank" rel="noreferrer" href="https://github.com/svilenmarkov">
+            svilenmarkov
           </a>
         </div>
       `,
         style: {
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          alignItems: 'start',
         },
       },
     ],
