@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     { type: 'text', name: 'Background Image Path/URL', key: 'background-image-path',
       value: glanceThemeConfig.themeProperties?.backgroundImage || '',
-      colOffset: 2,
+      colOffset: 2, tooltip: 'Recommended: 1920×1080 (max 2560px wide), under 1 MB. Beyond these may affect performance!',
     },
     { type: 'slider', name: 'Background Image Alpha', key: 'background-image-url-alpha',
       min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfig.themeProperties?.backgroundImage === '',

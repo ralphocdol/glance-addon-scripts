@@ -14,7 +14,8 @@ This will replace Glance's default theming and will do more than just change col
 
 > [!WARNING]
 >
-> Using the Widget Background Blur is GPU-intensive!
+> 1. Using the Widget Background Blur is GPU-intensive!
+> 2. Background Image should be set to a reasonable limit, 1920×1080 (max 2560px wide), under 1 MB. Beyond these may affect performance
 
 # Dependency
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
