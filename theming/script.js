@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setRootVars({ '--background-image-url': value });
         applyBackgroundImage(fadeImage);
       },
-      setBackgroundImageAlpha: function (value = 1) {
-        const newValue = clamp(value, 0, 1);
+      setBackgroundImageAlpha: function (value = 0.5) {
+        const newValue = clamp(value, 0, 0.9);
         if (isNaN(newValue)) return errorMessage('Invalid background image alpha value:', value);
         themeProperties.backgroundImageAlpha = newValue;
         setRootVars({ '--background-image-url-alpha': newValue });
@@ -533,8 +533,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       colOffset: 2,
     },
     { type: 'slider', name: 'Background Image Alpha', key: 'background-image-url-alpha',
-      min: 0, max: 1, step: 0.05,
-      value: glanceThemeConfig.themeProperties.backgroundImageAlpha,
+      min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfig.themeProperties?.backgroundImage === '',
+      value: glanceThemeConfig.themeProperties.backgroundImageAlpha || 0.5,
     },
     { type: 'slider', name: 'Widget Background Alpha', key: 'color-widget-background-alpha',
       min: 0.1, max: 1, step: 0.05,
@@ -638,6 +638,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const themePresetEl = getKeyedElement('theme-preset');
           const isLightEl = getKeyedElement('is-light-scheme');
           const presets = config?.preset || [];
+          const backgroundImageUrlAlphaEl = getKeyedElement('background-image-url-alpha');
 
           getKeyedElement('override-theming').checked = config.overrideTheming;
           getKeyedElement('follow-system-scheme').checked = config?.followSystemScheme;
@@ -661,7 +662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           getKeyedElement('text-saturation-multiplier').value = configThemeProperties.textSaturationMultiplier;
           getKeyedElement('border-radius').value = parseFloat(configThemeProperties.borderRadius || '5');
           getKeyedElement('background-image-path').value = configThemeProperties.backgroundImage || '';
-          getKeyedElement('background-image-url-alpha').value = configThemeProperties.backgroundImageAlpha || 1;
+          backgroundImageUrlAlphaEl.value = configThemeProperties.backgroundImageAlpha || 0.5;
           getKeyedElement('color-widget-background-alpha').value = configThemeProperties.colorWidgetBackgroundAlpha || 1;
           getKeyedElement('widget-background-blur').value = configThemeProperties.widgetBackgroundBlur || 0;
           getKeyedElement('color-popover-background-alpha').value = configThemeProperties.colorPopoverBackgroundAlpha || 1;
@@ -677,6 +678,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           isLightEl.disabled = config.followSystemScheme;
           themePresetEl.disabled = presets.length === 0;
+          backgroundImageUrlAlphaEl.disabled = configThemeProperties.backgroundImage === '';
         }
 
         const updateConfig = () => {
