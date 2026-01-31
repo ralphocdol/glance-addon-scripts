@@ -21,12 +21,15 @@
 
 ## ⚠️ Disclaimer
 
-This repository provides an **unofficial add-on script** for [Glance](https://github.com/glanceapp/glance).  
+This repository provides an **unofficial addon script** for [Glance](https://github.com/glanceapp/glance).  
 It is **not affiliated with, endorsed by, or connected to** it or its maintainers.
 
 > [!WARNING]
 >
-> This repository is provided "as is" without any warranties or guarantees. Use it at your own risk. I, the author is not responsible for any damage, loss of data, or any issues arising from the use or misuse of this code.
+> These scripts are unofficial and intended for users who are comfortable exploring and modifying their dashboard.
+> Review the code before use.
+> 
+> Provided under the terms of the GPL-3.0 license
 
 *Check the [Widget Repository](https://github.com/ralphocdol/glance-custom-widgets) that uses these scripts.*
 
@@ -97,6 +100,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
