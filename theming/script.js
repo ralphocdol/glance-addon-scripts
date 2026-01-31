@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const applyBackgroundImage = (fadeImage = true) => {
       const isValid = themeProperties.backgroundImage !== '' || isUrlOrPath(themeProperties.backgroundImage);
-      if (fadeImage) document.body.classList.remove('bg-img-visible');
+      if (fadeImage) document.body.setAttribute('theming-image', '');
       setRootVars({
         '--background-gradient-overlay': isValid
           ? `linear-gradient(hsla(var(--bghs), var(--bgl), var(--background-image-url-alpha, 1)),
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setRootVars({
           '--background-image-url-body': isValid ? `url(${themeProperties.backgroundImage})` : 'var(--color-background)'
         });
-        document.body.classList.add('bg-img-visible');
+        document.body.setAttribute('theming-image', 'visible');
       }, 500);
     }
 

@@ -34,7 +34,7 @@
     color .5s ease;
 }
 
-[data-theming] body.bg-img-visible::before {
+[data-theming] body[theming-image="visible"]::before {
   opacity: 1;
 }
 /* endregion */
