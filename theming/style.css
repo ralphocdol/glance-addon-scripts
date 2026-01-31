@@ -40,6 +40,10 @@
 /* endregion */
 
 /* region: theme selector override */
+[data-theming] .current-theme-preview {
+  opacity: 0.7;
+}
+
 [data-theming] .theme-preset {
   border-radius: var(--border-radius);
 }
