@@ -1,5 +1,16 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', async () => {
+  // Catch duplicate instances
+  const scriptName = 'Lazy Unloader';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
   const className = 'lazy-unloader-parent';
 
   const obs = new IntersectionObserver(entries => {

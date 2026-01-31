@@ -1,5 +1,16 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', async () => {
+  // Catch duplicate instances
+  const scriptName = 'Modal';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
   const ENUM_WIDTH = {
     SMALL: 'small',
     MEDIUM: 'medium',

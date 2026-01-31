@@ -1,5 +1,16 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', () => {
+  // Catch duplicate instances
+  const scriptName = 'Swipe Left Right';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
   const SWIPE_WRAP_AROUND = false;
   const EXCLUDED_CLASS = [
     'carousel-container',

@@ -1,5 +1,16 @@
 'use strict';
 (() => {
+  // Catch duplicate instances
+  const scriptName = 'Mobile Vertical Nav';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
   const mobilePageLinks = document.querySelector('.mobile-navigation-page-links');
   const hamburgerMenu = document.querySelector('.mobile-navigation-icons > :last-child:has(.hamburger-icon)');
   hamburgerMenu.innerHTML = '';
