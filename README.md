@@ -90,16 +90,17 @@ you can retain the css in import url or copy the one above
 Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) Issue. You, the user, will have to do things manually.
 
 Here are several method to do so:
-- By Force loading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically its just `Ctrl+Shift+R`
+- By Force reloading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically its just `Ctrl+Shift+R`
 - By updating all the instance of `?v=1` to `?v=2` and so on each addon-script update.
-- If you want to disable caching entirely and don't care about bandwidth or any other issue that may come with it (*careful, this is for those who knows what they are doing*). You can do so by disabling the caching in the Glance's `/assets/`. If you are using Nginx to proxy Glance, you can add this location block
+- If you want to disable caching entirely and don't care about bandwidth or any other issue that may come with it (*careful, this is for those who knows what they are doing*). You can do so by disabling the caching. If you are using Nginx to proxy Glance, you can add this location block
 ```nginx
-  location /assets/ {
+  location /assets/glance-addon-scripts/ {
     add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
     add_header Pragma 'no-cache';
     add_header Expires 0;
   }
 ```
+
 
 
 
