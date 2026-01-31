@@ -31,7 +31,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 > 
 > Provided under the terms of the GPL-3.0 license
 
-*Check the [Widget Repository](https://github.com/ralphocdol/glance-custom-widgets) that uses these scripts.*
+*Check the [Widget Repository](https://github.com/ralphocdol/glance-custom-widgets) that uses some of these scripts.*
 
 ### Addon Scripts
 
@@ -100,6 +100,7 @@ Here are several method to do so:
     add_header Expires 0;
   }
 ```
+
 
 
 
