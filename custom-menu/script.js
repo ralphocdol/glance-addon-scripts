@@ -1,5 +1,17 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', async () => {
+  // Catch duplicate instances
+  const scriptName = 'Custom Menu';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
+  // Catch Missing Dependencies
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';

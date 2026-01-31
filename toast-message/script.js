@@ -1,5 +1,16 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', () => {
+  // Catch duplicate instances
+  const scriptName = 'Toast Message';
+  if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
+    const msg = scriptName + ' already loaded, you might have duplicate instance of this script. Aborting.';
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { type: 'error' });
+    console.error(msg);
+    return;
+  } else {
+    window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
+  }
+
   const icons = {
     info: `
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0">
