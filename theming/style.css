@@ -15,6 +15,10 @@
   backdrop-filter: var(--widget-background-blur, none);
 }
 
+[data-theming] .expand-toggle-button.container-expanded {
+  backdrop-filter: var(--widget-background-blur, none);
+}
+
 /* region: body background theming */
 [data-theming] body {
   background-color: unset;

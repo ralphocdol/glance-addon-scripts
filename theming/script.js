@@ -319,7 +319,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      if (!group?.some(p => p.isDefault) && group.length) group[0].isDefault = true;
+      if (!group?.some(p => p.isDefault) && group.length) {
+        group[0].isDefault = true;
+        window.showToast?.('No default theme for scheme set, falling back to the first one.');
+      }
     });
 
     const syncedPreset = presets?.find(p => p.themeName === themeProperties.themeName);
