@@ -220,6 +220,231 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
   }, 500);
 
+  function elementToggle(widget) {
+    const toggleEl = createElementFn({
+      tag: 'label', classes: 'toggle',
+      children: [
+        {
+          tag: 'input',
+          props: { type: 'checkbox', name: widget.key, checked: !!widget.value, disabled: widget.disabled || false },
+          datasets: { click: '', key: widget.key },
+        },
+        { tag: 'span', classes: 'toggle-switch' }
+      ]
+    });
+    return toggleEl;
+  }
+
+  function elementText(widget, extraEl) {
+    const { labelElSpec, buttonElSpec } = extraEl;
+    const inputGroup = createElementFn({
+      classes: 'input-group',
+      children: [
+        {
+          tag: 'input',
+          props: { type: 'text', name: widget.key,
+            placeholder: ' ', value: widget.value,
+            maxlength: widget.maxLength,
+            disabled: widget.disabled || false,
+          }
+        },
+        labelElSpec,
+        buttonElSpec,
+      ]
+    });
+    return inputGroup;
+  }
+
+  function elementDropdown(widget, extraEl) {
+    const labelElSpec = extraEl.labelElSpec;
+    const selectGroupEl = createElementFn({
+      classes: 'select-group',
+      children: [
+        {
+          tag: 'select',
+          props: { name: widget.key, disabled: widget.disabled || false },
+          datasets: { change: '', key: widget.key },
+          children: [
+            ...widget.options.map(o => ({
+              tag: 'option',
+              props: { value: o, selected: o === widget.value, disabled: widget.disabled || false },
+              textContent: o
+            })),
+            labelElSpec,
+          ]
+        }
+      ]
+    });
+    return selectGroupEl;
+  }
+
+  function elementMultiText(widget, extraEl) {
+    const { labelElSpec, buttonElSpec } = extraEl;
+    const inputGroup = createElementFn({
+      classes: 'input-group',
+      children: [
+        {
+          tag: 'input',
+          props: {
+            type: 'text',
+            name: widget.key,
+            placeholder: ' ',
+            value: (widget.value || []).join(','),
+            maxlength: widget.maxLength,
+            disabled: widget.disabled || false,
+          }
+        },
+        labelElSpec,
+        buttonElSpec,
+      ]
+    });
+    return inputGroup;
+  }
+
+  function elementTextarea(widget, extraEl) {
+    const labelElSpec = extraEl.labelElSpec;
+    const fragment = createElementFn({
+      isFragment: true,
+      children: [
+        {
+          classes: 'input-group',
+          children: [
+            {
+              tag: 'textarea',
+              props: {
+                name: widget.key,
+                placeholder: ' ',
+                spellcheck: widget.spellcheck || false,
+                disabled: widget.disabled || false,
+              },
+              style: { height: widget?.height || '300px' }
+            },
+            labelElSpec,
+          ]
+        },
+        {
+          classes: 'textarea-actions',
+          children: [
+            { htmlContent: widget?.additionalInfo || '' },
+            {
+              classes: 'more-btns',
+              children: [
+                ...(widget.moreButtons?.map(b => ({
+                    tag: 'button',
+                    classes: 'btn',
+                    attrs: { title: b.tooltip },
+                    props: { disabled: b.disabled || false },
+                    datasets: { click: '', key: b.key },
+                    htmlContent: b.name,
+                  }))
+                || []),
+                {
+                  tag: 'button',
+                  classes: 'btn',
+                  props: { disabled: widget.disabled || false },
+                  datasets: { click: '', key: widget.key },
+                  htmlContent: widget?.customButton || `${btnSaveSvg} SAVE`,
+                }
+              ]
+            }
+          ]
+        },
+      ]
+    });
+    return fragment;
+  }
+
+  function elementButtons(widget) {
+    const fragment = createElementFn({
+      isFragment: true,
+      children: [
+        ...widget.buttons.map(b => ({
+          tag: 'button',
+          classes: 'btn',
+          props: { disabled: widget.disabled || false },
+          attrs: { title: b.tooltip },
+          datasets: { click: '', key: b.key },
+          style: { background: b.negative ? 'var(--color-negative)' : '' },
+          textContent: b.name
+        }))
+      ]
+    });
+    return fragment;
+  }
+
+  function elementColorPicker(widget) {
+    const colorEl = createElementFn({
+      tag: 'input',
+      datasets: { change: '', key: widget.key },
+      attrs: {
+        name: widget.key,
+        type: 'color',
+        placeholder: ' ',
+        value: widget.value
+      },
+      props: { disabled: widget.disabled || false },
+    });
+    return colorEl;
+  }
+
+  function elementSlider(widget, extraEl) {
+    const labelElSpec = extraEl.labelElSpec;
+    const fragment = createElementFn({
+      isFragment: true,
+      children: [
+        {
+          classes: 'slider-label',
+          children: [
+            labelElSpec,
+            {
+              tag: 'label',
+              datasets: { sliderLabel: widget.key },
+              textContent: widget.value || 0,
+            }
+          ]
+        },
+        {
+          tag: 'input',
+          datasets: { input: '', key: widget.key },
+          attrs: {
+            type: 'range',
+            name: widget.key,
+            placeholder: ' ',
+            min: widget.min || 0,
+            max: widget.max || 1,
+            step: widget.step || 0.1,
+            value: widget.value || 1,
+          },
+          props: { disabled: widget.disabled || false },
+          events: {
+            ...(!widget?.disableMouseWheel && {
+              wheel: {
+                handler: sliderWheel,
+                options: { passive: false }
+              }
+            })
+          }
+        },
+      ]
+    });
+    return fragment;
+  }
+
+  function sliderWheel(event, sliderEl) {
+    const fromHorizontalWheel = event.deltaX !== 0 && !event.shiftKey;
+    const fromShiftScroll = event.shiftKey && event.deltaY !== 0;
+    if (!fromHorizontalWheel && !fromShiftScroll) return;
+    event.preventDefault();
+    const step = Number(sliderEl.step) || 1;
+
+    // Normalize direction
+    const raw = fromHorizontalWheel ? event.deltaX : event.deltaY;
+
+    const dir = raw > 0 ? -1 : 1;
+    sliderEl.value = Number(sliderEl.value) + dir * step;
+    sliderEl.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
   function generateSettingsWidgets({
     key = '',
     contentObject = [],
@@ -242,151 +467,45 @@ document.addEventListener('DOMContentLoaded', async () => {
       }) : createElementFn({ isFragment : true});
       widgetElement.appendChild(toolTipEl);
 
-      const labelEl = createElementFn({ tag: 'label', classes: 'input-floating-label', textContent: widget.name });
+      const labelElSpec = { tag: 'label', classes: 'input-floating-label', textContent: widget.name };
+      const labelEl = createElementFn(labelElSpec);
 
-      const buttonEl = createElementFn({
+      const buttonElSpec = {
         tag: 'button',
         classes: 'btn btn-float',
         datasets: { click: '', key: widget.key },
         htmlContent: widget?.icon || btnSaveSvg,
-      });
+      }
 
       switch (widget.type){
         case 'toggle': {
           widgetElement.classList.add('card-toggle');
-
-          const toggleEl = createElementFn({ tag: 'label', classes: 'toggle' });
-          const toggleSwitch = createElementFn({ tag: 'span', classes: 'toggle-switch' });
-          const toggleInput = createElementFn({
-            tag: 'input',
-            props: { type: 'checkbox', name: widget.key, checked: !!widget.value, disabled: widget.disabled || false },
-            datasets: { click: '', key: widget.key },
-          });
-          toggleEl.appendChild(toggleInput);
-          toggleEl.appendChild(toggleSwitch);
-
           widgetElement.appendChild(labelEl);
-          widgetElement.appendChild(toggleEl);
+          widgetElement.appendChild(elementToggle(widget));
           break;
         }
         case 'text': {
           widgetElement.classList.add('card-text');
           widgetElement.style.gap = '1rem';
-
-          const inputGroup = createElementFn({ classes: 'input-group' });
-          const inputText = createElementFn({
-            tag: 'input',
-            props: { type: 'text', name: widget.key,
-              placeholder: ' ', value: widget.value,
-              maxlength: widget.maxLength,
-              disabled: widget.disabled || false,
-            }
-          });
-          inputGroup.appendChild(inputText);
-          inputGroup.appendChild(labelEl);
-          inputGroup.appendChild(buttonEl);
-
-          widgetElement.appendChild(inputGroup);
+          widgetElement.appendChild(elementText(widget, { buttonElSpec, labelElSpec }));
           break;
         }
         case 'dropdown': {
           widgetElement.classList.add('card-dropdown');
           widgetElement.style.gap = '1rem';
-
-          const selectGroupEl = createElementFn({ classes: 'select-group' });
-          const selectEl = createElementFn({
-            tag: 'select',
-            props: { name: widget.key, disabled: widget.disabled || false },
-            datasets: { change: '', key: widget.key }
-          });
-          widget.options.forEach(o => {
-            const optionEl = createElementFn({
-              tag: 'option',
-              props: { value: o, selected: o === widget.value, disabled: widget.disabled || false },
-              textContent: o
-            });
-            selectEl.appendChild(optionEl);
-          });
-          selectGroupEl.appendChild(selectEl);
-          selectGroupEl.appendChild(labelEl);
-
-          widgetElement.appendChild(selectGroupEl);
+          widgetElement.appendChild(elementDropdown(widget, { labelElSpec }));
           break;
         }
         case 'multi-text': {
           widgetElement.classList.add('card-multi-text');
           widgetElement.style.gap = '1rem';
-
-          const inputGroup = createElementFn({ classes: 'input-group' });
-
-          const inputEl = createElementFn({
-            tag: 'input',
-            props: {
-              type: 'text',
-              name: widget.key,
-              placeholder: ' ',
-              value: (widget.value || []).join(','),
-              maxlength: widget.maxLength,
-              disabled: widget.disabled || false,
-            }
-          });
-          inputGroup.appendChild(inputEl);
-          inputGroup.appendChild(labelEl);
-          inputGroup.appendChild(buttonEl);
-
-          widgetElement.appendChild(inputGroup);
+          widgetElement.appendChild(elementMultiText(widget, { buttonElSpec, labelElSpec }));
           break;
         }
         case 'textarea': {
           widgetElement.classList.add('card-textarea');
           widgetElement.style.gap = '1rem';
-
-          const inputGroup = createElementFn({ classes: 'input-group' });
-
-          const textareaEl = createElementFn({
-            tag: 'textarea',
-            props: {
-              name: widget.key,
-              placeholder: ' ',
-              spellcheck: widget.spellcheck || false,
-              disabled: widget.disabled || false,
-            },
-            style: { height: widget?.height || '300px' }
-          });
-          inputGroup.appendChild(textareaEl);
-          inputGroup.appendChild(labelEl);
-
-          const textareaActions = createElementFn({ classes: 'textarea-actions' });
-
-          const textareaAdditionInfo = createElementFn({ tag:'div', htmlContent: widget?.additionalInfo || '' });
-          textareaActions.appendChild(textareaAdditionInfo);
-
-          const btnContainer = createElementFn({ classes: 'more-btns' });
-          widget.moreButtons && widget.moreButtons.forEach(b => {
-            const moreButtons = createElementFn({
-              tag: 'button',
-              classes: 'btn',
-              attrs: { title: b.tooltip },
-              props: { disabled: b.disabled || false },
-              datasets: { click: '', key: b.key },
-              htmlContent: b.name,
-            });
-            btnContainer.appendChild(moreButtons);
-          });
-
-          const btnEl = createElementFn({
-            tag: 'button',
-            classes: 'btn',
-            props: { disabled: widget.disabled || false },
-            datasets: { click: '', key: widget.key },
-            htmlContent: widget?.customButton || `${btnSaveSvg} SAVE`,
-          });
-          btnContainer.appendChild(btnEl);
-
-          textareaActions.appendChild(btnContainer);
-
-          widgetElement.appendChild(inputGroup);
-          widgetElement.appendChild(textareaActions);
+          widgetElement.appendChild(elementTextarea(widget, { labelElSpec }));
           break;
         }
         case 'custom-html':
@@ -398,35 +517,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         case 'buttons': {
           widgetElement.classList.add('card-buttons');
           widgetElement.classList.add('frameless');
-          widget.buttons.forEach(b => {
-            const btn = createElementFn({
-              tag: 'button',
-              classes: 'btn',
-              props: { disabled: widget.disabled || false },
-              attrs: { title: b.tooltip },
-              datasets: { click: '', key: b.key },
-              style: { background: b.negative ? 'var(--color-negative)' : '' },
-              textContent: b.name
-            });
-            widgetElement.appendChild(btn);
-          });
+          widgetElement.appendChild(elementButtons(widget));
           break;
         }
         case 'color': {
           widgetElement.classList.add('card-color');
-          const colorEl = createElementFn({
-            tag: 'input',
-            datasets: { change: '', key: widget.key },
-            attrs: {
-              name: widget.key,
-              type: 'color',
-              placeholder: ' ',
-              value: widget.value
-            },
-            props: { disabled: widget.disabled || false },
-          });
           widgetElement.appendChild(labelEl);
-          widgetElement.appendChild(colorEl);
+          widgetElement.appendChild(elementColorPicker(widget));
           break;
         }
         case 'slider': {
@@ -436,32 +533,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             alignItems: 'unset',
             gap: '0.5rem',
           });
-          const sliderLabelEl = createElementFn({ classes: 'slider-label' });
-          const sliderValueEl = createElementFn({
-            tag: 'label',
-            datasets: { sliderLabel: widget.key },
-            textContent: widget.value || 0,
-          });
-          sliderLabelEl.appendChild(labelEl);
-          sliderLabelEl.appendChild(sliderValueEl);
-
-          const sliderEl = createElementFn({
-            tag: 'input',
-            datasets: { input: '', key: widget.key },
-            attrs: {
-              type: 'range',
-              name: widget.key,
-              placeholder: ' ',
-              min: widget.min || 0,
-              max: widget.max || 1,
-              step: widget.step || 0.1,
-              value: widget.value || 1,
-            },
-            props: { disabled: widget.disabled || false },
-          });
-
-          widgetElement.appendChild(sliderLabelEl);
-          widgetElement.appendChild(sliderEl);
+          widgetElement.appendChild(elementSlider(widget, { labelElSpec }));
           break;
         }
         default:

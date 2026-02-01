@@ -421,7 +421,7 @@
   justify-content: space-between;
 }
 
-#modal.custom-settings .card-slider input {
+#modal.custom-settings .card-slider input[type="range"] {
   border-radius: var(--border-radius);
   border: var(--custom-settings-border);
   outline: none;
@@ -430,3 +430,14 @@
   flex: 0 0 50%;
 }
 /* endregion */
+
+@media (max-width: 550px) {
+  #modal.custom-settings .card-buttons button.btn,
+  #modal.custom-settings .more-btns button.btn {
+    width: 100%;
+  }
+
+  #modal.custom-settings .card-textarea .textarea-actions .more-btns {
+    width: 100%;
+  }
+}
