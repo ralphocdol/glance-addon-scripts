@@ -432,7 +432,8 @@
 /* endregion */
 
 @media (max-width: 550px) {
-  #modal.custom-settings button.btn {
+  #modal.custom-settings .card-buttons button.btn,
+  #modal.custom-settings .more-btns button.btn {
     width: 100%;
   }
 
