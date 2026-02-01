@@ -46,6 +46,11 @@
   display: grid;
 }
 
+#modal.custom-settings nav .nav-top {
+  overflow-y: auto;
+  margin-bottom: 7rem;
+}
+
 #modal.custom-settings nav .nav-bottom {
   margin-top: auto;
 }
@@ -188,10 +193,20 @@
   pointer-events: none;
 }
 
+#modal.custom-settings .input-group {
+  --input-space-left: 5px;
+  display: flex;
+  flex: 1;
+  position: relative;
+  width: 100%;
+  border: var(--custom-settings-border);
+  border-radius: var(--border-radius);
+}
+
 #modal.custom-settings .input-group .input-floating-label {
   position: absolute;
   top: 50%;
-  left: 5px;
+  left: var(--input-space-left);
   pointer-events: none;
   border-radius: var(--border-radius);
   transform: translateY(-50%);
@@ -199,11 +214,30 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: calc(100% - 16px); /* 16px from left*2 */
+  max-width: calc(100% - (var(--input-space-left) * 2));
   padding: var(--input-padding);
   color: var(--color-text-subdue);
 }
 
+#modal.custom-settings .input-group input {
+  outline: none;
+  padding: var(--input-padding);
+  margin-left: var(--input-space-left);
+}
+
+#modal.custom-settings .card-toggle input[disabled] + .toggle-switch,
+#modal.custom-settings .select-group select[disabled],
+#modal.custom-settings .input-group input[disabled] {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+#modal.custom-settings .input-group input:focus-within {
+  border-color: var(--color-primary);
+}
+
+#modal.custom-settings .input-group textarea:focus + label,
+#modal.custom-settings .input-group textarea:not(:placeholder-shown) + label,
 #modal.custom-settings .input-group input:focus + label,
 #modal.custom-settings .input-group input:not(:placeholder-shown) + label {
   top: 0;
@@ -211,7 +245,7 @@
   background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   color: var(--color-primary);
-  max-width: calc(100% - 40px); /* 40px from left*2 + 24 to account for the button width */
+  max-width: calc(100% - 40px);
 }
 
 /* region: Toggle switch */
@@ -255,7 +289,7 @@
   width: var(--toggle-circle-size);
   height: var(--toggle-circle-size);
   border-radius: 50%;
-  background: var(--color-widget-background);
+  background: hsl(var(--color-widget-background-hsl-values));
   transition: transform 0.3s;
 }
 
@@ -272,24 +306,6 @@
       - var(--toggle-padding) * 2
     )
   );
-}
-/* endregion */
-
-/* region: Input Field */
-#modal.custom-settings .card-text .input-group {
-  position: relative;
-  width: 100%;
-  border: 1px solid var(--color-primary);
-  border-radius: var(--border-radius);
-}
-
-#modal.custom-settings .card-text .input-group input {
-  outline: none;
-  padding: var(--input-padding);
-}
-
-#modal.custom-settings .card-text .input-group input:focus-within {
-  border-color: var(--color-primary);
 }
 /* endregion */
 
@@ -337,47 +353,11 @@
   -webkit-appearance: none;
   -moz-appearance: none;
 }
-
-#modal.custom-settings .card-dropdown .select-group select[disabled] {
-  cursor: not-allowed;
-  opacity: .5;
-}
-/* endregion */
-
-/* region: multi-text */
-#modal.custom-settings .card-multi-text .input-group {
-  position: relative;
-  width: 100%;
-  border: var(--custom-settings-border);
-  border-radius: var(--border-radius);
-}
-
-#modal.custom-settings .card-multi-text .input-group input {
-  outline: none;
-  padding: var(--input-padding);
-}
-
-#modal.custom-settings .card-multi-text .input-group input[disabled] {
-  cursor: not-allowed;
-  opacity: .5;
-}
-
-#modal.custom-settings .card-multi-text .input-group input:focus-within {
-  border-color: var(--color-primary);
-}
 /* endregion */
 
 /* region: textarea */
 #modal.custom-settings .card-textarea {
   flex-direction: column;
-}
-
-#modal.custom-settings .card-textarea .input-group {
-  display: flex;
-  position: relative;
-  width: 100%;
-  border: var(--custom-settings-border);
-  border-radius: var(--border-radius);
 }
 
 #modal.custom-settings .card-textarea .input-group textarea {
@@ -394,15 +374,6 @@
 
 #modal.custom-settings .card-textarea .input-group textarea:focus-within {
   border-color: var(--color-primary);
-}
-
-#modal.custom-settings .card-textarea .input-group textarea:focus + label,
-#modal.custom-settings .card-textarea .input-group textarea:not(:placeholder-shown) + label {
-  top: 0;
-  font-size: 0.85em;
-  background: hsl(var(--color-widget-background-hsl-values));
-  padding: 0 5px;
-  color: var(--color-primary);
 }
 
 #modal.custom-settings .card-textarea .textarea-actions {
@@ -438,11 +409,6 @@
   outline: none;
   height: 2.5rem;
 }
-
-#modal.custom-settings .card-color input[disabled] {
-  cursor: not-allowed;
-  opacity: .5;
-}
 /* endregion */
 
 /* region: Slider Input */
@@ -462,10 +428,5 @@
   height: 2.5rem;
   accent-color: var(--color-primary);
   flex: 0 0 50%;
-}
-
-#modal.custom-settings .card-slider input[disabled] {
-  cursor: not-allowed;
-  opacity: .5;
 }
 /* endregion */
