@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       Object.assign(menu.closest('.custom-menu-popover').style, {
         pointerEvents: 'inherit',
         color: 'inherit',
+        opacity: 1,
       });
     });
 

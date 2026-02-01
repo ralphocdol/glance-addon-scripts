@@ -8,8 +8,10 @@
 
 .custom-menu .custom-menu-popover {
   pointer-events: none;
-  color: var(--color-text-subdue);
-  transition: color .3s;
+  opacity: 0.5;
+  transition:
+    opacity .3s,
+    color .3s;
 }
 
 .custom-menu-button, /* Nav only */
