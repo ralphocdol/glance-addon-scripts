@@ -3,6 +3,7 @@
 This will replace Glance's default theming and will do more than just change colors.
 
 ![custom-settings](preview/preview1.png)
+
 ![Theme Picker](preview/preview2.png)
 
 > [!NOTE]
