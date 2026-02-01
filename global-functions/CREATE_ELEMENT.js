@@ -1,7 +1,7 @@
 /*
  * Boilerplate for creating HTML element
  */
- 'use strict';
+'use strict';
 (() => {
   // Catch duplicate instances
   const scriptName = 'CREATE_ELEMENT';
@@ -14,7 +14,7 @@
     window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
   }
 
-  window.CREATE_ELEMENT = function ({
+  function createElement ({
     tag = 'div',
     isFragment = false,
     id = null,
@@ -28,6 +28,7 @@
     textContent = null,
     htmlContent = null,
     events = null,
+    children = null,
   } = {}) {
     const e = isFragment ? document.createDocumentFragment() : document.createElement(tag);
 
@@ -55,9 +56,23 @@
 
     if (attrs !== null) safeAttr(e, attrs);
 
-    if (events !== null)
-      for (const [event, handler] of Object.entries(events))
-        e.addEventListener(event, handler);
+    if (events !== null) {
+      for (const [eventName, spec] of Object.entries(events)) {
+        let handler, options;
+
+        if (typeof spec === 'function') {
+          handler = spec;
+          options = undefined;
+        } else {
+          handler = spec.handler;
+          options = spec.options;
+        }
+
+        e.addEventListener(eventName, event => handler(event, e), options);
+      }
+    }
+
+    if (children && Array.isArray(children)) children.forEach(child => e.appendChild(createElement(child)));
 
     return e;
   }
@@ -122,4 +137,6 @@
 
     return frag;
   }
+
+  window.CREATE_ELEMENT = createElement;
 })();
