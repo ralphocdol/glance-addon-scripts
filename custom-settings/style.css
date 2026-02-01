@@ -400,7 +400,7 @@
 #modal.custom-settings .card-textarea .input-group textarea:not(:placeholder-shown) + label {
   top: 0;
   font-size: 0.85em;
-  background: var(--color-widget-background);
+  background: hsl(var(--color-widget-background-hsl-values));
   padding: 0 5px;
   color: var(--color-primary);
 }
