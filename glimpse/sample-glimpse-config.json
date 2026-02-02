@@ -1,0 +1,24 @@
+{
+  "glanceSearch": {
+    "searchUrl": "https://duckduckgo.com/?q={QUERY}",
+    "autofocus": false,
+    "target": "_blank",
+    "placeholder": "Type here to search…",
+    "bangs": [
+      { "title": "DuckDuckGo", "shortcut": "!ddg", "url": "https://duckduckgo.com/?q={QUERY}", "rawQuery": false }
+    ]
+  },
+  "showBangSuggest": true,
+  "searchSuggestEndpoint": "",
+  "pagesSlug": [
+
+  ],
+  "cleanupOtherPages": true,
+  "glimpseKey": "s",
+  "waitForGlance": true,
+  "detectUrl": true,
+  "mobileBottomSearch": true,
+  "resizeOnSoftKeyboardOpen": false,
+  "autoClose": false,
+  "preserveQuery": true
+}
