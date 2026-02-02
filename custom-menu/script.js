@@ -102,6 +102,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
 
+  function isImgOrSvg(str) {
+    return /^\s*<\s*(img|svg)(\s|>)/i.test(str);
+  }
+
   setTimeout(() => {
     const customMenuItems = document.querySelectorAll('.custom-menu-items');
     if (!customMenuItems) return;
@@ -117,7 +121,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             classes: 'custom-menu-item',
             props: { title: tooltip },
             children: [
-              { classes: `${className}${newStatus}`, htmlContent: icon },
+              {
+                classes: `${className}${newStatus}`,
+                ...(isImgOrSvg(icon) ? {htmlContent: icon} : {textContent: icon})
+              },
               { tag: 'label', htmlContent: label || tooltip },
             ],
             events: {

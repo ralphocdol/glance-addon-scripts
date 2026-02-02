@@ -22,9 +22,14 @@ window.createCustomMenuItemElement?.({
   className: 'class-of-the-menu',
   label: 'Label',
   tooltip: 'Tooltip on icon hover',
-  icon: '', // <img> or <svg>
-  actionFn: () => {}, //on icon click function
-  // order: 9, // By default, items are sorted alphabetically by className. Menu with `order` will be prioritized and sorted first.
+  icon: '', // <img> or <svg> or text only
+  actionFn: (e) => {}, //on icon click function
+  
+  // By default, items are sorted alphabetically by className.
+  // Menu with `order` will be prioritized and sorted first.
+  order: 9,
+  
+  dismissOnClick: true, // closes the menu after selection. `true` by default
 });
 ```
 
