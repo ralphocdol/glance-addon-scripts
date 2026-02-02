@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     preserveQuery: true, // Preserves search query
   };
 
+  const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
+  // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
   const glimpseConfigCopy = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseConfig;
   glimpseConfigCopy.glanceSearch.target = glimpseConfigCopy.glanceSearch.target ?? '_blank';
 
@@ -620,6 +622,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             NOTE: <span style="font-style: italic;">Reload the page after every change.</span>
           </div>`
         },
+        { type: 'text', name: 'Load configuration from Path/URL', key: 'glimpse-configuration-url', value: localStorage.getItem(configPathKey) || '', colOffset: 1,
+          icon: `
+            <svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="fillColor"></path> </g></svg>
+          `,
+        },
         { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colOffset: 1 },
         { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colOffset: 1, tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q=' },
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
@@ -665,6 +672,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
 
+          const configPathKey = 'glimpse-config-path-url';
           const configKey = 'glimpse-search-config';
           const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
           const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
@@ -682,28 +690,49 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           const cardElement = type => Array.from(_SETTING_ELEMENT_.childNodes).filter(e => e.classList.contains(type));
           const findElementByCardAndName = (card, name) => cardElement(card).find(e => e.querySelector(`[name="${name}"]`));
+
+          function setValuesWithConfig(config) {
+            getKeyedElement('glanceSearch.searchUrl').value = config.glanceSearch.searchUrl;
+            getKeyedElement('searchSuggestEndpoint').value = config.searchSuggestEndpoint;
+            getKeyedElement('glanceSearch.target').value = config.glanceSearch.target;
+            getKeyedElement('glanceSearch.placeholder').value = config.glanceSearch.placeholder;
+            getKeyedElement('glimpseKey').value = config.glimpseKey;
+            getKeyedElement('glanceSearch.autofocus').checked = config.glanceSearch.autofocus;
+            getKeyedElement('showBangSuggest').checked = config.showBangSuggest;
+            getKeyedElement('cleanupOtherPages').checked = config.cleanupOtherPages;
+            getKeyedElement('pagesSlug').value = config.pagesSlug;
+            getKeyedElement('waitForGlance').checked = config.waitForGlance;
+            getKeyedElement('detectUrl').checked = config.detectUrl;
+            getKeyedElement('mobileBottomSearch').checked = config.mobileBottomSearch;
+            getKeyedElement('resizeOnSoftKeyboardOpen').checked = config.resizeOnSoftKeyboardOpen;
+            getKeyedElement('autoClose').checked = config.autoClose;
+            getKeyedElement('preserveQuery').checked = config.preserveQuery;
+            getKeyedElement('glanceSearch.bangs').value = JSON.stringify(config.glanceSearch.bangs, null, 2).trim();
+          }
         },
         ready: () => {
-          getKeyedElement('glanceSearch.searchUrl').value = storedGlimpseConfig.glanceSearch.searchUrl;
-          getKeyedElement('searchSuggestEndpoint').value = storedGlimpseConfig.searchSuggestEndpoint;
-          getKeyedElement('glanceSearch.target').value = storedGlimpseConfig.glanceSearch.target;
-          getKeyedElement('glanceSearch.placeholder').value = storedGlimpseConfig.glanceSearch.placeholder;
-          getKeyedElement('glimpseKey').value = storedGlimpseConfig.glimpseKey;
-          getKeyedElement('glanceSearch.autofocus').checked = storedGlimpseConfig.glanceSearch.autofocus;
-          getKeyedElement('showBangSuggest').checked = storedGlimpseConfig.showBangSuggest;
-          getKeyedElement('cleanupOtherPages').checked = storedGlimpseConfig.cleanupOtherPages;
-          getKeyedElement('pagesSlug').value = storedGlimpseConfig.pagesSlug;
-          getKeyedElement('waitForGlance').checked = storedGlimpseConfig.waitForGlance;
-          getKeyedElement('detectUrl').checked = storedGlimpseConfig.detectUrl;
-          getKeyedElement('mobileBottomSearch').checked = storedGlimpseConfig.mobileBottomSearch;
-          getKeyedElement('resizeOnSoftKeyboardOpen').checked = storedGlimpseConfig.resizeOnSoftKeyboardOpen;
-          getKeyedElement('autoClose').checked = storedGlimpseConfig.autoClose;
-          getKeyedElement('preserveQuery').checked = storedGlimpseConfig.preserveQuery;
-          getKeyedElement('glanceSearch.bangs').value = JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim();
+          setValuesWithConfig(storedGlimpseConfig);
         },
         click: async e => {
           const target = e.target;
           const keyEl = getKeyedElement(target.dataset.key);
+
+          if (target.dataset.key === 'glimpse-configuration-url') {
+            if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
+              try {
+                localStorage.setItem(configPathKey, keyEl.value);
+                const getUrlConfig = await fetch(customSettingsFunctions.buildFetchUrl(keyEl.value));
+                const urlConfig = await getUrlConfig.json();
+                localStorage.setItem(configKey, JSON.stringify(urlConfig));
+                window.showToast?.('Glimpse Configuration successfully loaded.', { type: 'success' });
+                setTimeout(() => location.reload(), 1000);
+              } catch (err) {
+                window.showToast?.('Failed to fetch configuration, see logs.', { type: 'error' });
+                console.error(err);
+              }
+              return;
+            }
+          }
 
           try {
             if (findElementByCardAndName('card-toggle', keyEl?.name) !== undefined) {
