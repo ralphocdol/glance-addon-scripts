@@ -14,6 +14,11 @@
   --space-horizontal: 1.5rem;
 }
 
+#modal.show {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
 #modal::before {
   content: '';
   position: absolute;
@@ -23,12 +28,6 @@
   background: var(--color-widget-background-highlight);
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-#modal.show {
-  opacity: 1;
-  display: flex;
-  transform: scaleY(1);
 }
 
 #modal.show::before {
@@ -169,7 +168,6 @@
   display: none;
 }
 
-
 [modal-header],
 [modal-body],
 [modal-footer] {
@@ -178,24 +176,6 @@
 
 [custom-modal] {
   cursor: pointer;
-}
-
-#modal.fade-in {
-  animation: fadeIn 0.5s backwards cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-#modal.fade-out {
-  animation: fadeOut 0.5s forwards cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 @keyframes modalFrameEntrance {

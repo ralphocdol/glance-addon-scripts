@@ -137,9 +137,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     modal.style.display = 'flex';
     setTimeout(() => {
+      modal.classList.add('show');
       modal.hidden = false;
-      modal.classList.add('show', 'fade-in');
-    }, 10);
+    }, 100);
     document.body.style.overflow = 'hidden';
     window.closeModal = () => closeModal(cleanUpModalClose);
   }
@@ -147,12 +147,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   function closeModal(cleanUp) {
     const targetModal = document.querySelector('#modal');
     const targetModalBody = targetModal.querySelector('.modal-body');
-    targetModal.hidden = true;
-    targetModal.style.display = 'none';
-    targetModal.classList.remove('show', 'fade-in');
-    targetModalBody.innerHTML = '';
+    targetModal.style.opacity = 0;
+
+    setTimeout(() => {
+      targetModal.classList.remove('show');
+      targetModalBody.innerHTML = '';
+      initializeModalProperties(targetModal);
+    }, 200);
+
     document.body.style.overflow = bodyOverflowState;
-    initializeModalProperties(targetModal);
     setTimeout(() => {
       for (const fn of cleanUp) fn();
       cleanUp.length = 0;
