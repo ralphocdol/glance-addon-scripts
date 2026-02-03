@@ -4,6 +4,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 
 ![desktop](preview/preview1.png)
 ![mobile](preview/preview2.png)
+![custom-settings](preview/preview3.png)
 
 # Dependency
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
