@@ -2,12 +2,14 @@
 
 This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
 
-![desktop](preview/preview1.webp)
-![mobile](preview/preview2.webp)
+![desktop](preview/preview1.png)
+![mobile](preview/preview2.png)
+![custom-settings](preview/preview3.png)
 
 # Dependency
-- [Custom Menu](../custom-menu) *(optional)* — adds the launch button inside the custom menu instead
-- [Custom Settings](../custom-settings) *(optional)* — adds a custom-settings, must have the `Custom Menu` to work. Your modified configurations are ONLY available in wherever browser you modified them to, it does NOT have a sync functionality. This utilizes your browser's `localStorage` and will based its configuration by default from [config.js](config.js).
+- [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
+- [Custom Menu](../custom-menu) *(required)* — adds the launch button inside the custom menu instead
+- [Custom Settings](../custom-settings) *(required)* — adds a custom-settings, must have the `Custom Menu` to work. Your modified configurations are ONLY available in wherever browser you modified them to, it does NOT have a sync functionality. This utilizes your browser's `localStorage`.
 
 # How to load
 ```html
@@ -20,11 +22,11 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 # Limitations
 - Only the Docker, Monitor, and recurring HTML structure widgets like RSS are supported. 
 - If you have a `custom-api`, `extension`, or `html` widget that uses the same HTML structure, you can simply add the property `css-class: glimpsable`.
-- Popovers and similar elements do not work on searched widgets. The scripts have already been initialized and cannot be reinitialized unless you manually copy and reinitialize them with each search—which adds overhead.
+- Popovers and similar elements do not work on searched widgets. The scripts have already been initialized and cannot be reinitialized.
 
 # Configurations
 ## Setting up
-Check the [Glance Search Properties](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#properties-10), it should be almost similar in terms of configuration.
+Copy the [sample-glimpse-config.json](sample-glimpse-config.json) to your `/assets` path, rename and load them in the `custom-settings` addon of Glimpse.
 
 ## Search Suggestion
 Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you'll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
@@ -83,8 +85,8 @@ css-class: glimpse-unique-some-unique-name
 ***Tip**: The class must start with `glimpse-unique-` to be recognized.
 Choose a unique suffix to keep it distinctly identifiable.*
 
-## Other user definable variables
-| Variables           | Description |
+## Other Configuration Options
+| Key           | Description |
 |---------------------|--------------------------|
 | `cleanupOtherPages` | Whether to clean the iframes or not. Can lead to high usage if set to `false` but could otherwise speed up your widget queries |
 | `glimpseKey` | The shortcut key to call Glimpse, set to empty `''` by default to disable. *Setting this to `'s'` will override Glance's default search key focus* |

@@ -11,40 +11,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
   }
 
-  const glimpseConfig = {
-    glanceSearch: {
-      searchUrl: 'https://duckduckgo.com/?q={QUERY}',
-      autofocus: false,
-      target: '_blank',
-      placeholder: 'Type here to search…',
-      bangs: [
-        { title: 'DuckDuckGo', shortcut: '!ddg', url: 'https://duckduckgo.com/?q={QUERY}', rawQuery: false }, // duplicate as needed
-      ],
-    },
-    showBangSuggest: true, // Suggests the search bang list
-    searchSuggestEndpoint: '',
-    pagesSlug: [
-      // Other page search may or may not work due to limitations, and can be slow
-      // 'home-page',
-      // 'page-1',
-      // 'page-2',
-    ],
-    cleanupOtherPages: true, // Warning: setting this to false is like having (# of pagesSlug) tabs opened all at once
-    glimpseKey: '',
-    waitForGlance: true,
-    detectUrl: true, // Make sure to set to false if https://github.com/glanceapp/glance/issues/229 is addressed.
-    mobileBottomSearch: true,
-    resizeOnSoftKeyboardOpen: false, // Read Glimpse's README
-    autoClose: false, // Closes Glimpse on search submit
-    preserveQuery: true, // Preserves search query
-  };
+  // Catch Missing Dependencies
+  const createElementFn = window.CREATE_ELEMENT;
+  if (typeof createElementFn !== 'function') {
+    const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
 
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CUSTOM SETTINGS', type: 'error' });
+    else alert(msg);
+
+    console.error('CREATE_ELEMENT not found');
+    return;
+  }
+
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', pagesSlug: [], cleanupOtherPages: true, glimpseKey: '', waitForGlance: true, detectUrl: true, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
+
+  const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
-  const glimpseConfigCopy = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseConfig;
-  glimpseConfigCopy.glanceSearch.target = glimpseConfigCopy.glanceSearch.target ?? '_blank';
+  // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
+  const glimpseConfig = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseBaseConfig;
+  glimpseConfig.glanceSearch.target = glimpseConfig.glanceSearch.target ?? '_blank';
 
   const replaceBraces = str => str.replace(/[{}]/g, '!');
-  const newTab = glimpseConfigCopy.glanceSearch.target === '_blank';
+  const newTab = glimpseConfig.glanceSearch.target === '_blank';
   const glanceSearchWidget = `
     <div class="widget widget-type-search">
       <div class="widget-header">
@@ -52,16 +40,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
       <div class="widget-content widget-content-frameless">
         <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center"
-          data-default-search-url="${replaceBraces(glimpseConfigCopy.glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glimpseConfigCopy.glanceSearch.target}">
+          data-default-search-url="${replaceBraces(glimpseConfig.glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glimpseConfig.glanceSearch.target}">
           <div class="search-bangs">
-            ${glimpseConfigCopy.glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
+            ${glimpseConfig.glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
           </div>
           <div class="search-icon-container">
             <svg class="search-icon" stroke="var(--color-text-subdue)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
             </svg>
           </div>
-          <input class="search-input" type="text" placeholder="${glimpseConfigCopy.glanceSearch.placeholder}" autocomplete="off" autofocus="${glimpseConfigCopy.glanceSearch.autofocus}">
+          <input class="search-input" type="text" placeholder="${glimpseConfig.glanceSearch.placeholder}" autocomplete="off" autofocus>
           <div class="search-bang"></div>
           <kbd class="hide-on-mobile" title="Press [S] to focus the search input">S</kbd>
         </div>
@@ -75,20 +63,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!search) return;
 
-  const showSearchSuggest = !!glimpseConfigCopy.searchSuggestEndpoint;
+  const showSearchSuggest = !!glimpseConfig.searchSuggestEndpoint;
   const uniqueStore = [];
 
-  const loadingAnimationElement = document.createElement('div');
-  loadingAnimationElement.className = 'custom-page-loading-container';
-  loadingAnimationElement.innerHTML = `
-    <div class="visually-hidden">Loading</div>
-    <div class="loading-icon" aria-hidden="true"></div>
-  `;
+  const loadingAnimationElement = createElementFn({
+    classes: 'custom-page-loading-container',
+    children: [
+      { classes: 'visually-hidden', textContent: 'Loading' },
+      { classes: 'loading-icon', ariaHidden: true },
+    ],
+  });
 
-  if (glimpseConfigCopy.resizeOnSoftKeyboardOpen) {
-    const meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content';
+  if (glimpseConfig.resizeOnSoftKeyboardOpen) {
+    const meta = createElementFn({
+      tag: 'meta',
+      attrs: {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1.0, interactive-widget=resizes-content',
+      },
+    });
     document.head.appendChild(meta);
   }
 
@@ -96,36 +89,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   const windowPathname = window.location.pathname;
   const currentPathList = windowPathname.split('/').filter(p => p !== '');
 
-  const glimpse = document.createElement('div');
-  glimpse.id = 'glimpse';
-  glimpse.className = 'widget-exclude-swipe';
-  glimpse.style.display = 'none';
-  glimpse.innerHTML = `
-    <div class="glimpse-wrapper">
-      <div class="glimpse-search widget widget-type-search"></div>
-      <div class="glimpse-result"></div>
-    </div>
-  `;
+  const glimpse = createElementFn({
+    id: 'glimpse',
+    classes: 'widget-exclude-swipe',
+    style: { display: 'none' },
+    children: [
+      {
+        classes: 'glimpse-wrapper',
+        children: [
+          { classes: 'glimpse-search widget widget-type-search' },
+          { classes: 'glimpse-result' }
+        ]
+      }
+    ],
+    events: {
+      ...(glimpseConfig.autoClose &&
+        {
+          click: e => {
+            if (!e.target.closest('a')) return;
+            closeGlimpse();
+          }
+        }
+      )
+    }
+  });
   document.body.appendChild(glimpse);
-
-  if (glimpseConfigCopy.autoClose) {
-    glimpse.addEventListener('click', e => {
-      if (!e.target.closest('a')) return;
-      closeGlimpse();
-    });
-  }
 
   const bodyOverflowState = document.body.style.overflow;
   const glimpseSearch = document.querySelector('#glimpse .glimpse-search');
   [...search.childNodes].forEach(child => glimpseSearch.appendChild(child.cloneNode(true)));
 
-  const glimpseSearchSuggestContainer = document.createElement('div');
-  glimpseSearchSuggestContainer.classList.add('glimpse-search-suggest-container', 'flex', 'flex-column');
+  const glimpseSearchSuggestContainer = createElementFn({
+    classes: 'glimpse-search-suggest-container flex flex-column'
+  });
   glimpseSearch.appendChild(glimpseSearchSuggestContainer);
 
-  const closeBtnElement = document.createElement('span');
-  closeBtnElement.className = 'close';
-  closeBtnElement.addEventListener('click', () => closeGlimpse());
+  const closeBtnElement = createElementFn({
+    tag: 'span',
+    classes: 'close',
+    events: {
+      click: () => closeGlimpse()
+    }
+  });
   glimpseSearch.querySelector('.widget-header').appendChild(closeBtnElement);
 
   const searchInput = glimpse.querySelector('.search-input');
@@ -137,47 +142,63 @@ document.addEventListener('DOMContentLoaded', async () => {
   const iframeBySlug = {};
 
   glimpseResult.addEventListener('scroll', () => glimpseResult.classList.toggle('is-scrolled', glimpseResult.scrollTop > 0));
-  if (glimpseConfigCopy.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
-  const getBangRegExp = new RegExp(glimpseConfigCopy.glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
+  if (glimpseConfig.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
+  const getBangRegExp = new RegExp(glimpseConfig.glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
 
-  if (glimpseConfigCopy.showBangSuggest) {
-    const searchBangContainer = document.createElement('div');
-    searchBangContainer.className = 'glimpse-bang-suggest';
-    searchBangContainer.innerHTML = ``;
+  if (glimpseConfig.showBangSuggest) {
+    const searchBangContainer = createElementFn({
+      classes: 'glimpse-bang-suggest',
+      style: { display: 'none' }
+    });
+
     glimpseSearchSuggestContainer.appendChild(searchBangContainer);
-    searchBangContainer.style.display = 'none';
-    if (glimpseConfigCopy.glanceSearch?.bangs.length > 0) {
+    if (glimpseConfig.glanceSearch?.bangs.length > 0) {
       searchBangContainer.style.display = 'flex';
-      const searchBangItems = document.createElement('ul');
 
-      searchBangItems.addEventListener('click', e => {
-        const targetElement = e.target.closest('.glimpse-bang-item');
-        if (!targetElement || !searchBangItems.contains(targetElement)) return;
-        searchInput.value = searchInput.value.replace(getBangRegExp, '');
-        searchInput.value = targetElement.dataset.shortcut + ' ' + searchInput.value.trim();
-        glanceBang.textContent = targetElement.dataset.title;
-        searchInput.focus();
-        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      const searchBangItems = createElementFn({
+        tag: 'ul',
+        events: {
+          click: (e, thisEl) => {
+            const targetElement = e.target.closest('.glimpse-bang-item');
+            if (!targetElement || !thisEl.contains(targetElement)) return;
+            searchInput.value = searchInput.value.replace(getBangRegExp, '');
+            searchInput.value = targetElement.dataset.shortcut + ' ' + searchInput.value.trim();
+            glanceBang.textContent = targetElement.dataset.title;
+            searchInput.focus();
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        },
+        children: [
+          ...(glimpseConfig.glanceSearch.bangs.map(b => (
+            {
+              tag: 'li',
+              children: [
+                {
+                  tag: 'span',
+                  classes: 'glimpse-bang-item',
+                  datasets: {
+                    shortcut: b.shortcut,
+                    title: b.title
+                  },
+                  htmlContent: `${b.shortcut} <span class="color-subdue">(${b.title})</span>`
+                }
+              ]
+            }
+          )))
+        ]
       });
-
-      searchBangItems.innerHTML = glimpseConfigCopy.glanceSearch.bangs
-        .map(b => `<li>
-            <span class="glimpse-bang-item" data-shortcut="${b.shortcut}" data-title="${b.title}">
-              ${b.shortcut} <span class="color-subdue">(${b.title})</span>
-            </span>
-        </li>`)
-        .join('');
 
       searchBangContainer.replaceChildren(searchBangItems);
     }
   }
 
   const emptySearchSuggest = msg => `<span style="padding: 3px 15px; margin: 3px 0;">${msg ?? 'No suggestions…'}</span>`;
-  const searchSuggestContainer = document.createElement('div');
-  searchSuggestContainer.className = 'glimpse-search-suggest';
-  searchSuggestContainer.innerHTML = emptySearchSuggest();
+  const searchSuggestContainer = createElementFn({
+    classes: 'glimpse-search-suggest',
+    htmlContent: emptySearchSuggest(),
+    style: { display: showSearchSuggest ? 'flex' : 'none' }
+  });
   glimpseSearchSuggestContainer.appendChild(searchSuggestContainer);
-  searchSuggestContainer.style.display = showSearchSuggest ? 'flex' : 'none';
 
   function isValidUrl(str) {
     const domainPattern = /^([a-z0-9-]{1,63}\.)+[a-z]{2,}$/i;
@@ -252,14 +273,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    if (glimpseConfigCopy.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
+    if (glimpseConfig.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
 
     glimpseWrapper.appendChild(loadingAnimationElement);
     try {
       await searchScrape({ contentElement: glanceContent, query, callId });
       const [suggestionResult] = await Promise.allSettled([
         showSearchSuggestion({ query, controller }),
-        ...glimpseConfigCopy.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
+        ...glimpseConfig.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
       ]);
       if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
@@ -278,25 +299,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   }, 300);
 
-  const openUrl = url => window.open(url, glimpseConfigCopy.glanceSearch.target, 'noopener,noreferrer');
+  const openUrl = url => window.open(url, glimpseConfig.glanceSearch.target, 'noopener,noreferrer');
   const handleKeydown = e => {
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
     if (e.key === 'Enter') {
+      if (glimpseConfig.glanceSearch.searchUrl === '') e.stopImmediatePropagation();
       const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
-      const currentBangObject = glimpseConfigCopy.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
+      const currentBangObject = glimpseConfig.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
 
       if (currentBangObject?.rawQuery) {
         e.stopImmediatePropagation();
         openUrl(currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, '')));
-      } else if (glimpseConfigCopy.detectUrl && isValidUrl(query)) {
+      } else if (glimpseConfig.detectUrl && isValidUrl(query)) {
         e.stopImmediatePropagation();
         openUrl(toUrl(query));
       }
 
       setTimeout(() => {
-        if (glimpseConfigCopy.autoClose) closeGlimpse();
-        if (glimpseConfigCopy.preserveQuery) searchInput.value = query;
+        if (glimpseConfig.autoClose) closeGlimpse();
+        if (glimpseConfig.preserveQuery) searchInput.value = query;
       }, 50);
     }
   }
@@ -322,12 +344,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const hasActiveModal = !!(modalElement && getComputedStyle(modalElement).display !== 'none');
-    if (glimpseConfigCopy.glimpseKey &&
-      event.code === keyToCode(glimpseConfigCopy.glimpseKey) &&
+    if (glimpseConfig.glimpseKey &&
+      event.code === keyToCode(glimpseConfig.glimpseKey) &&
       activeElement !== searchInput &&
       !hasActiveModal) {
         event.preventDefault();
-        if ((glimpseConfigCopy.waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !glimpseConfigCopy.waitForGlance) spawnGlimpse();
+        if ((glimpseConfig.waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !glimpseConfig.waitForGlance) spawnGlimpse();
     }
 
     if (event.key === 'Escape') closeGlimpse();
@@ -429,8 +451,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function cleanupAllIframes() {
-    if (!glimpseConfigCopy.cleanupOtherPages) return;
-    glimpseConfigCopy.pagesSlug.forEach(slug => {
+    if (!glimpseConfig.cleanupOtherPages) return;
+    glimpseConfig.pagesSlug.forEach(slug => {
       const iframe = iframeBySlug[slug];
       if (!iframe) return;
       if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
@@ -439,7 +461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function showSearchSuggestion({ query, controller }) {
-    if (!glimpseConfigCopy.searchSuggestEndpoint) return;
+    if (!glimpseConfig.searchSuggestEndpoint) return;
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
@@ -447,10 +469,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
     try {
-      const getSuggestion = await fetch(glimpseConfigCopy.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+      const getSuggestion = await fetch(glimpseConfig.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
       const result = await getSuggestion.json();
       if (!result?.[1].length) return;
-      const searchEngine = glimpseConfigCopy.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
+      const searchEngine = glimpseConfig.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
       const searchSuggestList = document.createElement('ul');
       searchSuggestList.innerHTML = `
         ${result[1].map(r => {
@@ -493,16 +515,25 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       if (!resultSearch.length) return resolve();
 
-      const newWidget = document.createElement('div');
-      newWidget.className = 'widget';
-      newWidget.innerHTML = `<div class="widget-header"><h2 class="uppercase"></h2></div>`;
-
-      const header = newWidget.querySelector('h2');
       const newTitle = headerSource
         ?? document.getElementById(widgetContent.closest('.widget-group-content')?.getAttribute('aria-labelledby'))?.innerText
         ?? '';
 
-      header.innerHTML = newTitle ? `${pageTitle} <span class="color-primary">→</span> ${newTitle}`: pageTitle;
+      const newWidget = createElementFn({
+        classes: 'widget',
+        children:[
+          {
+            classes: 'widget-header',
+            children: [
+              {
+                tag: 'h2',
+                classes: 'uppercase',
+                htmlContent: newTitle ? `${pageTitle} <span class="color-primary">→</span> ${newTitle}`: pageTitle
+              }
+            ]
+          }
+        ]
+      });
 
       widgetContentClone.innerHTML = '';
       newWidget.appendChild(widgetContentClone);
@@ -607,7 +638,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const customSettingsFunctions = window.customSettingsFunctions;
   if (customSettingsFunctions && typeof customSettingsFunctions === 'object') {
     if (!localStorage.getItem(configKey)) {
-      localStorage.setItem(configKey, JSON.stringify(glimpseConfig));
+      localStorage.setItem(configKey, JSON.stringify(glimpseBaseConfig));
       console.info('Glimpse Local Storage configuration initialized.');
     }
     const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
@@ -615,17 +646,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       name: 'Glimpse',
       order: 1,
       contentObject: [
-        { type: 'custom-html', frameless: true, contentHTML: `
-          <div style="color: var(--color-negative);">
-            NOTE: <span style="font-style: italic;">Reload the page after every change.</span>
-          </div>`
+        { type: 'text', name: 'Load configuration from Path/URL', key: 'glimpse-configuration-url', value: localStorage.getItem(configPathKey) || '', colOffset: 1,
+          icon: `
+            <svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="fillColor"></path> </g></svg>
+          `,
         },
         { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colOffset: 1 },
-        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colOffset: 1, tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q=' },
+        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colOffset: 1,
+          tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q='
+        },
+        { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder, colOffset: 2 },
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
-        { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder },
         { type: 'text', name: 'Shortcut Key', key: 'glimpseKey', value: storedGlimpseConfig.glimpseKey, maxLength: 1 },
-        { type: 'toggle', name: 'Search Auto Focus', key: 'glanceSearch.autofocus', value: storedGlimpseConfig.glanceSearch.autofocus },
         { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
         { type: 'toggle', name: 'Cleanup Other Pages', key: 'cleanupOtherPages', value: storedGlimpseConfig.cleanupOtherPages, tooltip: 'Cleans other page search on Glimpse close. High resource usage if false.' },
         { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'pagesSlug', value: storedGlimpseConfig.pagesSlug, colOffset: 1, tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.' },
@@ -639,6 +671,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { type: 'buttons', buttons: [
           { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
           { name: 'Reload Page', key: 'reload-page' },
+          { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance assets-path.` },
         ], colOffset: 2 },
         { type: 'custom-html', contentHTML: `
           <div class="flex-1">
@@ -662,9 +695,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentEventListener: {
         setup: () => {
           const toastNotification = typeof window.showToast === 'function' ? window.showToast : (msg => alert(msg));
-
           const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
+          const glimpseEl = document.getElementById('glimpse');
 
+          const configPathKey = 'glimpse-config-path-url';
           const configKey = 'glimpse-search-config';
           const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
           const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
@@ -680,45 +714,80 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           }
 
+          async function saveAndReload(config, name, value) {
+            if (await confirmDialog('Save changes and reload?')) {
+              setAndSave(config, name, value);
+              location.reload();
+            } else {
+              setValuesWithConfig(storedGlimpseConfig);
+            }
+          }
+
           const cardElement = type => Array.from(_SETTING_ELEMENT_.childNodes).filter(e => e.classList.contains(type));
           const findElementByCardAndName = (card, name) => cardElement(card).find(e => e.querySelector(`[name="${name}"]`));
+
+          function setValuesWithConfig(config) {
+            getKeyedElement('glanceSearch.searchUrl').value = config.glanceSearch.searchUrl;
+            getKeyedElement('searchSuggestEndpoint').value = config.searchSuggestEndpoint;
+            getKeyedElement('glanceSearch.target').value = config.glanceSearch.target;
+            getKeyedElement('glanceSearch.placeholder').value = config.glanceSearch.placeholder;
+            getKeyedElement('glimpseKey').value = config.glimpseKey;
+            getKeyedElement('showBangSuggest').checked = config.showBangSuggest;
+            getKeyedElement('cleanupOtherPages').checked = config.cleanupOtherPages;
+            getKeyedElement('pagesSlug').value = config.pagesSlug;
+            getKeyedElement('waitForGlance').checked = config.waitForGlance;
+            getKeyedElement('detectUrl').checked = config.detectUrl;
+            getKeyedElement('mobileBottomSearch').checked = config.mobileBottomSearch;
+            getKeyedElement('resizeOnSoftKeyboardOpen').checked = config.resizeOnSoftKeyboardOpen;
+            getKeyedElement('autoClose').checked = config.autoClose;
+            getKeyedElement('preserveQuery').checked = config.preserveQuery;
+            getKeyedElement('glanceSearch.bangs').value = JSON.stringify(config.glanceSearch.bangs, null, 2).trim();
+          }
         },
         ready: () => {
-          getKeyedElement('glanceSearch.searchUrl').value = storedGlimpseConfig.glanceSearch.searchUrl;
-          getKeyedElement('searchSuggestEndpoint').value = storedGlimpseConfig.searchSuggestEndpoint;
-          getKeyedElement('glanceSearch.target').value = storedGlimpseConfig.glanceSearch.target;
-          getKeyedElement('glanceSearch.placeholder').value = storedGlimpseConfig.glanceSearch.placeholder;
-          getKeyedElement('glimpseKey').value = storedGlimpseConfig.glimpseKey;
-          getKeyedElement('glanceSearch.autofocus').checked = storedGlimpseConfig.glanceSearch.autofocus;
-          getKeyedElement('showBangSuggest').checked = storedGlimpseConfig.showBangSuggest;
-          getKeyedElement('cleanupOtherPages').checked = storedGlimpseConfig.cleanupOtherPages;
-          getKeyedElement('pagesSlug').value = storedGlimpseConfig.pagesSlug;
-          getKeyedElement('waitForGlance').checked = storedGlimpseConfig.waitForGlance;
-          getKeyedElement('detectUrl').checked = storedGlimpseConfig.detectUrl;
-          getKeyedElement('mobileBottomSearch').checked = storedGlimpseConfig.mobileBottomSearch;
-          getKeyedElement('resizeOnSoftKeyboardOpen').checked = storedGlimpseConfig.resizeOnSoftKeyboardOpen;
-          getKeyedElement('autoClose').checked = storedGlimpseConfig.autoClose;
-          getKeyedElement('preserveQuery').checked = storedGlimpseConfig.preserveQuery;
-          getKeyedElement('glanceSearch.bangs').value = JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim();
+          setValuesWithConfig(storedGlimpseConfig);
         },
         click: async e => {
           const target = e.target;
           const keyEl = getKeyedElement(target.dataset.key);
 
           try {
-            if (findElementByCardAndName('card-toggle', keyEl?.name) !== undefined) {
-              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
+            if (target.dataset.key === 'glimpse-configuration-url') {
+              if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
+                try {
+                  localStorage.setItem(configPathKey, keyEl.value);
+                  const getUrlConfig = await fetch(customSettingsFunctions.buildFetchUrl(keyEl.value));
+                  const urlConfig = await getUrlConfig.json();
+                  localStorage.setItem(configKey, JSON.stringify(urlConfig));
+                  window.showToast?.('Glimpse Configuration successfully loaded.', { type: 'success' });
+                  setTimeout(() => location.reload(), 1000);
+                } catch (err) {
+                  window.showToast?.('Failed to fetch configuration, see logs.', { type: 'error' });
+                  console.error(err);
+                }
+                return;
+              }
             }
-            if (findElementByCardAndName('card-text', keyEl?.name)) {
+
+            if (target.dataset.key === 'glanceSearch.searchUrl') {
+              const targetEl = glimpseEl.querySelector('.glimpse-search .search');
+              targetEl.dataset.defaultSearchUrl = keyEl?.value;
               setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+              return;
             }
 
-            if (findElementByCardAndName('card-multi-text', keyEl?.name)) {
-              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value?.split(','));
+            if (target.dataset.key === 'glanceSearch.placeholder') {
+              const targetEl = glimpseEl.querySelector('.glimpse-search .search-input');
+              targetEl.placeholder = keyEl?.value;
+              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+              return;
             }
 
-            if (keyEl?.name === 'glanceSearch.bangs') {
-              setAndSave(storedGlimpseConfig, keyEl?.name, JSON.parse(keyEl?.value));
+            if (target.dataset.key === 'mobileBottomSearch') {
+              const targetEl = glimpseEl.querySelector('.glimpse-wrapper');
+              targetEl.classList.toggle('bottom-search', keyEl?.checked);
+              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
+              return;
             }
 
             if (target.dataset.key === 'restore-defaults') {
@@ -726,6 +795,34 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.removeItem(configKey);
                 location.reload();
               }
+              return;
+            }
+
+            if (target.dataset.key === 'copy-all-json-configuration') {
+              try {
+                const configToCopy = JSON.parse(localStorage.getItem(configKey));
+                await navigator.clipboard.writeText(customSettingsFunctions.customJSONStringify(configToCopy));
+                window.showToast?.('JSON configuration has been copied to clipboard.', { type: 'success' });
+              } catch (err) {
+                window.showToast?.('Failed to copy JSON config, see logs', { type: 'error' });
+                console.error(err);
+              }
+              return;
+            }
+
+            if (findElementByCardAndName('card-toggle', keyEl?.name) !== undefined) {
+              saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
+            }
+            if (findElementByCardAndName('card-text', keyEl?.name)) {
+              saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+            }
+
+            if (findElementByCardAndName('card-multi-text', keyEl?.name)) {
+              saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.value?.split(','));
+            }
+
+            if (keyEl?.name === 'glanceSearch.bangs') {
+              saveAndReload(storedGlimpseConfig, keyEl?.name, JSON.parse(keyEl?.value));
             }
 
             if (target.dataset.key === 'reload-page') {
@@ -736,11 +833,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error(e);
           }
         },
-        change: e => {
+        change: async e => {
           const target = e.target;
           const keyEl = getKeyedElement(target.dataset.key);
+
           if (target.dataset.key === 'glanceSearch.target') {
-            setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+            saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+            return;
           }
         }
       }
@@ -748,10 +847,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function createNavElement() {
-    const newElement = document.createElement('div');
-    newElement.setAttribute('title', 'Launch Glimpse');
-    newElement.innerHTML = icon;
-    newElement.addEventListener('click', () => spawnGlimpse());
-    return newElement;
+    return createElementFn({
+      attrs: { title: 'Launch Glimpse' },
+      htmlContent: icon,
+      events: {
+        click: () => spawnGlimpse()
+      }
+    });
   }
 });
