@@ -86,6 +86,7 @@
       ]
     });
   }
+
   document.addEventListener('DOMContentLoaded', async () => {
     let menuList = [];
     function createCustomMenuItemElement(params) {
