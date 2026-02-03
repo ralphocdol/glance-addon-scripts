@@ -1,7 +1,6 @@
 {
   "glanceSearch": {
     "searchUrl": "https://duckduckgo.com/?q={QUERY}",
-    "autofocus": false,
     "target": "_blank",
     "placeholder": "Type here to search…",
     "bangs": [

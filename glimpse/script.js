@@ -23,41 +23,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const glimpseConfig = {
-    glanceSearch: {
-      searchUrl: 'https://duckduckgo.com/?q={QUERY}',
-      target: '_blank',
-      placeholder: 'Type here to search…',
-      bangs: [
-        { title: 'DuckDuckGo', shortcut: '!ddg', url: 'https://duckduckgo.com/?q={QUERY}', rawQuery: false }, // duplicate as needed
-      ],
-    },
-    showBangSuggest: true, // Suggests the search bang list
-    searchSuggestEndpoint: '',
-    pagesSlug: [
-      // Other page search may or may not work due to limitations, and can be slow
-      // 'home-page',
-      // 'page-1',
-      // 'page-2',
-    ],
-    cleanupOtherPages: true, // Warning: setting this to false is like having (# of pagesSlug) tabs opened all at once
-    glimpseKey: '',
-    waitForGlance: true,
-    detectUrl: true, // Make sure to set to false if https://github.com/glanceapp/glance/issues/229 is addressed.
-    mobileBottomSearch: true,
-    resizeOnSoftKeyboardOpen: false, // Read Glimpse's README
-    autoClose: false, // Closes Glimpse on search submit
-    preserveQuery: true, // Preserves search query
-  };
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', pagesSlug: [], cleanupOtherPages: true, glimpseKey: 's', waitForGlance: true, detectUrl: true, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
 
   const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
   // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
-  const glimpseConfigCopy = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseConfig;
-  glimpseConfigCopy.glanceSearch.target = glimpseConfigCopy.glanceSearch.target ?? '_blank';
+  const glimpseConfig = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseBaseConfig;
+  glimpseConfig.glanceSearch.target = glimpseConfig.glanceSearch.target ?? '_blank';
 
   const replaceBraces = str => str.replace(/[{}]/g, '!');
-  const newTab = glimpseConfigCopy.glanceSearch.target === '_blank';
+  const newTab = glimpseConfig.glanceSearch.target === '_blank';
   const glanceSearchWidget = `
     <div class="widget widget-type-search">
       <div class="widget-header">
@@ -65,16 +40,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
       <div class="widget-content widget-content-frameless">
         <div class="search widget-content-frame padding-inline-widget flex gap-15 items-center"
-          data-default-search-url="${replaceBraces(glimpseConfigCopy.glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glimpseConfigCopy.glanceSearch.target}">
+          data-default-search-url="${replaceBraces(glimpseConfig.glanceSearch.searchUrl)}" data-new-tab="${newTab}" data-target="${glimpseConfig.glanceSearch.target}">
           <div class="search-bangs">
-            ${glimpseConfigCopy.glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
+            ${glimpseConfig.glanceSearch.bangs.map(b => `<input type="hidden" data-shortcut="${b.shortcut}" data-title="${b.title}" data-url="${replaceBraces(b.url)}">`)}
           </div>
           <div class="search-icon-container">
             <svg class="search-icon" stroke="var(--color-text-subdue)" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
             </svg>
           </div>
-          <input class="search-input" type="text" placeholder="${glimpseConfigCopy.glanceSearch.placeholder}" autocomplete="off" autofocus>
+          <input class="search-input" type="text" placeholder="${glimpseConfig.glanceSearch.placeholder}" autocomplete="off" autofocus>
           <div class="search-bang"></div>
           <kbd class="hide-on-mobile" title="Press [S] to focus the search input">S</kbd>
         </div>
@@ -88,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!search) return;
 
-  const showSearchSuggest = !!glimpseConfigCopy.searchSuggestEndpoint;
+  const showSearchSuggest = !!glimpseConfig.searchSuggestEndpoint;
   const uniqueStore = [];
 
   const loadingAnimationElement = createElementFn({
@@ -99,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ],
   });
 
-  if (glimpseConfigCopy.resizeOnSoftKeyboardOpen) {
+  if (glimpseConfig.resizeOnSoftKeyboardOpen) {
     const meta = createElementFn({
       tag: 'meta',
       attrs: {
@@ -128,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     ],
     events: {
-      ...(glimpseConfigCopy.autoClose &&
+      ...(glimpseConfig.autoClose &&
         {
           click: e => {
             if (!e.target.closest('a')) return;
@@ -167,17 +142,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const iframeBySlug = {};
 
   glimpseResult.addEventListener('scroll', () => glimpseResult.classList.toggle('is-scrolled', glimpseResult.scrollTop > 0));
-  if (glimpseConfigCopy.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
-  const getBangRegExp = new RegExp(glimpseConfigCopy.glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
+  if (glimpseConfig.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
+  const getBangRegExp = new RegExp(glimpseConfig.glanceSearch.bangs.map(b => '\\' + b.shortcut).join(' |'), 'g');
 
-  if (glimpseConfigCopy.showBangSuggest) {
+  if (glimpseConfig.showBangSuggest) {
     const searchBangContainer = createElementFn({
       classes: 'glimpse-bang-suggest',
       style: { display: 'none' }
     });
 
     glimpseSearchSuggestContainer.appendChild(searchBangContainer);
-    if (glimpseConfigCopy.glanceSearch?.bangs.length > 0) {
+    if (glimpseConfig.glanceSearch?.bangs.length > 0) {
       searchBangContainer.style.display = 'flex';
 
       const searchBangItems = createElementFn({
@@ -194,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         },
         children: [
-          ...(glimpseConfigCopy.glanceSearch.bangs.map(b => (
+          ...(glimpseConfig.glanceSearch.bangs.map(b => (
             {
               tag: 'li',
               children: [
@@ -298,14 +273,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    if (glimpseConfigCopy.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
+    if (glimpseConfig.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
 
     glimpseWrapper.appendChild(loadingAnimationElement);
     try {
       await searchScrape({ contentElement: glanceContent, query, callId });
       const [suggestionResult] = await Promise.allSettled([
         showSearchSuggestion({ query, controller }),
-        ...glimpseConfigCopy.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
+        ...glimpseConfig.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
       ]);
       if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
@@ -324,25 +299,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   }, 300);
 
-  const openUrl = url => window.open(url, glimpseConfigCopy.glanceSearch.target, 'noopener,noreferrer');
+  const openUrl = url => window.open(url, glimpseConfig.glanceSearch.target, 'noopener,noreferrer');
   const handleKeydown = e => {
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
     if (e.key === 'Enter') {
+      if (glimpseConfig.glanceSearch.searchUrl === '') e.stopImmediatePropagation();
       const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
-      const currentBangObject = glimpseConfigCopy.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
+      const currentBangObject = glimpseConfig.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
 
       if (currentBangObject?.rawQuery) {
         e.stopImmediatePropagation();
         openUrl(currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, '')));
-      } else if (glimpseConfigCopy.detectUrl && isValidUrl(query)) {
+      } else if (glimpseConfig.detectUrl && isValidUrl(query)) {
         e.stopImmediatePropagation();
         openUrl(toUrl(query));
       }
 
       setTimeout(() => {
-        if (glimpseConfigCopy.autoClose) closeGlimpse();
-        if (glimpseConfigCopy.preserveQuery) searchInput.value = query;
+        if (glimpseConfig.autoClose) closeGlimpse();
+        if (glimpseConfig.preserveQuery) searchInput.value = query;
       }, 50);
     }
   }
@@ -368,12 +344,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const hasActiveModal = !!(modalElement && getComputedStyle(modalElement).display !== 'none');
-    if (glimpseConfigCopy.glimpseKey &&
-      event.code === keyToCode(glimpseConfigCopy.glimpseKey) &&
+    if (glimpseConfig.glimpseKey &&
+      event.code === keyToCode(glimpseConfig.glimpseKey) &&
       activeElement !== searchInput &&
       !hasActiveModal) {
         event.preventDefault();
-        if ((glimpseConfigCopy.waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !glimpseConfigCopy.waitForGlance) spawnGlimpse();
+        if ((glimpseConfig.waitForGlance && document.body.classList.contains('page-columns-transitioned')) || !glimpseConfig.waitForGlance) spawnGlimpse();
     }
 
     if (event.key === 'Escape') closeGlimpse();
@@ -475,8 +451,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function cleanupAllIframes() {
-    if (!glimpseConfigCopy.cleanupOtherPages) return;
-    glimpseConfigCopy.pagesSlug.forEach(slug => {
+    if (!glimpseConfig.cleanupOtherPages) return;
+    glimpseConfig.pagesSlug.forEach(slug => {
       const iframe = iframeBySlug[slug];
       if (!iframe) return;
       if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
@@ -485,7 +461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function showSearchSuggestion({ query, controller }) {
-    if (!glimpseConfigCopy.searchSuggestEndpoint) return;
+    if (!glimpseConfig.searchSuggestEndpoint) return;
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
@@ -493,10 +469,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
     try {
-      const getSuggestion = await fetch(glimpseConfigCopy.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+      const getSuggestion = await fetch(glimpseConfig.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
       const result = await getSuggestion.json();
       if (!result?.[1].length) return;
-      const searchEngine = glimpseConfigCopy.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
+      const searchEngine = glimpseConfig.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
       const searchSuggestList = document.createElement('ul');
       searchSuggestList.innerHTML = `
         ${result[1].map(r => {
@@ -662,7 +638,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const customSettingsFunctions = window.customSettingsFunctions;
   if (customSettingsFunctions && typeof customSettingsFunctions === 'object') {
     if (!localStorage.getItem(configKey)) {
-      localStorage.setItem(configKey, JSON.stringify(glimpseConfig));
+      localStorage.setItem(configKey, JSON.stringify(glimpseBaseConfig));
       console.info('Glimpse Local Storage configuration initialized.');
     }
     const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
@@ -695,6 +671,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { type: 'buttons', buttons: [
           { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
           { name: 'Reload Page', key: 'reload-page' },
+          { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance assets-path.` },
         ], colOffset: 2 },
         { type: 'custom-html', contentHTML: `
           <div class="flex-1">
@@ -774,45 +751,65 @@ document.addEventListener('DOMContentLoaded', async () => {
           const target = e.target;
           const keyEl = getKeyedElement(target.dataset.key);
 
-          if (target.dataset.key === 'glimpse-configuration-url') {
-            if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
+          try {
+            if (target.dataset.key === 'glimpse-configuration-url') {
+              if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
+                try {
+                  localStorage.setItem(configPathKey, keyEl.value);
+                  const getUrlConfig = await fetch(customSettingsFunctions.buildFetchUrl(keyEl.value));
+                  const urlConfig = await getUrlConfig.json();
+                  localStorage.setItem(configKey, JSON.stringify(urlConfig));
+                  window.showToast?.('Glimpse Configuration successfully loaded.', { type: 'success' });
+                  setTimeout(() => location.reload(), 1000);
+                } catch (err) {
+                  window.showToast?.('Failed to fetch configuration, see logs.', { type: 'error' });
+                  console.error(err);
+                }
+                return;
+              }
+            }
+
+            if (target.dataset.key === 'glanceSearch.searchUrl') {
+              const targetEl = glimpseEl.querySelector('.glimpse-search .search');
+              targetEl.dataset.defaultSearchUrl = keyEl?.value;
+              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+              return;
+            }
+
+            if (target.dataset.key === 'glanceSearch.placeholder') {
+              const targetEl = glimpseEl.querySelector('.glimpse-search .search-input');
+              targetEl.placeholder = keyEl?.value;
+              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
+              return;
+            }
+
+            if (target.dataset.key === 'mobileBottomSearch') {
+              const targetEl = glimpseEl.querySelector('.glimpse-wrapper');
+              targetEl.classList.toggle('bottom-search', keyEl?.checked);
+              setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
+              return;
+            }
+
+            if (target.dataset.key === 'restore-defaults') {
+              if (await confirmDialog('Restoring configuration to default, are you sure about this?')) {
+                localStorage.removeItem(configKey);
+                location.reload();
+              }
+              return;
+            }
+
+            if (target.dataset.key === 'copy-all-json-configuration') {
               try {
-                localStorage.setItem(configPathKey, keyEl.value);
-                const getUrlConfig = await fetch(customSettingsFunctions.buildFetchUrl(keyEl.value));
-                const urlConfig = await getUrlConfig.json();
-                localStorage.setItem(configKey, JSON.stringify(urlConfig));
-                window.showToast?.('Glimpse Configuration successfully loaded.', { type: 'success' });
-                setTimeout(() => location.reload(), 1000);
+                const configToCopy = JSON.parse(localStorage.getItem(configKey));
+                await navigator.clipboard.writeText(customSettingsFunctions.customJSONStringify(configToCopy));
+                window.showToast?.('JSON configuration has been copied to clipboard.', { type: 'success' });
               } catch (err) {
-                window.showToast?.('Failed to fetch configuration, see logs.', { type: 'error' });
+                window.showToast?.('Failed to copy JSON config, see logs', { type: 'error' });
                 console.error(err);
               }
               return;
             }
-          }
 
-          if (target.dataset.key === 'glanceSearch.searchUrl') {
-            const targetEl = glimpseEl.querySelector('.glimpse-search .search');
-            targetEl.dataset.defaultSearchUrl = keyEl?.value;
-            setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
-            return;
-          }
-
-          if (target.dataset.key === 'glanceSearch.placeholder') {
-            const targetEl = glimpseEl.querySelector('.glimpse-search .search-input');
-            targetEl.placeholder = keyEl?.value;
-            setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.value);
-            return;
-          }
-
-          if (target.dataset.key === 'mobileBottomSearch') {
-            const targetEl = glimpseEl.querySelector('.glimpse-wrapper');
-            targetEl.classList.toggle('bottom-search', keyEl?.checked);
-            setAndSave(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
-            return;
-          }
-
-          try {
             if (findElementByCardAndName('card-toggle', keyEl?.name) !== undefined) {
               saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.checked);
             }
@@ -826,13 +823,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (keyEl?.name === 'glanceSearch.bangs') {
               saveAndReload(storedGlimpseConfig, keyEl?.name, JSON.parse(keyEl?.value));
-            }
-
-            if (target.dataset.key === 'restore-defaults') {
-              if (await confirmDialog('Restoring configuration to default, are you sure about this?')) {
-                localStorage.removeItem(configKey);
-                location.reload();
-              }
             }
 
             if (target.dataset.key === 'reload-page') {
