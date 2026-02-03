@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', pagesSlug: [], cleanupOtherPages: true, glimpseKey: 's', waitForGlance: true, detectUrl: true, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', pagesSlug: [], cleanupOtherPages: true, glimpseKey: '', waitForGlance: true, detectUrl: true, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
 
   const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
