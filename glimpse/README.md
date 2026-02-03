@@ -2,8 +2,8 @@
 
 This adds a way to search through your widgets—similar to Quick Launch from [Homepage](https://gethomepage.dev/configs/settings/#quick-launch). There's an open [feature request](https://github.com/glanceapp/glance/issues/133#issuecomment-2159504258) for native support, but until then, this provides a workaround.
 
-![desktop](preview/preview1.webp)
-![mobile](preview/preview2.webp)
+![desktop](preview/preview1.png)
+![mobile](preview/preview2.png)
 
 # Dependency
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
