@@ -13,7 +13,7 @@ This simply adds a custom menu to the navigation bar. And will be used for other
   <!-- Dependencies goes here -->
   
   <link rel="preload" href="/assets/glance-addon-scripts/custom-menu/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <script src="/assets/glance-addon-scripts/custom-menu/script.js?v=1"></script>
+  <script defer src="/assets/glance-addon-scripts/custom-menu/script.js?v=1"></script>
 ```
 
 # Usage
