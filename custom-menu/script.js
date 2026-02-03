@@ -1,5 +1,5 @@
 'use strict';
-document.addEventListener('DOMContentLoaded', async () => {
+(() => {
   // Catch duplicate instances
   const scriptName = 'Custom Menu';
   if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
@@ -15,40 +15,41 @@ document.addEventListener('DOMContentLoaded', async () => {
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
-    if (typeof window.showToast === 'function') {
-      window.showToast?.(msg, { title: 'CUSTOM MENU', type: 'error' });
-    } else {
-      alert(msg);
-    }
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CUSTOM MENU', type: 'error' });
+    else alert(msg);
+
     console.error('CREATE_ELEMENT not found');
     return;
   }
 
   const headerNav = document.querySelector('.header-container > .header');
   const mobileNav = document.querySelector('.mobile-navigation > .mobile-navigation-icons');
-  if (!headerNav || !mobileNav) return;
 
-  const navElement = headerNav.querySelector(':scope > nav');
-  if (!navElement) return;
+  if (headerNav) {
+    const navElement = headerNav.querySelector(':scope > nav');
+    if (navElement) {
+      const headerCustomMenu = createCustomMenuElement();
+      navElement.parentNode.insertBefore(headerCustomMenu, navElement.nextSibling);
+    }
+  }
 
-  const headerCustomMenu = createCustomMenuElement();
-  navElement.parentNode.insertBefore(headerCustomMenu, navElement.nextSibling);
+  if (mobileNav) {
+    const mobileSearchNav = createCustomMenuElement(true);
+    mobileSearchNav.classList.add('mobile-navigation-label');
 
-  const mobileSearchNav = createCustomMenuElement(true);
-  mobileSearchNav.classList.add('mobile-navigation-label');
+    const newCustomMenuItem = createElementFn({
+      classes: 'custom-menu-item',
+      htmlContent: `
+        <a href="#top" class="custom-menu-top">
+          <svg class="custom-menu-item-icon" viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 20L12 4M12 4L18 10M12 4L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        </a>
+        <label>Top</label>
+      `,
+    });
 
-  const newCustomMenuItem = createElementFn({
-    classes: 'custom-menu-item',
-    htmlContent: `
-      <a href="#top" class="custom-menu-top">
-        <svg class="custom-menu-item-icon" viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 20L12 4M12 4L18 10M12 4L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-      </a>
-      <label>Top</label>
-    `,
-  });
-
-  mobileSearchNav.querySelector('.custom-menu-items').appendChild(newCustomMenuItem);
-  mobileNav.prepend(mobileSearchNav);
+    mobileSearchNav.querySelector('.custom-menu-items').appendChild(newCustomMenuItem);
+    mobileNav.prepend(mobileSearchNav);
+  }
 
   document.querySelector('a[href="#top"]:not(.custom-menu-top)').style.display = 'none';
 
@@ -61,10 +62,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           classes: 'custom-menu-popover',
           datasets: {
             popoverType: 'html',
+            popoverPosition: mobile ? 'above' : 'below',
             popoverShowDelay: '0',
             popoverHideDelay: '0',
             popoverMaxWidth: '500px',
-            popoverPosition: mobile ? 'above' : 'below',
             ...(mobile && { popoverPosition: 'above', popoverAnchor: '.custom-menu-button', popoverTrigger: 'click' })
           },
           children: [
@@ -85,81 +86,82 @@ document.addEventListener('DOMContentLoaded', async () => {
       ]
     });
   }
+  document.addEventListener('DOMContentLoaded', async () => {
+    let menuList = [];
+    function createCustomMenuItemElement(params) {
+      const { className, tooltip, icon, actionFn } = params
+      if (!className || !tooltip || !icon || !actionFn) {
+        window.showToast?.('Missing required parameters, see logs.', { title: 'CUSTOM MENU', type: 'error' })
+        console.error('Missing required parameters:', { className, tooltip, icon, actionFn });
+        return;
+      }
 
-  let menuList = [];
-  function createCustomMenuItemElement(params) {
-    const { className, tooltip, icon, actionFn } = params
-    if (!className || !tooltip || !icon || !actionFn) {
-      window.showToast?.('Missing required parameters, see logs.', { title: 'CUSTOM MENU', type: 'error' })
-      console.error('Missing required parameters:', { className, tooltip, icon, actionFn });
-      return;
+      menuList.push(params);
     }
 
-    menuList.push(params);
-  }
+    window.createCustomMenuItemElement = createCustomMenuItemElement;
 
-  window.createCustomMenuItemElement = createCustomMenuItemElement;
+    while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
 
-  while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
+    function isImgOrSvg(str) {
+      return /^\s*<\s*(img|svg)(\s|>)/i.test(str);
+    }
 
-  function isImgOrSvg(str) {
-    return /^\s*<\s*(img|svg)(\s|>)/i.test(str);
-  }
+    setTimeout(() => {
+      const customMenuItems = document.querySelectorAll('.custom-menu-items');
+      if (!customMenuItems) return;
+      const customMenuPopover = document.querySelector('.popover-container');
 
-  setTimeout(() => {
-    const customMenuItems = document.querySelectorAll('.custom-menu-items');
-    if (!customMenuItems) return;
-    const customMenuPopover = document.querySelector('.popover-container');
+      menuList
+        .sort((a, b) => (Number.isFinite(a.order) ? a.order : Infinity) - (Number.isFinite(b.order) ? b.order : Infinity) || a.className.localeCompare(b.className))
+        .forEach(({ className, tooltip, icon, actionFn, status, label, dismissOnClick = true }) => {
+          const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
 
-    menuList
-      .sort((a, b) => (Number.isFinite(a.order) ? a.order : Infinity) - (Number.isFinite(b.order) ? b.order : Infinity) || a.className.localeCompare(b.className))
-      .forEach(({ className, tooltip, icon, actionFn, status, label, dismissOnClick = true }) => {
-        const newStatus = typeof status === 'boolean' ? (status ? ' active' : ' inactive') : '';
+          customMenuItems.forEach(menu => {
+            const customItemEl = createElementFn({
+              classes: 'custom-menu-item',
+              props: { title: tooltip },
+              children: [
+                {
+                  classes: `${className}${newStatus}`,
+                  ...(isImgOrSvg(icon) ? {htmlContent: icon} : {textContent: icon})
+                },
+                { tag: 'label', htmlContent: label || tooltip },
+              ],
+              events: {
+                click: e => {
+                  if (dismissOnClick) customMenuPopover.dispatchEvent(new Event('mouseleave'));
+                  actionFn(e);
+                },
+              }
+            });
+            menu.appendChild(customItemEl);
 
-        customMenuItems.forEach(menu => {
-          const customItemEl = createElementFn({
-            classes: 'custom-menu-item',
-            props: { title: tooltip },
-            children: [
-              {
-                classes: `${className}${newStatus}`,
-                ...(isImgOrSvg(icon) ? {htmlContent: icon} : {textContent: icon})
-              },
-              { tag: 'label', htmlContent: label || tooltip },
-            ],
-            events: {
-              click: e => {
-                if (dismissOnClick) customMenuPopover.dispatchEvent(new Event('mouseleave'));
-                actionFn(e);
-              },
-            }
+            const columns = Array.from(menu.querySelectorAll('.custom-menu-item')).length
+            menu.style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns);
           });
-          menu.appendChild(customItemEl);
+        });
 
-          const columns = Array.from(menu.querySelectorAll('.custom-menu-item')).length
-          menu.style.setProperty('--custom-menu-columns', columns >= 3 ? 3 : columns);
+
+      let hasColumns = false;
+      customMenuItems.forEach(menu => {
+        let columns = menu.style.getPropertyValue('--custom-menu-columns');
+        if (columns === '' || isNaN(columns)) columns = 0;
+        if (!hasColumns) hasColumns = Number(columns) > 0;
+        Object.assign(menu.closest('.custom-menu').style, {
+          cursor: 'pointer',
+          display: hasColumns ? 'flex' : 'none'
+        });
+        Object.assign(menu.closest('.custom-menu-popover').style, {
+          pointerEvents: 'inherit',
+          color: 'inherit',
+          opacity: 1,
         });
       });
 
-
-    let hasColumns = false;
-    customMenuItems.forEach(menu => {
-      let columns = menu.style.getPropertyValue('--custom-menu-columns');
-      if (columns === '' || isNaN(columns)) columns = 0;
-      if (!hasColumns) hasColumns = Number(columns) > 0;
-      Object.assign(menu.closest('.custom-menu').style, {
-        cursor: 'pointer',
-        display: hasColumns ? 'flex' : 'none'
-      });
-      Object.assign(menu.closest('.custom-menu-popover').style, {
-        pointerEvents: 'inherit',
-        color: 'inherit',
-        opacity: 1,
-      });
-    });
-
-    const glanceNativeToTopEl = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
-    if (hasColumns) glanceNativeToTopEl.remove();
-    else glanceNativeToTopEl.style.display = 'flex';
-  }, 500);
-});
+      const glanceNativeToTopEl = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
+      if (hasColumns) glanceNativeToTopEl.remove();
+      else glanceNativeToTopEl.style.display = 'flex';
+    }, 500);
+  });
+})();
