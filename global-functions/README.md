@@ -4,5 +4,5 @@ This will be the place where redundant functions or a boilerplate will be stored
 
 # How to load
 ```html
-  <script async src="/assets/glance-addon-scripts/global-functions/CREATE_ELEMENT.js?v=1"></script>
+  <script src="/assets/glance-addon-scripts/global-functions/CREATE_ELEMENT.js?v=1"></script>
 ```
