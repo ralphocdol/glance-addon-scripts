@@ -270,9 +270,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               props: { value: o, selected: o === widget.value, disabled: widget.disabled || false },
               textContent: o
             })),
-            labelElSpec,
           ]
-        }
+        },
+        labelElSpec,
       ]
     });
     return selectGroupEl;
@@ -570,14 +570,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       mainItems.forEach(c => c.style.display = c.classList.contains('show') ? 'block' : 'none');
 
       const resetElementData = () => {
-        navItems.forEach(e => {
-          e.classList[e.dataset.target === 'about' ? 'add' : 'remove']('active');
-        });
-        mainItems.forEach(e => {
-          const isAbout = e.dataset.content === 'about';
-          e.style.display = isAbout ? 'block' : 'none';
-          e.classList[isAbout ? 'add' : 'remove']('show');
-        });
+        setTimeout(() => {
+          navItems.forEach(e => {
+            e.classList[e.dataset.target === 'about' ? 'add' : 'remove']('active');
+          });
+          mainItems.forEach(e => {
+            const isAbout = e.dataset.content === 'about';
+            e.style.display = isAbout ? 'block' : 'none';
+            e.classList[isAbout ? 'add' : 'remove']('show');
+          });
+        }, 500);
       }
 
       let activeScriptCleanup = null;
