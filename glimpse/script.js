@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
             </svg>
           </div>
-          <input class="search-input" type="text" placeholder="${glimpseConfig.glanceSearch.placeholder}" autocomplete="off" autofocus>
+          <input name="glimpse" class="search-input" type="text" placeholder="${glimpseConfig.glanceSearch.placeholder}" autocomplete="off" autofocus>
           <div class="search-bang"></div>
           <kbd class="hide-on-mobile" title="Press [S] to focus the search input">S</kbd>
         </div>
@@ -701,7 +701,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           const configPathKey = 'glimpse-config-path-url';
           const configKey = 'glimpse-search-config';
           const storedGlimpseConfig = JSON.parse(localStorage.getItem(configKey));
-          const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
 
           function setAndSave(config, name, value) {
             try {
@@ -727,21 +726,21 @@ document.addEventListener('DOMContentLoaded', async () => {
           const findElementByCardAndName = (card, name) => cardElement(card).find(e => e.querySelector(`[name="${name}"]`));
 
           function setValuesWithConfig(config) {
-            getKeyedElement('glanceSearch.searchUrl').value = config.glanceSearch.searchUrl;
-            getKeyedElement('searchSuggestEndpoint').value = config.searchSuggestEndpoint;
-            getKeyedElement('glanceSearch.target').value = config.glanceSearch.target;
-            getKeyedElement('glanceSearch.placeholder').value = config.glanceSearch.placeholder;
-            getKeyedElement('glimpseKey').value = config.glimpseKey;
-            getKeyedElement('showBangSuggest').checked = config.showBangSuggest;
-            getKeyedElement('cleanupOtherPages').checked = config.cleanupOtherPages;
-            getKeyedElement('pagesSlug').value = config.pagesSlug;
-            getKeyedElement('waitForGlance').checked = config.waitForGlance;
-            getKeyedElement('detectUrl').checked = config.detectUrl;
-            getKeyedElement('mobileBottomSearch').checked = config.mobileBottomSearch;
-            getKeyedElement('resizeOnSoftKeyboardOpen').checked = config.resizeOnSoftKeyboardOpen;
-            getKeyedElement('autoClose').checked = config.autoClose;
-            getKeyedElement('preserveQuery').checked = config.preserveQuery;
-            getKeyedElement('glanceSearch.bangs').value = JSON.stringify(config.glanceSearch.bangs, null, 2).trim();
+            _SET_KEYED_ELEMENT_('glanceSearch.searchUrl', { value: config.glanceSearch.searchUrl });
+            _SET_KEYED_ELEMENT_('searchSuggestEndpoint', { value: config.searchSuggestEndpoint });
+            _SET_KEYED_ELEMENT_('glanceSearch.target', { value: config.glanceSearch.target });
+            _SET_KEYED_ELEMENT_('glanceSearch.placeholder', { value: config.glanceSearch.placeholder });
+            _SET_KEYED_ELEMENT_('glimpseKey', { value: config.glimpseKey });
+            _SET_KEYED_ELEMENT_('showBangSuggest', { checked: config.showBangSuggest });
+            _SET_KEYED_ELEMENT_('cleanupOtherPages', { checked: config.cleanupOtherPages });
+            _SET_KEYED_ELEMENT_('pagesSlug', { value: config.pagesSlug });
+            _SET_KEYED_ELEMENT_('waitForGlance', { checked: config.waitForGlance });
+            _SET_KEYED_ELEMENT_('detectUrl', { checked: config.detectUrl });
+            _SET_KEYED_ELEMENT_('mobileBottomSearch', { checked: config.mobileBottomSearch });
+            _SET_KEYED_ELEMENT_('resizeOnSoftKeyboardOpen', { checked: config.resizeOnSoftKeyboardOpen });
+            _SET_KEYED_ELEMENT_('autoClose', { checked: config.autoClose });
+            _SET_KEYED_ELEMENT_('preserveQuery', { checked: config.preserveQuery });
+            _SET_KEYED_ELEMENT_('glanceSearch.bangs', { value: JSON.stringify(config.glanceSearch.bangs, null, 2).trim() });
           }
         },
         ready: () => {
@@ -749,7 +748,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         click: async e => {
           const target = e.target;
-          const keyEl = getKeyedElement(target.dataset.key);
+          const keyEl = _KEYED_ELEMENT_(target.dataset.key);
 
           try {
             if (target.dataset.key === 'glimpse-configuration-url') {
@@ -835,7 +834,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         change: async e => {
           const target = e.target;
-          const keyEl = getKeyedElement(target.dataset.key);
+          const keyEl = _KEYED_ELEMENT_(target.dataset.key);
 
           if (target.dataset.key === 'glanceSearch.target') {
             saveAndReload(storedGlimpseConfig, keyEl?.name, keyEl?.value);

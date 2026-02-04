@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  const configPathKey = 'glance-theme-config-path';
   const configKey = 'glance-theme-storage';
   // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
   const { themeProperties, setAll } = newThemePropertiesManager();
@@ -506,66 +507,75 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!(customSettingsFunctions && typeof customSettingsFunctions === 'object')) return;
 
   const glanceThemeConfigPresets = glanceThemeConfig?.preset || [];
+  const glanceThemeConfigProperties = glanceThemeConfig.themeProperties;
 
   const configForOverride = glanceThemeConfig.overrideTheming ? [
     { type: 'toggle', name: 'Follow System Scheme', key: 'follow-system-scheme',
       value: glanceThemeConfig?.followSystemScheme, tooltip: 'Requires one of each scheme.',
     },
-    { type: 'text', name: 'Load Theme Config from Path/URL', key: 'theme-configuration-url', value: '', colOffset: 2,
+    { type: 'text', name: 'Load Theme Config from Path/URL', key: 'theme-configuration-url', value: localStorage.getItem(configPathKey) || '', colOffset: 2,
       tooltip: 'A way to load theme in JSON format from either your assets-path or from a URL.',
       icon: `
         <svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="fillColor"></path> </g></svg>
       `,
     },
-    { type: 'dropdown', name: 'Theme Preset', key: 'theme-preset', value: glanceThemeConfig.themeProperties.themeName,
+    { type: 'dropdown', name: 'Theme Preset', key: 'theme-preset', value: glanceThemeConfigProperties.themeName,
       options: glanceThemeConfigPresets.map(p => p.themeName) || [], disabled: glanceThemeConfigPresets.length === 0,
       tooltip: 'Can only be populated by loading a theme configuration from a Path/URL'
     },
-    { type: 'toggle', name: 'Default for Scheme', key: 'is-default', value: glanceThemeConfig.themeProperties.isDefault,
+    { type: 'toggle', name: 'Default for Scheme', key: 'is-default', value: glanceThemeConfigProperties.isDefault,
       tooltip: 'Only one default per light and dark scheme, will automatically uncheck others.'
     },
-    { type: 'toggle', name: 'Light Scheme', key: 'is-light-scheme', value: glanceThemeConfig.themeProperties.isLight,
+    { type: 'toggle', name: 'Light Scheme', key: 'is-light-scheme', value: glanceThemeConfigProperties.isLight,
       disabled: glanceThemeConfig?.followSystemScheme || false, tooltip: 'Set this theme a light theme. Follow System Scheme needs to be disabled.'
     },
-    { type: 'color', name: 'Background Color', key: 'background-color', value: hslToHex(glanceThemeConfig.themeProperties.backgroundColor) },
-    { type: 'color', name: 'Primary Color', key: 'primary-color', value: hslToHex(glanceThemeConfig.themeProperties.primaryColor) },
-    { type: 'color', name: 'Positive Color', key: 'positive-color', value: hslToHex(glanceThemeConfig.themeProperties.positiveColor) },
-    { type: 'color', name: 'Negative Color', key: 'negative-color', value: hslToHex(glanceThemeConfig.themeProperties.negativeColor) },
+    { type: 'color', name: 'Background Color', key: 'background-color', value: hslToHex(glanceThemeConfigProperties.backgroundColor),
+      title: `HSL: ${glanceThemeConfigProperties.backgroundColor}\nHEX: ${hslToHex(glanceThemeConfigProperties.backgroundColor)}`
+    },
+    { type: 'color', name: 'Primary Color', key: 'primary-color', value: hslToHex(glanceThemeConfigProperties.primaryColor),
+      title: `HSL: ${glanceThemeConfigProperties.primaryColor}\nHEX: ${hslToHex(glanceThemeConfigProperties.primaryColor)}`,
+    },
+    { type: 'color', name: 'Positive Color', key: 'positive-color', value: hslToHex(glanceThemeConfigProperties.positiveColor),
+      title: `HSL: ${glanceThemeConfigProperties.positiveColor}\nHEX: ${hslToHex(glanceThemeConfigProperties.positiveColor)}`,
+    },
+    { type: 'color', name: 'Negative Color', key: 'negative-color', value: hslToHex(glanceThemeConfigProperties.negativeColor),
+      title: `HSL: ${glanceThemeConfigProperties.negativeColor}\nHEX: ${hslToHex(glanceThemeConfigProperties.negativeColor)}`,
+    },
     { type: 'slider', name: 'Contrast Multiplier', key: 'contrast-multiplier',
       min: 0.3, max: 2, step: 0.1,
-      value: glanceThemeConfig.themeProperties.contrastMultiplier,
+      value: glanceThemeConfigProperties.contrastMultiplier,
     },
     { type: 'slider', name: 'Text Saturation Multiplier', key: 'text-saturation-multiplier',
       min: 0.3, max: 5, step: 0.1,
-      value: glanceThemeConfig.themeProperties.textSaturationMultiplier,
+      value: glanceThemeConfigProperties.textSaturationMultiplier,
     },
     { type: 'slider', name: 'Border Radius', key: 'border-radius',
       min: 0, max: 30, step: 1,
-      value: parseFloat(glanceThemeConfig.themeProperties.borderRadius),
+      value: parseFloat(glanceThemeConfigProperties.borderRadius),
     },
     { type: 'text', name: 'Background Image Path/URL', key: 'background-image-path',
-      value: glanceThemeConfig.themeProperties?.backgroundImage || '',
+      value: glanceThemeConfigProperties?.backgroundImage || '',
       colOffset: 2, tooltip: 'Recommended: 1920×1080 (max 2560px wide), under 1 MB. Beyond these may affect performance!',
     },
     { type: 'slider', name: 'Background Image Alpha', key: 'background-image-url-alpha',
-      min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfig.themeProperties?.backgroundImage === '',
-      value: glanceThemeConfig.themeProperties.backgroundImageAlpha || 0.5,
+      min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfigProperties?.backgroundImage === '',
+      value: glanceThemeConfigProperties.backgroundImageAlpha || 0.5,
     },
     { type: 'slider', name: 'Widget Background Alpha', key: 'color-widget-background-alpha',
       min: 0.1, max: 1, step: 0.05,
-      value: glanceThemeConfig.themeProperties.colorWidgetBackgroundAlpha,
+      value: glanceThemeConfigProperties.colorWidgetBackgroundAlpha,
     },
     { type: 'slider', name: 'Widget Background Blur', key: 'widget-background-blur',
       min: 0, max: 12, step: 1,
-      value: glanceThemeConfig.themeProperties.widgetBackgroundBlur,
+      value: glanceThemeConfigProperties.widgetBackgroundBlur,
       tooltip: 'WARNING! GPU-intensive, set to 0px to disable.',
     },
     { type: 'slider', name: 'Color Popover Alpha', key: 'color-popover-background-alpha',
       min: 0.1, max: 1, step: 0.05,
-      value: glanceThemeConfig.themeProperties.colorPopoverBackgroundAlpha,
+      value: glanceThemeConfigProperties.colorPopoverBackgroundAlpha,
     },
     { type: 'textarea', name: 'Current JSON Configuration', key: 'current-configuration',
-      value: JSON.stringify(glanceThemeConfig.themeProperties, null, 2), colOffset: 1, height: '310px',
+      value: JSON.stringify(glanceThemeConfigProperties, null, 2), colOffset: 1, height: '310px',
       moreButtons: [
         { name: 'Copy this configuration', key: 'copy-this-json-configuration' },
       ]
@@ -654,20 +664,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
 
-        const getKeyedElement = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
-        const sliderLabelElement = key => _SETTING_ELEMENT_.querySelector(`[data-slider-label="${key}"]`);
+        const followSystemIsChecked = _KEYED_ELEMENT_('follow-system-scheme')?.checked || false;
 
-        const followSystemIsChecked = getKeyedElement('follow-system-scheme')?.checked || false;
+        function setColorInputValue(el, color) {
+          const colorHex = hslToHex(color);
+          _SET_KEYED_ELEMENT_(el, { value: colorHex, title: `HSL: ${color}\nHEX: ${colorHex}` });
+        }
 
         function setValuesWithConfig(config) {
           const configThemeProperties = config.themeProperties;
-          const themePresetEl = getKeyedElement('theme-preset');
-          const isLightEl = getKeyedElement('is-light-scheme');
+          const themePresetEl = _KEYED_ELEMENT_('theme-preset');
           const presets = config?.preset || [];
-          const backgroundImageUrlAlphaEl = getKeyedElement('background-image-url-alpha');
 
-          getKeyedElement('override-theming').checked = config.overrideTheming;
-          getKeyedElement('follow-system-scheme').checked = config?.followSystemScheme;
+          _SET_KEYED_ELEMENT_('override-theming', { checked: config.overrideTheming });
+          _SET_KEYED_ELEMENT_('follow-system-scheme', { checked: config?.followSystemScheme });
+
           themePresetEl.value = configThemeProperties.themeName;
           themePresetEl.replaceChildren(...presets
             .filter(o =>
@@ -678,33 +689,35 @@ document.addEventListener('DOMContentLoaded', async () => {
               return new Option(`${(o.isLight ? '☀️' : '🌙')} ${o.themeName}`, o.themeName, selected, selected);
             })
           || []);
-          getKeyedElement('is-default').checked = configThemeProperties.isDefault;
-          isLightEl.checked = configThemeProperties.isLight;
-          getKeyedElement('background-color').value = hslToHex(configThemeProperties.backgroundColor);
-          getKeyedElement('primary-color').value = hslToHex(configThemeProperties.primaryColor);
-          getKeyedElement('positive-color').value = hslToHex(configThemeProperties.positiveColor);
-          getKeyedElement('negative-color').value = hslToHex(configThemeProperties.negativeColor);
-          getKeyedElement('contrast-multiplier').value = configThemeProperties.contrastMultiplier;
-          getKeyedElement('text-saturation-multiplier').value = configThemeProperties.textSaturationMultiplier;
-          getKeyedElement('border-radius').value = parseFloat(configThemeProperties.borderRadius || '5');
-          getKeyedElement('background-image-path').value = configThemeProperties.backgroundImage || '';
-          backgroundImageUrlAlphaEl.value = configThemeProperties.backgroundImageAlpha || 0.5;
-          getKeyedElement('color-widget-background-alpha').value = configThemeProperties.colorWidgetBackgroundAlpha || 1;
-          getKeyedElement('widget-background-blur').value = configThemeProperties.widgetBackgroundBlur || 0;
-          getKeyedElement('color-popover-background-alpha').value = configThemeProperties.colorPopoverBackgroundAlpha || 1;
-          getKeyedElement('current-configuration').value = customSettingsFunctions.customJSONStringify(configThemeProperties);
-
-          sliderLabelElement('contrast-multiplier').textContent = configThemeProperties.contrastMultiplier;
-          sliderLabelElement('text-saturation-multiplier').textContent = configThemeProperties.textSaturationMultiplier;
-          sliderLabelElement('border-radius').textContent = configThemeProperties.borderRadius || '5px';
-          sliderLabelElement('background-image-url-alpha').textContent = configThemeProperties.backgroundImageAlpha || 1;
-          sliderLabelElement('color-widget-background-alpha').textContent = configThemeProperties.colorWidgetBackgroundAlpha || 1;
-          sliderLabelElement('widget-background-blur').textContent = (configThemeProperties.widgetBackgroundBlur || 0) + 'px';
-          sliderLabelElement('color-popover-background-alpha').textContent = configThemeProperties.colorPopoverBackgroundAlpha || 1;
-
-          isLightEl.disabled = config.followSystemScheme;
           themePresetEl.disabled = presets.length === 0;
-          backgroundImageUrlAlphaEl.disabled = configThemeProperties.backgroundImage === '';
+
+          _SET_KEYED_ELEMENT_('is-default', { checked: configThemeProperties.isDefault });
+          _SET_KEYED_ELEMENT_('is-light-scheme', { checked: configThemeProperties.isLight, disabled: config.followSystemScheme });
+          setColorInputValue('background-color', configThemeProperties.backgroundColor);
+          setColorInputValue('primary-color', configThemeProperties.primaryColor);
+          setColorInputValue('positive-color', configThemeProperties.positiveColor);
+          setColorInputValue('negative-color', configThemeProperties.negativeColor);
+          _SET_KEYED_ELEMENT_('contrast-multiplier', { value: configThemeProperties.contrastMultiplier });
+          _SET_KEYED_ELEMENT_('text-saturation-multiplier', { value: configThemeProperties.textSaturationMultiplier });
+          _SET_KEYED_ELEMENT_('border-radius', { value: parseFloat(configThemeProperties.borderRadius || '5') });
+
+          _SET_KEYED_ELEMENT_('background-image-path', { value: configThemeProperties.backgroundImage || '' });
+          _SET_KEYED_ELEMENT_('background-image-url-alpha', {
+            value: configThemeProperties.backgroundImageAlpha || 0.5,
+            disabled: configThemeProperties.backgroundImage === ''
+          });
+          _SET_KEYED_ELEMENT_('color-widget-background-alpha', { value: configThemeProperties.colorWidgetBackgroundAlpha || 1 });
+          _SET_KEYED_ELEMENT_('widget-background-blur', { value: configThemeProperties.widgetBackgroundBlur || 0 });
+          _SET_KEYED_ELEMENT_('color-popover-background-alpha', { value: configThemeProperties.colorPopoverBackgroundAlpha || 1 });
+          _SET_KEYED_ELEMENT_('current-configuration', { value: customSettingsFunctions.customJSONStringify(configThemeProperties) });
+
+          _SET_SLIDER_LABEL_('contrast-multiplier', configThemeProperties.contrastMultiplier);
+          _SET_SLIDER_LABEL_('text-saturation-multiplier', configThemeProperties.textSaturationMultiplier);
+          _SET_SLIDER_LABEL_('border-radius', configThemeProperties.borderRadius || '5px');
+          _SET_SLIDER_LABEL_('background-image-url-alpha', configThemeProperties.backgroundImageAlpha || 1);
+          _SET_SLIDER_LABEL_('color-widget-background-alpha', configThemeProperties.colorWidgetBackgroundAlpha || 1);
+          _SET_SLIDER_LABEL_('widget-background-blur', (configThemeProperties.widgetBackgroundBlur || 0) + 'px');
+          _SET_SLIDER_LABEL_('color-popover-background-alpha', configThemeProperties.colorPopoverBackgroundAlpha || 1);
         }
 
         const updateConfig = () => {
@@ -714,14 +727,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       ready: () => {
         const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
         if (!storedThemesConfig.overrideTheming) return;
-        getKeyedElement('theme-configuration-url').value = localStorage.getItem(configPathKey);
         setValuesWithConfig(storedThemesConfig);
-        followSystemSchemeFn(getKeyedElement('follow-system-scheme').checked, () => updateConfig());
+        followSystemSchemeFn(_KEYED_ELEMENT_('follow-system-scheme').checked, () => updateConfig());
       },
       click: async e => {
         const storedThemesConfig = JSON.parse(localStorage.getItem(configKey));
         const target = e.target;
-        const keyEl = getKeyedElement(target.dataset.key);
+        const keyEl = _KEYED_ELEMENT_(target.dataset.key);
 
         if (target.dataset.key === 'override-theming') {
           if (await confirmDialog(target.checked ? 'This will override the built one rendering it useless, proceed and reload?' : 'Disable and reload?')) {
@@ -737,7 +749,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           customSettingsFunctions.setValueByPath(storedThemesConfig, 'followSystemScheme', target.checked);
           localStorage.setItem(configKey, JSON.stringify({...storedThemesConfig }));
           updateConfig();
-          followSystemSchemeFn(getKeyedElement('follow-system-scheme').checked, () => updateConfig());
+          followSystemSchemeFn(_KEYED_ELEMENT_('follow-system-scheme').checked, () => updateConfig());
           document.querySelectorAll('.theme-picker .auto-theme-toggle-container [name="auto-follow-system"]').forEach(t => t.checked = target.checked);
         }
 
@@ -778,7 +790,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (target.dataset.key === 'reload-page' && await confirmDialog('Reload page?', { parentElement: document.getElementById('modalDescription') })) location.reload();
         if (target.dataset.key === 'background-image-path') {
-          setBackgroundImage(getKeyedElement('background-image-path').value);
+          setBackgroundImage(_KEYED_ELEMENT_('background-image-path').value);
           updateConfig();
           window.showToast?.('Background image updated.', { type: 'success' });
         }
