@@ -128,6 +128,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     return function (_KEY_) {
       const _SETTING_ELEMENT_ = _KEY_ && document.querySelector('#custom-settings .'+ _KEY_);
       if (!_SETTING_ELEMENT_) return;
+
+      // Helper functions
+      const _KEYED_ELEMENT_ = key => _SETTING_ELEMENT_.querySelector(`[name="${key}"]`);
+      const _SET_KEYED_ELEMENT_ = (key, properties) => Object.assign(_KEYED_ELEMENT_(key), { ...properties });
+      const _SET_SLIDER_LABEL_ = (key, value) => _SETTING_ELEMENT_.querySelector(`[data-slider-label="${key}"]`).textContent = value;
+
       const _CLEANUP_LISTENER_ = [];
 
       /*__BODY__*/
@@ -380,7 +386,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         name: widget.key,
         type: 'color',
         placeholder: ' ',
-        value: widget.value
+        value: widget.value,
+        title: widget.title || widget.value,
       },
       props: { disabled: widget.disabled || false },
     });

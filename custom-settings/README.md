@@ -35,8 +35,11 @@ Needs to be in loaded after the Glance is completely loaded. See other widgets t
     ],
     contentEventListener: {
       // Every function here has access to the following:
-      // _SETTING_ELEMENT_ = this is the main element, the parent element
-      // _KEY_ = the key of the element, mainly used for class of the parent element
+      // _SETTING_ELEMENT_    = this is the main element, the parent element
+      // _KEY_                = the key of the element, mainly used for class of the parent element
+      // _KEYED_ELEMENT_      = query's the element by key from contentObject 
+      // _SET_KEYED_ELEMENT_  = sets the properties of the keyed element (value, checked, title and more)
+      // _SET_SLIDER_LABEL_   = for slider type, updates the label on the right side
       // 
       // Every function cannot access anything outside of window.createCustomSettingsItem
        
