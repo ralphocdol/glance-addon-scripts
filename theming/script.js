@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     { type: 'text', name: 'Background Image Path/URL', key: 'background-image-path',
       value: glanceThemeConfigProperties?.backgroundImage || '',
-      colOffset: 2, tooltip: 'Recommended: 1920×1080 (max 2560px wide), under 1 MB. Beyond these may affect performance!',
+      colOffset: 2, tooltip: 'Recommended: Image should be under 1 MB. Beyond this may affect performance!',
     },
     { type: 'slider', name: 'Background Image Alpha', key: 'background-image-url-alpha',
       min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfigProperties?.backgroundImage === '',
@@ -662,7 +662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           setBorderRadius,
         } = newThemePropertiesManager();
 
-        const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
+        const confirmDialog = typeof window.customDialog === 'function' ? (msg, config) => window.customDialog(msg, config) : msg => window.confirm(msg);
 
         const followSystemIsChecked = _KEYED_ELEMENT_('follow-system-scheme')?.checked || false;
 
@@ -788,11 +788,32 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }
 
-        if (target.dataset.key === 'reload-page' && await confirmDialog('Reload page?', { parentElement: document.getElementById('modalDescription') })) location.reload();
+        if (target.dataset.key === 'reload-page' && await confirmDialog('Reload page?')) location.reload();
         if (target.dataset.key === 'background-image-path') {
-          setBackgroundImage(_KEYED_ELEMENT_('background-image-path').value);
-          updateConfig();
-          window.showToast?.('Background image updated.', { type: 'success' });
+          const imagePath = _KEYED_ELEMENT_('background-image-path').value;
+          const setImagePath = () => {
+            setBackgroundImage(imagePath);
+            updateConfig();
+            window.showToast?.('Background image updated.', { type: 'success' });
+          }
+          try {
+            const queryImage = await fetch(imagePath);
+            const imageSize = queryImage.headers.get('content-length');
+            const isAcceptableSize = imageSize && Number(imageSize) <= 1048576;
+            if (isAcceptableSize ||
+              (!isAcceptableSize &&
+                await confirmDialog(`Image is higher than 1MB and may cause high memory usage.
+                  Do you still want to set this as background image?`, { confirmText: 'YES' }))) {
+                setImagePath();
+            }
+          } catch (error) {
+            if (await confirmDialog(`Failed to determine image size.
+              Be warned that recommended is under 1MB,
+              beyond this can affect performance.
+              Do you still want to set this as background image?`, { confirmText: 'YES' })) {
+                setImagePath();
+            }
+          }
         }
 
         if (target.dataset.key === 'copy-glance-theme-config') {
