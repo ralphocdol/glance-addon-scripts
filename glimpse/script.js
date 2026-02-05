@@ -695,7 +695,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentEventListener: {
         setup: () => {
           const toastNotification = typeof window.showToast === 'function' ? window.showToast : (msg => alert(msg));
-          const confirmDialog = typeof window.customDialog === 'function' ? msg => window.customDialog(msg, { type: 'confirm' }) : msg => window.confirm(msg);
+          const confirmDialog = typeof window.customDialog === 'function' ? (msg, config) => window.customDialog(msg, config) : msg => window.confirm(msg);
           const glimpseEl = document.getElementById('glimpse');
 
           const configPathKey = 'glimpse-config-path-url';

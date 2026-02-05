@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const createElementFn = window.CREATE_ELEMENT;
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
-    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CONFIRM_DIALOG', type: 'error' });
+    if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CUSTOM DIALOG', type: 'error' });
 
     console.error('CREATE_ELEMENT not found');
     window.customDialog = message => window.confirm(message);
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.body.appendChild(dialog);
 
-  async function customDialog(message, config) {
+  async function customDialog(message, config = {}) {
     return new Promise(resolve => {
       const {
         type = 'confirm',
