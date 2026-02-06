@@ -56,7 +56,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
 
 ### Loading Script
-We will use the Glance's served assets path at `/assets/`. You can also clone the entire project in there.
+We will use the Glance's served assets path at `/assets/`.
 
 #### in the `document` config:
 ```yaml
@@ -67,6 +67,26 @@ document:
     <link rel="preload" href="/assets/glance-addon-scripts/toast-message/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <script defer src="/assets/glance-addon-scripts/toast-message/script.js?v=1"></script>
 ```
+
+#### Cloned Project
+You can clone this project inside the `/assets/` and load all of them using [load-addons.html](load-addons.html).
+Let's assume your assets folder is `/home/user/glance-assets`:
+
+```bash
+cd /home/user/glance-assets
+git clone https://github.com/ralphocdol/glance-addon-scripts.git
+```
+
+Then on your `glance.yml`
+```yaml
+server:
+  assets-path: /home/user/glance-assets
+  
+document:
+  head: | #gohtml
+    $include: /home/user/glance-assets/glance-addon-scripts/load-addons.html
+```
+
 #### Still want to use $include?
 <details>
   <summary>Click to expand</summary>
