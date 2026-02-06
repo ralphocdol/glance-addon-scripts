@@ -905,11 +905,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         const setter = setters[target.dataset.key];
         if (setter && storedThemesConfig.overrideTheming) {
-          const sliderLabelEl = _SETTING_ELEMENT_.querySelector(`[data-slider-label="${target.dataset.key}"]`);
           let targetValue = target.value || 1;
           if (target.dataset.key === 'border-radius') targetValue = `${target.value || 5}px`;
           setter(targetValue);
-          sliderLabelEl.textContent = targetValue;
+          _SET_SLIDER_LABEL_(target.dataset.key, targetValue);
           updateConfig();
         }
       }
