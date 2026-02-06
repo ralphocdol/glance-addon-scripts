@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "npx babel . --out-dir _src --ignore _src,node_modules"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.6",
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0"
+  }
+}

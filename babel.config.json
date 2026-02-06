@@ -1,0 +1,11 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": {
+        "safari": "12",
+        "ios": "12"
+      },
+      "bugfixes": true
+    }]
+  ]
+}
