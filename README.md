@@ -107,19 +107,30 @@ you can retain the css in import url or copy the one above
 </details>
 
 #### Know issue
-Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) Issue. You, the user, will have to do things manually.
+Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/support/what-is-cache-busting) Issue. I have a reopened issue at [glanceapp/glance #550](https://github.com/glanceapp/glance/issues/550#issuecomment-3755143924) if you'd like to upvote it. For now, you, the user, will have to do things manually.
 
-Here are several method to do so:
-- By Force reloading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically its just `Ctrl+Shift+R`
+Here are several approach to do so:
+- By force reloading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically it's just `Ctrl+Shift+R`.
 - By updating all the instance of `?v=1` to `?v=2` and so on each addon-script update.
+- By modifying the Glance's Docker Compose entrypoint. By default, as of v0.8.4, it's `/app/glance --config /app/config/glance.yml` and is omitted.
+  ```yaml
+    services:
+      glance:
+        image: glanceapp/glance:v0.8.4
+        container_name: glance
+        environment:
+          - MY_ENV_VAR=test-value
+        entrypoint: sh -c 'export LAST_RESTART=$(date +%s); exec /app/glance --config /app/config/glance.yml'
+  ```
+  This will now append an Environment Variable called `LAST_RESTART` which can be used to replace `?v=1` to `?v=${LAST_RESTART}`. The only downside is that, this only works if the Docker Compose of Glance is restarted and not when Glance gets reloaded.
 - If you want to disable caching entirely and don't care about bandwidth or any other issue that may come with it (*careful, this is for those who knows what they are doing*). You can do so by disabling the caching. If you are using Nginx to proxy Glance, you can add this location block
-```nginx
-  location /assets/glance-addon-scripts/ {
-    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-    add_header Pragma 'no-cache';
-    add_header Expires 0;
-  }
-```
+  ```nginx
+    location /assets/glance-addon-scripts/ {
+      add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+      add_header Pragma 'no-cache';
+      add_header Expires 0;
+    }
+  ```
 
 
 
