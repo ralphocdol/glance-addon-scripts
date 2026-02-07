@@ -16,6 +16,9 @@
   "glimpseKey": "s",
   "waitForGlance": true,
   "detectUrl": true,
+  "allowedUrlHosts": [
+
+  ],
   "mobileBottomSearch": true,
   "resizeOnSoftKeyboardOpen": false,
   "autoClose": false,

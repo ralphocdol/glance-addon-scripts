@@ -26,7 +26,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 
 # Configurations
 ## Setting up
-Copy the [sample-glimpse-config.json](sample-glimpse-config.json) to your `/assets` path, rename and load them in the `custom-settings` addon of Glimpse.
+Copy the [config.json](config.json) to your `/assets` path, rename and load them in the `custom-settings` addon of Glimpse.
 
 ## Search Suggestion
 Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you'll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
