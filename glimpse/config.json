@@ -16,8 +16,9 @@
   "glimpseKey": "s",
   "waitForGlance": true,
   "detectUrl": true,
-  "allowedUrlHosts": [
-
+  "allowedUrlCidrHosts": [
+    "*.home.local",
+    "192.168.0.0/12"
   ],
   "mobileBottomSearch": true,
   "resizeOnSoftKeyboardOpen": false,

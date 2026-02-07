@@ -200,21 +200,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   glimpseSearchSuggestContainer.appendChild(searchSuggestContainer);
 
+  function isAllowedHost(hostname) {
+    hostname = hostname.split(':')[0];
+    const isIPv4 = /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname);
+    const ipToInt = ip => ip.split('.').reduce((acc, oct) => (acc << 8) + (+oct), 0) >>> 0;
+
+    return (glimpseConfig.allowedUrlCidrHosts || []).some(entry => {
+      // CIDR
+      if (entry.includes('/')) {
+        if (!isIPv4) return false;
+        const [range, bits] = entry.split('/');
+        const mask = bits === '0' ? 0 : (~0 << (32 - bits)) >>> 0;
+        return (ipToInt(hostname) & mask) === (ipToInt(range) & mask);
+      }
+      // wildcard or exact
+      const rx = new RegExp('^' + entry.replace(/\./g, '\\.').replace(/\*/g, '[^.]+') + '$', 'i');
+      return rx.test(hostname);
+    });
+  }
+
   function isValidUrl(str) {
-    const domainPattern = /^([a-z0-9-]{1,63}\.)+[a-z]{2,}$/i;
+    const domainPattern = /^([a-z0-9-]{1,63}\.)+(com|net|org|io|dev|tech|app|me|xyz|online|site|cloud|blog|tv|fm|gg)$/i;
     try {
       const url = new URL(str);
       const { protocol, hostname } = url;
       if (protocol !== 'http:' && protocol !== 'https:') return false;
-
-      if (hostname === 'localhost') return true;
-      if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) return true; // IPv4
-      if (/^[a-f0-9:]+$/i.test(hostname) && hostname.includes(':')) return true; // IPv6
-
+      if (isAllowedHost(hostname)) return true;
       return domainPattern.test(hostname);
     } catch {
-      const domain = str.split('/')[0];
-      return domainPattern.test(domain);
+      const domain = str.split('/')[0].split(':')[0];
+      return isAllowedHost(domain) || domainPattern.test(domain);
     }
   }
 
