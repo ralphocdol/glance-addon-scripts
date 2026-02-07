@@ -170,7 +170,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function buildFetchUrl(target) {
     try {
       const isFullUrl = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(target);
-      return isFullUrl ? new URL(target).href : new URL(target, window.location.origin).href;
+      const url = isFullUrl ? new URL(target) : new URL(target, window.location.origin);
+      url.searchParams.set('_', Date.now());
+      return url.href;
     } catch (e) {
       window?.showToast('Invalid URL, see logs.', { title: 'Theming', type: 'error' });
       console.error('Invalid URL:', e);
