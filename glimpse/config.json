@@ -14,12 +14,12 @@
   ],
   "cleanupOtherPages": true,
   "glimpseKey": "s",
-  "waitForGlance": true,
   "detectUrl": true,
   "allowedUrlCidrHosts": [
     "*.home.local",
     "192.168.0.0/12"
   ],
+  "waitForGlance": true,
   "mobileBottomSearch": true,
   "resizeOnSoftKeyboardOpen": false,
   "autoClose": false,

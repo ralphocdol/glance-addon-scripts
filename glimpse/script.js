@@ -676,8 +676,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
         { type: 'toggle', name: 'Cleanup Other Pages', key: 'cleanupOtherPages', value: storedGlimpseConfig.cleanupOtherPages, tooltip: 'Cleans other page search on Glimpse close. High resource usage if false.' },
         { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'pagesSlug', value: storedGlimpseConfig.pagesSlug, colOffset: 1, tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.' },
+        { type: 'toggle', name: 'Detect URL', key: 'detectUrl', value: storedGlimpseConfig.detectUrl, colOffset: 3 },
+        { type: 'multi-text', name: 'Allowed URL CIDR hosts', key: 'allowedUrlCidrHosts', value: storedGlimpseConfig.allowedUrlCidrHosts, style: { gridColumn: '2 / -1' }, disabled: !storedGlimpseConfig.detectUrl },
         { type: 'toggle', name: 'Wait For Glance', key: 'waitForGlance', value: storedGlimpseConfig.waitForGlance },
-        { type: 'toggle', name: 'Detect URL', key: 'detectUrl', value: storedGlimpseConfig.detectUrl },
         { type: 'toggle', name: 'Mobile Bottom Search', key: 'mobileBottomSearch', value: storedGlimpseConfig.mobileBottomSearch, tooltip: 'Repositions the search bar and the suggestions to the bottom in mobile view for ease of access.' },
         { type: 'toggle', name: 'Resize On Keyboard', key: 'resizeOnSoftKeyboardOpen', value: storedGlimpseConfig.resizeOnSoftKeyboardOpen, tooltip: 'On most mobile browsers, when a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard. This attempts to fix that by making the content resized instead.' },
         { type: 'toggle', name: 'Auto Close', key: 'autoClose', value: storedGlimpseConfig.autoClose },
@@ -749,8 +750,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             _SET_KEYED_ELEMENT_('showBangSuggest', { checked: config.showBangSuggest });
             _SET_KEYED_ELEMENT_('cleanupOtherPages', { checked: config.cleanupOtherPages });
             _SET_KEYED_ELEMENT_('pagesSlug', { value: config.pagesSlug });
-            _SET_KEYED_ELEMENT_('waitForGlance', { checked: config.waitForGlance });
             _SET_KEYED_ELEMENT_('detectUrl', { checked: config.detectUrl });
+            _SET_KEYED_ELEMENT_('allowedUrlCidrHosts', { value: config.allowedUrlCidrHosts, disabled: !config.detectUrl });
+            _SET_KEYED_ELEMENT_('waitForGlance', { checked: config.waitForGlance });
             _SET_KEYED_ELEMENT_('mobileBottomSearch', { checked: config.mobileBottomSearch });
             _SET_KEYED_ELEMENT_('resizeOnSoftKeyboardOpen', { checked: config.resizeOnSoftKeyboardOpen });
             _SET_KEYED_ELEMENT_('autoClose', { checked: config.autoClose });
