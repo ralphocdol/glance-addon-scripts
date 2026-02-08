@@ -754,6 +754,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (target.dataset.key === 'theme-configuration-url') {
+          target.disabled = true;
           if (keyEl.value && await confirmDialog('Downloading configuration, this will replace your existing one, proceed?')) {
             try {
               localStorage.setItem(configPathKey, keyEl.value);
@@ -769,6 +770,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               console.error(err);
             }
           }
+          target.disabled = false;
         }
 
         if (target.dataset.key === 'is-default' && !followSystemIsChecked) {
@@ -790,14 +792,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (target.dataset.key === 'reload-page' && await confirmDialog('Reload page?')) location.reload();
         if (target.dataset.key === 'background-image-path') {
-          const imagePath = _KEYED_ELEMENT_('background-image-path').value;
+          target.disabled = true;
+          const imagePath = _KEYED_ELEMENT_(target.dataset.key).value;
           const setImagePath = () => {
             setBackgroundImage(imagePath);
             updateConfig();
             window.showToast?.('Background image updated.', { type: 'success' });
           }
           try {
-            const queryImage = await fetch(imagePath);
+            const c = new AbortController();
+            setTimeout(() => c.abort(), 2000);
+            const queryImage = await fetch(imagePath, { signal: c.signal });
             const imageSize = queryImage.headers.get('content-length');
             const isAcceptableSize = imageSize && Number(imageSize) <= 1048576;
             if (isAcceptableSize ||
@@ -814,6 +819,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setImagePath();
             }
           }
+          target.disabled = false;
         }
 
         if (target.dataset.key === 'copy-glance-theme-config') {
