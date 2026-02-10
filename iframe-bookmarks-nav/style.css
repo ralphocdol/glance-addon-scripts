@@ -24,6 +24,11 @@
   color: var(--color-primary);
 }
 
+[class^="iframe-links-"] li:not(:has(.bookmarks-icon-container)) a.bookmarks-link,
+[class*=" iframe-links-"] li:not(:has(.bookmarks-icon-container)) a.bookmarks-link {
+  padding: 0 1rem
+}
+
 [class^="iframe-links-"] li a.bookmarks-link::after,
 [class*=" iframe-links-"] li a.bookmarks-link::after {
   display: none;
