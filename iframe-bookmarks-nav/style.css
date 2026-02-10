@@ -1,0 +1,31 @@
+[class^="iframe-links-"] li,
+[class*=" iframe-links-"] li {
+  border-radius: var(--border-radius);
+  user-select: none;
+  -moz-user-select: none;
+  transition:
+    background-color .3s,
+    color .3s;
+}
+
+[class^="iframe-links-"] li.active,
+[class*=" iframe-links-"] li.active {
+  background: var(--color-primary);
+}
+
+[class^="iframe-links-"] li .bookmarks-icon-container,
+[class*=" iframe-links-"] li .bookmarks-icon-container {
+  background-color: unset;
+}
+
+[class^="iframe-links-"] li:hover a.bookmarks-link,
+[class*=" iframe-links-"] li:hover a.bookmarks-link {
+  color: var(--color-primary);
+}
+
+[class^="iframe-links-"] li.active a.bookmarks-link,
+[class*=" iframe-links-"] li.active a.bookmarks-link,
+[class^="iframe-links-"] li.active a.bookmarks-link::after,
+[class*=" iframe-links-"] li.active a.bookmarks-link::after {
+  color: var(--color-background);
+}

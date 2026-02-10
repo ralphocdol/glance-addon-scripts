@@ -19,16 +19,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const classId = className.replace(iframePage.links, '');
     const pageClass = `${iframePage.page}${classId}`;
 
+    const bookmarksLists = el.querySelectorAll('li');
+    bookmarksLists.forEach((li, index) => {
+      if (index === 0) li.classList.add('active');
+      else li.classList.remove('active');
+      li.querySelector('a.bookmarks-link').classList.add('flex-1');
+    });
+
     const iframeContainer = document.querySelector(`.${pageClass}`);
     if (!iframeContainer) throw new Error(`No iframe container found for class ${pageClass}`);
     const iframeHeader = iframeContainer.querySelector('.widget-header h2');
-    const iframeHeaderLink = iframeHeader.querySelector('a');
+    const iframeHeaderLink = iframeHeader?.querySelector('a') || null;
     const iframe = iframeContainer.querySelector('iframe');
     if (!iframe) throw new Error(`No iframe found for class ${pageClass}`);
 
     el.addEventListener('click', e => {
       const link = e.target.closest('a');
       if (!link) return;
+
+      bookmarksLists.forEach(li => li.classList.remove('active'));
+      link.closest('li').classList.add('active');
+
       iframe.contentWindow.location.href = link.href;
       if (iframeHeaderLink) {
         iframeHeaderLink.textContent = link.textContent;
