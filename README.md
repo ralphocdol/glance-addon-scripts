@@ -51,6 +51,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 | [Mobile Vertical Navigation](mobile-vertical-nav/README.md) | Replaces horizontal navigation | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Custom Dialog](custom-dialog/README.md) | A basic dialog box | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Navigation Shortcuts](navigation-shortcuts/README.md) | Navigation shortcut using `Ctrl+Shift+#` | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Iframe Bookmarks Nav](iframe-bookmarks-nav/README.md) | Turning bookmarks into navigation, paired with iframe | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
