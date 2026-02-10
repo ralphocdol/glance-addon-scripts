@@ -15,7 +15,8 @@
 
 [class^="iframe-links-"] li .bookmarks-icon-container,
 [class*=" iframe-links-"] li .bookmarks-icon-container {
-  background-color: unset;
+  margin-block: unset;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
 
 [class^="iframe-links-"] li:hover a.bookmarks-link,
