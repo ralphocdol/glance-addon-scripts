@@ -23,6 +23,7 @@ This will replace Glance's default theming and will do more than just change col
 - [Custom Settings](../custom-settings) *(required)* — where the configuration can be modified, `inherits dependency`.
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <!-- Dependencies -->
   

@@ -8,6 +8,7 @@ Just a basic dialog box, this will be an optional dependency for other addon scr
 - [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <!-- Dependencies goes here -->
   

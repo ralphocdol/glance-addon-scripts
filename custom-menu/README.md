@@ -9,6 +9,7 @@ This simply adds a custom menu to the navigation bar. And will be used for other
 - [Toast Message](../toast-message) *(optional)*
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <!-- Dependencies goes here -->
   

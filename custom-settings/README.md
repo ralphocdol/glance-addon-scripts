@@ -13,6 +13,7 @@ On its own it does nothing, this will be used for other addon-scripts that may n
 - [Custom Dialog](../custom-dialog) *(optional)* - Falls back to `window.confirm` dialog
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <!-- Dependencies goes here -->
   

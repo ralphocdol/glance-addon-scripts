@@ -5,6 +5,7 @@ This turns your bookmarks into a navigation when paired with an `iframe`.
 ![preview1](preview/preview1.png)
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <link rel="preload" href="/assets/glance-addon-scripts/iframe-bookmarks-nav/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <script defer src="/assets/glance-addon-scripts/iframe-bookmark-nav/script.js?v=1"></script>

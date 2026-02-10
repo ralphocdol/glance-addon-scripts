@@ -13,6 +13,7 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 
 # How to load
 ```html
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
   <!-- Dependencies goes here -->
   
   <link rel="preload" href="/assets/glance-addon-scripts/glimpse/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">

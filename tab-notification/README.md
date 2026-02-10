@@ -7,6 +7,7 @@
 This is mainly for `custom-api` and/or "probably" `extension` too. This does not work on native Glance widget.
 
 # How to load
+Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
   <script defer src="/assets/glance-addon-scripts/tab-notification/script.js?v=1"></script>
 ```
