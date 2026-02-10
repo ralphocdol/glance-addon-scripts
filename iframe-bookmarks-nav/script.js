@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       link.closest('li').classList.add('active');
 
       iframe.contentWindow.location.href = link.href;
+      iframe.src = link.href
       if (iframeHeaderLink) {
         iframeHeaderLink.textContent = link.textContent;
         iframeHeaderLink.href = link.href;
