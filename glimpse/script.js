@@ -544,6 +544,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function showSearchSuggestion({ query, controller }) {
     if (!glimpseConfig.searchSuggestEndpoint) return;
+    const searchSuggestEndpoint = glimpseConfig.searchSuggestEndpoint.replace('!QUERY!', '').replace('{QUERY}', '');
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
@@ -552,21 +553,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
     try {
-      const getSuggestion = await fetch(glimpseConfig.searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+      const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
       const result = await getSuggestion.json();
       if (!result?.[1].length) return;
-      const searchEngine = glimpseConfig.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
-      const searchSuggestList = document.createElement('ul');
-      searchSuggestList.innerHTML = `
-        ${result[1].map(r => {
-        const suggestLink = searchEngine ? searchEngine + encodeURIComponent(r) : '#';
-        const target = searchEngine ? '_blank' : '';
-        return `
-            <li>
-              <a href="${suggestLink}" target="${target}" rel="noreferrer">${r}</a>
-            </li>`}).join('')
-        }
-      `;
+
+      const searchSuggestList = createElementFn({
+        tag: 'ul',
+        events: {
+          click: (e, thisEl) => {
+            const targetElement = e.target.closest('.glimpse-suggest-item');
+            if (!targetElement || !thisEl.contains(targetElement)) return;
+            const match = searchInput.value.match(getBangRegExp);
+            searchInput.value = match ? `${match[0]}${targetElement.textContent}` : targetElement.textContent;
+            searchInput.focus();
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        },
+        children: [
+          ...(result[1].map(r => ({
+            tag: 'li',
+            children: [
+              { tag: 'span', classes: 'glimpse-suggest-item', textContent: r }
+            ]
+          })))
+        ]
+      });
       searchSuggestContainer.replaceChildren(searchSuggestList);
     } catch (e) {
       console.error(e);
