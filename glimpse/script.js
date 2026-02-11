@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const domainPattern = /^([a-z0-9-]{1,63}\.)+(com|net|org|io|dev|tech|app|me|xyz|online|site|cloud|blog|tv|fm|gg)$/i;
   function isValidUrl(str) {
-    const domainPattern = /^([a-z0-9-]{1,63}\.)+(com|net|org|io|dev|tech|app|me|xyz|online|site|cloud|blog|tv|fm|gg)$/i;
     try {
       const url = new URL(str);
       const { protocol, hostname } = url;
@@ -443,8 +443,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const slugQueried = new Set();
   async function otherPageScrapeWithAPI({ slug, query, callId }) {
     return new Promise(async (resolve) => {
+      if (callId !== lastCallId) return resolve();
 
       const existingCache = cacheOtherPage[slug];
       if (existingCache) {
@@ -459,9 +461,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       try {
+        if (slugQueried.has(slug)) return resolve();
+        slugQueried.add(slug);
+
         const targetPage = await fetch(`/api/pages/${slug}/content`);
         const htmlString = await targetPage.text();
+
         const template = document.createElement('template');
+        template.setAttribute('slug', slug);
         template.innerHTML = htmlString;
         const templateContent = template.content;
 
@@ -485,17 +492,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function otherPageScrapeWithIframe({ slug, query, callId }) {
     return new Promise(async (resolve) => {
+      if (callId !== lastCallId) return resolve();
       const targetPathname = `/${slug}`;
 
-      const existingIframe = cacheOtherPage[slug];
-      if (existingIframe) {
-        await docSearch(existingIframe.contentDocument, slug);
+      const existingCache = cacheOtherPage[slug];
+      if (existingCache) {
+        await docSearch(existingCache.contentDocument, slug);
         return resolve();
       }
 
       const iframe = document.createElement('iframe');
       iframe.style.display = 'none';
       iframe.src = targetPathname;
+
       glimpse.appendChild(iframe);
       cacheOtherPage[slug] = iframe;
 
@@ -542,6 +551,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  let previousQuery = '';
+  let previousResult = {};
   async function showSearchSuggestion({ query, controller }) {
     if (!glimpseConfig.searchSuggestEndpoint) return;
     const searchSuggestEndpoint = glimpseConfig.searchSuggestEndpoint.replace('!QUERY!', '').replace('{QUERY}', '');
@@ -553,8 +564,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
     try {
-      const getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
-      const result = await getSuggestion.json();
+      let getSuggestion, result;
+      if (previousQuery === query) {
+        result = previousResult;
+      } else {
+        getSuggestion = await fetch(searchSuggestEndpoint + encodeURIComponent(query), { signal: controller.signal });
+        result = await getSuggestion.json();
+        previousQuery = query;
+        previousResult = result;
+      }
       if (!result?.[1].length) return;
 
       const searchSuggestList = createElementFn({
@@ -582,7 +600,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (e) {
       console.error(e);
       controller.abort();
-      return new Promise.reject();
+      return Promise.reject(new Error('Failed to fetch search results'));
     }
   }
 
