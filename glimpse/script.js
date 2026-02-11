@@ -768,44 +768,44 @@ document.addEventListener('DOMContentLoaded', async () => {
       name: 'Glimpse',
       order: 1,
       contentObject: [
-        { type: 'text', name: 'Load configuration from Path/URL', key: 'glimpse-configuration-url', value: localStorage.getItem(configPathKey) || '', colOffset: 1,
+        { type: 'text', name: 'Load configuration from Path/URL', key: 'glimpse-configuration-url', value: localStorage.getItem(configPathKey) || '', colSpan: 3,
           icon: `
             <svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="fillColor"></path> </g></svg>
           `,
         },
-        { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colOffset: 1 },
-        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colOffset: 1,
+        { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colSpan: 2 },
+        { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
+        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colSpan: 3,
           tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q='
         },
-        { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder, colOffset: 2 },
-        { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
-        { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest, colOffset: 2 },
+        { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder, colSpan: 2 },
         { type: 'text', name: 'Shortcut Key', key: 'glimpseKey', value: storedGlimpseConfig.glimpseKey, maxLength: 1 },
         { type: 'toggle', name: 'Use Iframe to Search Other Pages', key: 'otherPages.useIframe',
-          value: storedGlimpseConfig.otherPages.useIframe, colOffset: 2,
+          value: storedGlimpseConfig.otherPages.useIframe, colSpan: 2,
           tooltip: `By default, Other Page search uses Glance API which is a lot faster. However, using an iframe can provide better output in exchange for high resource usage since it will load JavaScripts.`
         },
         { type: 'toggle', name: 'Cleanup Other Pages', key: 'otherPages.cleanUp',
           value: storedGlimpseConfig.otherPages.cleanUp,
           tooltip: 'Glimpse can cache the Other Page to improve speed, in exchange for some resource. If you use iframe, the resource usage is much higher.'
         },
-        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'otherPages.slugs', colOffset: 1,
+        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'otherPages.slugs', colSpan: 3,
           value: storedGlimpseConfig.otherPages.slugs || [],
           tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.'
         },
-        { type: 'multi-text', name: 'Allowed URL CIDR hosts', key: 'detectUrl.allowedCidrHosts', value: storedGlimpseConfig.detectUrl.allowedCidrHosts || [], disabled: !storedGlimpseConfig.detectUrl.enabled, colOffset: 2 },
         { type: 'toggle', name: 'Detect URL', key: 'detectUrl.enabled', value: storedGlimpseConfig.detectUrl.enabled },
+        { type: 'multi-text', name: 'Allowed URL CIDR hosts', key: 'detectUrl.allowedCidrHosts', value: storedGlimpseConfig.detectUrl.allowedCidrHosts || [], disabled: !storedGlimpseConfig.detectUrl.enabled, colSpan: 2 },
+        { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
         { type: 'toggle', name: 'Wait For Glance', key: 'waitForGlance', value: storedGlimpseConfig.waitForGlance },
         { type: 'toggle', name: 'Mobile Bottom Search', key: 'mobileBottomSearch', value: storedGlimpseConfig.mobileBottomSearch, tooltip: 'Repositions the search bar and the suggestions to the bottom in mobile view for ease of access.' },
         { type: 'toggle', name: 'Resize On Keyboard', key: 'resizeOnSoftKeyboardOpen', value: storedGlimpseConfig.resizeOnSoftKeyboardOpen, tooltip: 'On most mobile browsers, when a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard. This attempts to fix that by making the content resized instead.' },
         { type: 'toggle', name: 'Auto Close', key: 'autoClose', value: storedGlimpseConfig.autoClose },
         { type: 'toggle', name: 'Preserve Search Query', key: 'preserveQuery', value: storedGlimpseConfig.preserveQuery, tooltip: 'Preserves Query on search.' },
-        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), colOffset: 1 },
+        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), colSpan: 3 },
         { type: 'buttons', buttons: [
           { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
           { name: 'Reload Page', key: 'reload-page' },
           { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance assets-path.` },
-        ], colOffset: 2 },
+        ], colSpan: 2 },
         { type: 'custom-html', contentHTML: `
           <div class="flex-1">
             <a class="color-primary visited-indicator" target="_blank" rel="noreferrer" href="https://github.com/ralphocdol/glance-addon-scripts/tree/main/glimpse">

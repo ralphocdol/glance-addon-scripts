@@ -464,7 +464,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       widget.maxLength = widget.maxLength || null;
       const widgetElement = createElementFn({ classes: 'custom-settings-content-card' });
       if (widget?.style) Object.assign(widgetElement.style, widget.style);
-      if (widget?.colOffset) widgetElement.style.gridColumn = `1 / -${widget.colOffset}`;
+      if (!['textarea', 'custom-html'].includes(widget.type)) {
+        if (widget?.colSpan && widget.colSpan === 'full') {
+          widgetElement.classList.add('card-span-full')
+        } else if (!isNaN(widget?.colSpan)) {
+          widgetElement.classList.add(`card-span-${widget.colSpan}`);
+        } else {
+          widgetElement.classList.add('card-span-1')
+        }
+      }
 
       const toolTipEl = widget.tooltip ? createElementFn({
         tag: 'span',
@@ -495,37 +503,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         case 'text': {
           widgetElement.classList.add('card-text');
-          widgetElement.style.gap = '1rem';
           widgetElement.appendChild(elementText(widget, { buttonElSpec, labelElSpec }));
           break;
         }
         case 'dropdown': {
           widgetElement.classList.add('card-dropdown');
-          widgetElement.style.gap = '1rem';
           widgetElement.appendChild(elementDropdown(widget, { labelElSpec }));
           break;
         }
         case 'multi-text': {
           widgetElement.classList.add('card-multi-text');
-          widgetElement.style.gap = '1rem';
           widgetElement.appendChild(elementMultiText(widget, { buttonElSpec, labelElSpec }));
           break;
         }
         case 'textarea': {
-          widgetElement.classList.add('card-textarea');
+          widgetElement.classList.add('card-textarea', 'card-span-full');
           widgetElement.style.gap = '1rem';
           widgetElement.appendChild(elementTextarea(widget, { labelElSpec }));
           break;
         }
         case 'custom-html':
-          widgetElement.classList.add('card-html');
-          widgetElement.classList.add('frameless');
-          widgetElement.style.gridColumn = '1 / -1'
+          widgetElement.classList.add('card-html', 'frameless', 'card-span-full');
           widgetElement.innerHTML = widget.contentHTML;
           break;
         case 'buttons': {
-          widgetElement.classList.add('card-buttons');
-          widgetElement.classList.add('frameless');
+          widgetElement.classList.add('card-buttons', 'frameless');
           widgetElement.appendChild(elementButtons(widget));
           break;
         }

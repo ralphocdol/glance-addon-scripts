@@ -449,3 +449,20 @@
     font-size: .85em;
   }
 }
+
+#modal.custom-settings .card-span-2,
+#modal.custom-settings .card-span-3,
+#modal.custom-settings .card-span-4,
+#modal.custom-settings .card-span-full {
+  grid-column: span 1;
+}
+
+@media (min-width: 900px) {
+  #modal.custom-settings .card-span-full {  grid-column: 1 / -1; }
+}
+
+@media (min-width: 1400px) {
+  #modal.custom-settings .card-span-2 { grid-column: span 2; }
+  #modal.custom-settings .card-span-3 { grid-column: span 3; }
+  #modal.custom-settings .card-span-4 { grid-column: span 4; }
+}

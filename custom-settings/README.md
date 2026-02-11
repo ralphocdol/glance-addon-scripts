@@ -31,7 +31,7 @@ Needs to be in loaded after the Glance is completely loaded. See other widgets t
   window.createCustomSettingsItem?.({
     nameHTML: 'Name of Settings',
     contentObject: [
-      { type: 'toggle', name: 'A toggle button', key: 'action-of-the-button', value: true, colOffset: 1 },
+      { type: 'toggle', name: 'A toggle button', key: 'action-of-the-button', value: true, colSpan: 3 },
       { type: 'text', name: 'A text field', key: 'action-of-its-save-button' value: 'The current value', tooltip: 'If needed' }
     ],
     contentEventListener: {

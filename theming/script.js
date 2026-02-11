@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     { type: 'toggle', name: 'Follow System Scheme', key: 'follow-system-scheme',
       value: glanceThemeConfig?.followSystemScheme, tooltip: 'Requires one of each scheme.',
     },
-    { type: 'text', name: 'Load Theme Config from Path/URL', key: 'theme-configuration-url', value: localStorage.getItem(configPathKey) || '', colOffset: 2,
+    { type: 'text', name: 'Load Theme Config from Path/URL', key: 'theme-configuration-url', value: localStorage.getItem(configPathKey) || '', colSpan: 2,
       tooltip: 'A way to load theme in JSON format from either your assets-path or from a URL.',
       icon: `
         <svg viewBox="0 0 24 24" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="fillColor"></path> </g></svg>
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     },
     { type: 'text', name: 'Background Image Path/URL', key: 'background-image-path',
       value: glanceThemeConfigProperties?.backgroundImage || '',
-      colOffset: 2, tooltip: 'Recommended: Image should be under 1 MB. Beyond this may affect performance!',
+      colSpan: 2, tooltip: 'Recommended: Image should be under 1 MB. Beyond this may affect performance!',
     },
     { type: 'slider', name: 'Background Image Alpha', key: 'background-image-url-alpha',
       min: 0, max: 0.9, step: 0.05, disabled: glanceThemeConfigProperties?.backgroundImage === '',
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       value: glanceThemeConfigProperties.colorPopoverBackgroundAlpha,
     },
     { type: 'textarea', name: 'Current JSON Configuration', key: 'current-configuration',
-      value: JSON.stringify(glanceThemeConfigProperties, null, 2), colOffset: 1, height: '310px',
+      value: JSON.stringify(glanceThemeConfigProperties, null, 2), colSpan: 3, height: '310px',
       moreButtons: [
         { name: 'Copy this configuration', key: 'copy-this-json-configuration' },
       ]
@@ -585,18 +585,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: 'Reload Page', key: 'reload-page' },
       { name: 'Copy this YAML Config', key: 'copy-glance-theme-config', tooltip: 'This is for Glance default theme yaml properties.' },
       { name: 'Copy ALL JSON Config', key: 'copy-all-json-configuration', tooltip: `If you want to store and host it somewhere, even in your Glance assets-path.` },
-    ], colOffset: 1 },
+    ], colSpan: 3 },
   ] : [
     { type: 'buttons', buttons: [
       { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
-    ], colOffset: 1 },
+    ], colSpan: 3 },
   ];
 
   customSettingsFunctions.createCustomSettingsItem?.({
     name: 'Theming',
     order: 2,
     contentObject: [
-      { type: 'toggle', name: 'Override Theming', key: 'override-theming', value: glanceThemeConfig.overrideTheming, colOffset: 2,
+      { type: 'toggle', name: 'Override Theming', key: 'override-theming', value: glanceThemeConfig.overrideTheming, colSpan: 2,
         tooltip: 'This will disable the built-in Glance theme.',
       },
       ...configForOverride,
