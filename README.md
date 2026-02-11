@@ -41,7 +41,7 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 | [Swipe Left and Right](swipe-left-and-right/README.md) | Swipe left/right on Mobile | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Modal](modal/README.md) | A modal popup | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Tab Notification](tab-notification/README.md) | Show notification count on `group` tabs | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
-| [Glimpse](glimpse/README.md) | A `search` widget that searches other widgets | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
+| [Glimpse](glimpse/README.md) | A Quick Launch for Glance | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Responsive Table](responsive-table/README.md) | A table widget | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Lazy Unloader](lazy-unloader/README.md) | Unloads image when not in view | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
 | [Custom Menu](custom-menu/README.md) | Menu grid for Addon Script | v0.8.4 \| dev@[784bf53](https://github.com/glanceapp/glance/tree/784bf5342570af94e62238c4f4a7b542d1853077) |
