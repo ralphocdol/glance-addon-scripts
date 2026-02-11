@@ -735,8 +735,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder, colOffset: 2 },
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
+        { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest, colOffset: 2 },
         { type: 'text', name: 'Shortcut Key', key: 'glimpseKey', value: storedGlimpseConfig.glimpseKey, maxLength: 1 },
-        { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
         { type: 'toggle', name: 'Use Iframe to Search Other Pages', key: 'otherPages.useIframe',
           value: storedGlimpseConfig.otherPages.useIframe, colOffset: 2,
           tooltip: `By default, Other Page search uses Glance API which is a lot faster. However, using an iframe can provide better output in exchange for high resource usage since it will load JavaScripts.`
