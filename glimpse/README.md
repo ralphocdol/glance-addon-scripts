@@ -35,18 +35,51 @@ Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guid
 For `searchSuggestEndpoint`, use the URL of your proxy endpoint. If you're using something like [Whoogle-Search](https://github.com/benbusby/whoogle-search), the endpoint would be `/autocomplete?q=`, so you would set it like this: `https://your-whoogle-domain.com/autocomplete?q=`.
 
 ## Other page search
-By default, Glimpse searches only the currently loaded page. To include other pages, set the `pagesSlug` array variable with your primary page's slug and any additional pages.
+```jsonc
+{
+  // ...
+  "otherPages": {
+    "slugs": [],
+    "useIframe": false,
+    "cleanUp": true
+  }
+  // ...
+}
+```
+
+### slugs
+By default, Glimpse searches only the currently loaded page. To include other pages, set the `otherPages.slug` array variable with your primary page's slug and any additional pages.
 
 Slugs are used instead of titles or page names since they can be [custom-defined](https://github.com/glanceapp/glance/blob/v0.8.4/docs/configuration.md#slug).
 
-> [!NOTE]
->
-> This may lead to performance issues or unreliable behavior due to how it's implemented.
->
-> The implementation uses `iframe`s to load additional pages. If widgets on those pages exceed the default timeout, their associated resources may not be released in a timely manner, leading to accumulated overhead—the more pages you include, the more it adds up.
->
-> The current page where Glimpse was launched will still be prioritized and shown first.
+The current page where Glimpse was launched will still be prioritized and shown first.
 
+### useIframe
+When `false`, will use the Glance's API endpoint `/api/pages/${slug}/content` to get the HTML of the page. This has no way of loading JavaScript itself since it will just be an HTML element which is why it's a lot lighter and faster.
+When `true`, will use an `iframe` element and load the `/${slug}` directly inside it. This uses more resources but have more accurate layout. Layout that depends on JavaScript like:
+```html
+  <div data-dynamic-relative-time="1700055000"></div>
+```
+will not be handled properly and would return empty.
+
+### cleanUp
+Each page slugs' pages are stored in the DOM once per page load when you do a search, this does increase the resource usage if you have `useIframe` set to `true`. Setting the `cleanUp` to `false` will store those pages for the next time you do a query but will only do so if the page haven't changed.
+
+## Detect URL
+To detect and open the searched query as a URL instead.
+Set the `detectUrl.enabled` to `true`.
+
+### Allowed CIDR and Host
+A list of CIDR's or Hosts to be detected as a URL
+```jsonc
+{
+  // ...
+  "allowedCidrHosts": [
+    "*.home.local",   // will match glance.home.local
+    "192.168.0.0/12"  // will match 192.168.21.2:8080
+  ]
+  // ...
+```
 
 ## Custom layout
 > [!CAUTION]
@@ -72,13 +105,13 @@ template: |
     </div>
 ```
 
-## Exclusions
+### Exclusions
 Add this property to your widget if you don't want a specific widget to be searched:
 ```yml
 css-class: glimpsable-hidden
 ```
 
-## Duplicate Handling
+### Duplicate Handling
 If you reuse widgets with Glimpse support across multiple pages with `$include` that is within `pagesSlug`, they may appear more than once in your Glimpse results. To avoid duplicates, add this to your widget's `css-class` property:
 ```yml
 css-class: glimpse-unique-some-unique-name
@@ -92,8 +125,6 @@ Choose a unique suffix to keep it distinctly identifiable.*
 | `cleanupOtherPages` | Whether to clean the iframes or not. Can lead to high usage if set to `false` but could otherwise speed up your widget queries |
 | `glimpseKey` | The shortcut key to call Glimpse, set to empty `''` by default to disable. *Setting this to `'s'` will override Glance's default search key focus* |
 | `waitForGlance` | Setting this to `false` will make the search and search-bangs functionality of Glance not work as those are loaded after Glance is ready, Glimpse functionality will remain working. This just limits when the `glimpseKey` can be triggered |
-| `detectUrl` | To detect and open the searched text as a URL. [glanceapp/glance #558](https://github.com/glanceapp/glance/pull/558) |
-| `allowedUrlCidrHosts` | Paired with `detectUrl`, you can list specific hosts or CIDRs to be detected as URL |
 | `showBangSuggest` | Suggests your defined `bang`s |
 | `mobileBottomSearch` | Repositions the search bar and the suggestions to the bottom for ease of access. |
 | `resizeOnSoftKeyboardOpen` | On most mobile browsers when, a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard making the `mobileBottomSearch` suggestions not scrollable. This attempts to fix that by making the content resized instead. |

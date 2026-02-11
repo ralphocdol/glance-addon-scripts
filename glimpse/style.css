@@ -77,25 +77,20 @@
 
 #glimpse .close {
   cursor: pointer;
-  width: 24px;
-  height: 24px;
+  width: 23px;
+  height: 23px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: auto;
   user-select: none;
+  padding: 5px;
 }
 
 #glimpse .close:hover {
   background-color: var(--color-negative);
   border-radius: var(--border-radius);
   color: var(--color-background);
-}
-
-#glimpse .close::before {
-	content: '×';
-	font-size: 23px;
-	line-height: 1;
 }
 
 #glimpse .custom-page-loading-container {
@@ -139,7 +134,7 @@
 #glimpse .glimpse-bang-suggest::after,
 #glimpse .glimpse-search-suggest::before,
 #glimpse .glimpse-search-suggest::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 2rem;
   height: 100%;

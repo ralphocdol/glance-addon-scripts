@@ -9,16 +9,21 @@
   },
   "showBangSuggest": true,
   "searchSuggestEndpoint": "",
-  "pagesSlug": [
+  "otherPages": {
+    "slugs": [
 
-  ],
-  "cleanupOtherPages": true,
+    ],
+    "useIframe": false,
+    "cleanUp": true
+  },
   "glimpseKey": "s",
-  "detectUrl": true,
-  "allowedUrlCidrHosts": [
-    "*.home.local",
-    "192.168.0.0/12"
-  ],
+  "detectUrl": {
+    "enabled": true,
+    "allowedCidrHosts": [
+      "*.home.local",
+      "192.168.0.0/12"
+    ]
+  },
   "waitForGlance": true,
   "mobileBottomSearch": true,
   "resizeOnSoftKeyboardOpen": false,
