@@ -13,6 +13,7 @@
 
   const mobilePageLinks = document.querySelector('.mobile-navigation-page-links');
   const hamburgerMenu = document.querySelector('.mobile-navigation-icons > :last-child:has(.hamburger-icon)');
+  if (!hamburgerMenu) return;
   hamburgerMenu.innerHTML = '';
   const verticalPageLink = document.createElement('div');
   verticalPageLink.classList.add('vertical-page-link');

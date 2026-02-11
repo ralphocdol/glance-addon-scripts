@@ -51,7 +51,8 @@
     mobileNav.prepend(mobileSearchNav);
   }
 
-  document.querySelector('a[href="#top"]:not(.custom-menu-top)').style.display = 'none';
+  const nativeTop = document.querySelector('a[href="#top"]:not(.custom-menu-top)');
+  if (nativeTop) nativeTop.style.display = 'none';
 
   function createCustomMenuElement(mobile = false) {
     return createElementFn({
