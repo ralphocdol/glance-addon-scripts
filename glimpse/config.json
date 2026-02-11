@@ -8,7 +8,10 @@
     ]
   },
   "showBangSuggest": true,
-  "searchSuggestEndpoint": "",
+  "searchSuggest": {
+    "enabled": false,
+    "endpoint": ""
+  },
   "otherPages": {
     "slugs": [
 

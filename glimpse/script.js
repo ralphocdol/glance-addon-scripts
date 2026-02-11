@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', otherPages: { slug: [], useIframe: false, cleanUp: false }, glimpseKey: '', waitForGlance: true, detectUrl: { enabled: true, allowedCidrHosts: [] }, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggest: { enabled: false, endpoint: '' }, otherPages: { slug: [], useIframe: false, cleanUp: false }, glimpseKey: '', waitForGlance: true, detectUrl: { enabled: true, allowedCidrHosts: [] }, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
 
   const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!search) return;
 
-  const showSearchSuggest = !!glimpseConfig.searchSuggestEndpoint;
+  const showSearchSuggest = !!glimpseConfig.searchSuggest?.enabled;
   const uniqueStore = [];
 
   const loadingAnimationElement = createElementFn({
@@ -318,21 +318,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const openUrl = url => window.open(url, glimpseConfig.glanceSearch.target, 'noopener,noreferrer');
   const handleKeydown = e => {
+    const searchUrl = glimpseConfig.glanceSearch.searchUrl;
     const query = (e.target.value || '').trim();
     if (query.length < 1) return;
     if (e.key === 'Enter') {
-      if (glimpseConfig.glanceSearch.searchUrl === '') e.stopImmediatePropagation();
+
       const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
       const currentBangObject = glimpseConfig.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
 
       let url;
-      if (currentBangObject?.rawQuery) {
+      if (searchUrl === '' && currentBangString !== '' && currentBangObject) {
+        url = currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, ''));
+      } else if (searchUrl === '') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      } else if (currentBangObject?.rawQuery) {
         url = currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, ''));
       } else if (glimpseConfig.detectUrl.enabled && isValidUrl(query)) {
         url = toUrl(query);
       } else if (query.startsWith('\\!')) {
         const newQuery = encodeURIComponent(query.replace('\\!', '!'));
-        url = glimpseConfig.glanceSearch.searchUrl.replace('{QUERY}', newQuery);
+        url = searchUrl.replace('{QUERY}', newQuery);
       }
 
       if (url) {
@@ -341,7 +347,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       setTimeout(() => {
-        if (glimpseConfig.autoClose) closeGlimpse();
+        if (searchUrl !== '' && glimpseConfig.autoClose) closeGlimpse();
         if (glimpseConfig.preserveQuery) searchInput.value = query;
       }, 50);
     }
@@ -557,8 +563,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let previousQuery = '';
   let previousResult = {};
   async function showSearchSuggestion({ query, controller }) {
-    if (!glimpseConfig.searchSuggestEndpoint) return;
-    const searchSuggestEndpoint = glimpseConfig.searchSuggestEndpoint.replace('!QUERY!', '').replace('{QUERY}', '');
+    if (!glimpseConfig.searchSuggest?.enabled) return;
+    const searchSuggestEndpoint = glimpseConfig.searchSuggest.endpoint.replace('!QUERY!', '').replace('{QUERY}', '');
     const searchEngine = glimpseConfig.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
@@ -775,7 +781,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
         { type: 'text', name: 'Search URL', key: 'glanceSearch.searchUrl', value: storedGlimpseConfig.glanceSearch.searchUrl, colSpan: 2 },
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
-        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggestEndpoint', value: storedGlimpseConfig.searchSuggestEndpoint, colSpan: 3,
+        { type: 'toggle', name: 'Enable Search Suggest', key: 'searchSuggest.enabled', value: storedGlimpseConfig.searchSuggest.enabled },
+        { type: 'text', name: 'Search Suggest Endpoint', key: 'searchSuggest.endpoint', value: storedGlimpseConfig.searchSuggest.endpoint, colSpan: 2,
+          disabled: !storedGlimpseConfig.searchSuggest.enabled,
           tooltip: 'Search Suggest/Autocomplete endpoint. May not work most of the time, only tested with Whoogle https://your-whoogle-domain.com/autocomplete?q='
         },
         { type: 'text', name: 'Search Placeholder', key: 'glanceSearch.placeholder', value: storedGlimpseConfig.glanceSearch.placeholder, colSpan: 2 },
@@ -860,7 +868,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           function setValuesWithConfig(config) {
             _SET_KEYED_ELEMENT_('glanceSearch.searchUrl', { value: config.glanceSearch.searchUrl });
-            _SET_KEYED_ELEMENT_('searchSuggestEndpoint', { value: config.searchSuggestEndpoint });
+            _SET_KEYED_ELEMENT_('searchSuggest.enabled', { checked: config.searchSuggest.enabled });
+            _SET_KEYED_ELEMENT_('searchSuggest.endpoint', { value: config.searchSuggest.endpoint, disabled: !config.searchSuggest.enabled });
             _SET_KEYED_ELEMENT_('glanceSearch.target', { value: config.glanceSearch.target });
             _SET_KEYED_ELEMENT_('glanceSearch.placeholder', { value: config.glanceSearch.placeholder });
             _SET_KEYED_ELEMENT_('glimpseKey', { value: config.glimpseKey });
