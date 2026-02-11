@@ -323,12 +323,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       const currentBangString = query.match(getBangRegExp)?.[0]?.trim();
       const currentBangObject = glimpseConfig.glanceSearch.bangs.find(b => b.shortcut === currentBangString);
 
+      let url;
       if (currentBangObject?.rawQuery) {
-        e.stopImmediatePropagation();
-        openUrl(currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, '')));
+        url = currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, ''));
       } else if (glimpseConfig.detectUrl && isValidUrl(query)) {
+        url = toUrl(query);
+      } else if (query.startsWith('\\!')) {
+        const newQuery = encodeURIComponent(query.replace('\\!', '!'));
+        url = glimpseConfig.glanceSearch.searchUrl.replace('{QUERY}', newQuery);
+      }
+
+      if (url) {
         e.stopImmediatePropagation();
-        openUrl(toUrl(query));
+        openUrl(url);
       }
 
       setTimeout(() => {
@@ -480,6 +487,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
+    loadingAnimationClone.style.height = '35px';
     searchSuggestContainer.innerHTML = '';
     searchSuggestContainer.appendChild(loadingAnimationClone);
 
@@ -501,7 +509,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       `;
       searchSuggestContainer.replaceChildren(searchSuggestList);
     } catch (e) {
-      window.showToast?.(`Glimpse search suggest error, see logs for more info`, { type: 'error' });
       console.error(e);
       controller.abort();
       return new Promise.reject();
