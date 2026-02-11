@@ -180,7 +180,7 @@
 }
 
 #glimpse .glimpse-bang-suggest li > span,
-#glimpse .glimpse-search-suggest li > span {
+#glimpse .glimpse-search-suggest li > a {
   flex: 1;
   display: block;
   overflow: hidden;

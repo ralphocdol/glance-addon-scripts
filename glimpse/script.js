@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       ...(glimpseConfig.autoClose &&
         {
           click: e => {
-            if (!e.target.closest('a')) return;
+            if (!e.target.closest('a:not(.glimpse-suggest-item)')) return;
             closeGlimpse();
           }
         }
@@ -556,6 +556,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function showSearchSuggestion({ query, controller }) {
     if (!glimpseConfig.searchSuggestEndpoint) return;
     const searchSuggestEndpoint = glimpseConfig.searchSuggestEndpoint.replace('!QUERY!', '').replace('{QUERY}', '');
+    const searchEngine = glimpseConfig.glanceSearch.searchUrl.replace('!QUERY!', '').replace('{QUERY}', '');
 
     const loadingAnimationClone = loadingAnimationElement.cloneNode(true);
     loadingAnimationClone.style.flex = 1;
@@ -579,6 +580,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         tag: 'ul',
         events: {
           click: (e, thisEl) => {
+            if (e.ctrlKey) return;
+            if (!e.ctrlKey) e.preventDefault();
             const targetElement = e.target.closest('.glimpse-suggest-item');
             if (!targetElement || !thisEl.contains(targetElement)) return;
             const match = searchInput.value.match(getBangRegExp);
@@ -591,7 +594,16 @@ document.addEventListener('DOMContentLoaded', async () => {
           ...(result[1].map(r => ({
             tag: 'li',
             children: [
-              { tag: 'span', classes: 'glimpse-suggest-item', textContent: r }
+              {
+                tag: 'a',
+                classes: 'glimpse-suggest-item',
+                attrs: {
+                  href: searchEngine ? searchEngine + encodeURIComponent(r) : '#',
+                  target: searchEngine ? '_blank' : '',
+                  rel: 'noopener noreferrer',
+                },
+                textContent: r
+              }
             ]
           })))
         ]
