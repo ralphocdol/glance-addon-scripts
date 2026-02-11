@@ -33,7 +33,6 @@
     const e = isFragment ? document.createDocumentFragment() : document.createElement(tag);
 
     if (id !== null) e.id = id;
-    if (style !== null) Object.assign(e.style, style);
     if (props !== null) Object.assign(e, safeProps(props));
     if (classes !== null) e.className = classes;
     if (classAppend !== null) classAppend.forEach(c => c.classList.add(c));
@@ -45,6 +44,13 @@
     } else if (htmlContent !== null) {
       e.innerHTML = '';
       e.appendChild(sanitizeHTML(htmlContent));
+    }
+
+    if (style !== null) {
+      for (const k in style) {
+        const v = safeCssValue(style[k]);
+        k.startsWith('--') ? e.style.setProperty(k, v) : (e.style[k] = v);
+      }
     }
 
     if (datasets !== null) {
@@ -102,6 +108,15 @@
       safe[key] = value;
     }
     return safe;
+  }
+
+  function safeCssValue(v) {
+    if (v == null) return '';
+
+    const s = String(v);
+    if (/url\s*\(|expression\s*\(|javascript:/i.test(s)) return '';
+
+    return s;
   }
 
   function sanitizeHTML(htmlString) {
