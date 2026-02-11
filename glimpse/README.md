@@ -12,8 +12,8 @@ This adds a way to search through your widgets—similar to Quick Launch from [H
 - [Custom Settings](../custom-settings) *(required)* — adds a custom-settings, must have the `Custom Menu` to work. Your modified configurations are ONLY available in wherever browser you modified them to, it does NOT have a sync functionality. This utilizes your browser's `localStorage`.
 
 # How to load
-```html
 Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
+```html
   <!-- Dependencies goes here -->
   
   <link rel="preload" href="/assets/glance-addon-scripts/glimpse/style.css?v=1" as="style" onload="this.onload=null;this.rel='stylesheet'">
