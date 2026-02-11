@@ -32,7 +32,7 @@ Copy the [config.json](config.json) to your `/assets` path, rename and load them
 ## Search Suggestion
 Due to [some limitations](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) and the fact this is a client script, you'll need to proxy external search suggestions (e.g., from DuckDuckGo or Google) using a service like your own Node.js server.
 
-For `searchSuggestEndpoint`, use the URL of your proxy endpoint. If you're using something like [Whoogle-Search](https://github.com/benbusby/whoogle-search), the endpoint would be `/autocomplete?q=`, so you would set it like this: `https://your-whoogle-domain.com/autocomplete?q=`.
+For `searchSuggest.endpoint`, use the URL of your proxy endpoint. If you're using a self-hosted instance like whoogle, the endpoint would be `/autocomplete?q=` or searxng `/autocompleter?q=`, so you would set it like this: `https://your-domain.com/autocompleter?q=`.
 
 ## Other page search
 ```jsonc
