@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', pagesSlug: [], cleanupOtherPages: true, glimpseKey: '', waitForGlance: true, detectUrl: true, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggestEndpoint: '', otherPages: { slug: [], useIframe: false, cleanUp: false }, glimpseKey: '', waitForGlance: true, detectUrl: { enabled: true, allowedCidrHosts: [] }, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
 
   const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const glanceBang = glimpse.querySelector('.search-bang');
   const glanceContent = document.querySelector('#page-content');
   const glancePageTitle = document.querySelector('#page>h1')?.innerText || '';
-  const iframeBySlug = {};
+  const cacheOtherPage = {};
 
   glimpseResult.addEventListener('scroll', () => glimpseResult.classList.toggle('is-scrolled', glimpseResult.scrollTop > 0));
   if (glimpseConfig.mobileBottomSearch) glimpseWrapper.classList.add('bottom-search');
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isIPv4 = /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname);
     const ipToInt = ip => ip.split('.').reduce((acc, oct) => (acc << 8) + (+oct), 0) >>> 0;
 
-    return (glimpseConfig.allowedUrlCidrHosts || []).some(entry => {
+    return (glimpseConfig.detectUrl.allowedCidrHosts || []).some(entry => {
       // CIDR
       if (entry.includes('/')) {
         if (!isIPv4) return false;
@@ -288,14 +288,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    if (glimpseConfig.detectUrl && isValidUrl(query)) glanceBang.innerText = 'URL';
+    if (glimpseConfig.detectUrl.enabled && isValidUrl(query)) glanceBang.innerText = 'URL';
 
     glimpseWrapper.appendChild(loadingAnimationElement);
     try {
       await searchScrape({ contentElement: glanceContent, query, callId });
       const [suggestionResult] = await Promise.allSettled([
         showSearchSuggestion({ query, controller }),
-        ...glimpseConfig.pagesSlug.map(slug => otherPageScrape({ slug, query, callId }))
+        ...(glimpseConfig.otherPages.slugs || []).map(slug => otherPageScrape({ slug, query, callId }))
       ]);
       if (suggestionResult?.status === 'rejected') throw new Error(suggestionResult?.reason.message);
       uniqueStore.length = 0;
@@ -305,7 +305,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (err?.name !== 'AbortError') {
         loadingAnimationElement.remove();
         console.error(`Glimpse Error: ${err}`);
-        window.showToast?.(`Glimpse Error, see logs for more info.`, { type: 'error' });
         searchSuggestContainer.innerHTML = emptySearchSuggest('Search suggestion API failed to respond…')
       }
     } finally {
@@ -326,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       let url;
       if (currentBangObject?.rawQuery) {
         url = currentBangObject.url.replace('{QUERY}', query.replace(getBangRegExp, ''));
-      } else if (glimpseConfig.detectUrl && isValidUrl(query)) {
+      } else if (glimpseConfig.detectUrl.enabled && isValidUrl(query)) {
         url = toUrl(query);
       } else if (query.startsWith('\\!')) {
         const newQuery = encodeURIComponent(query.replace('\\!', '!'));
@@ -365,6 +364,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
+    const isLogin = location.pathname.split('/').filter(Boolean)[0] || '';
+    if (isLogin === 'login') return console.warn('You are in a login page.');
+
     const hasActiveModal = !!(modalElement && getComputedStyle(modalElement).display !== 'none');
     if (glimpseConfig.glimpseKey &&
       event.code === keyToCode(glimpseConfig.glimpseKey) &&
@@ -394,14 +396,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function closeGlimpse() {
     if (!glimpse.classList.contains('show')) return;
-    cleanupAllIframes();
+    cleanupOtherPageCache();
     glimpse.style.display = 'none';
     glimpse.classList.remove('show', 'fade-in');
     document.body.style.overflow = bodyOverflowState;
     searchInput.blur();
   }
 
-  async function searchScrape({ contentElement, query, callId, pageTitle = glancePageTitle }) {
+  async function searchScrape({ contentElement, query, callId, pageTitle = glancePageTitle, slug = '' }) {
     if (callId !== lastCallId) return;
     const columns = contentElement?.querySelectorAll('.page-columns');
     if (!columns?.length) return;
@@ -409,21 +411,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.allSettled(
       Array.from(columns).flatMap(column => [
         ...Array.from(column.querySelectorAll(widgetClasses)).flatMap(widget => [
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.list', itemSelector: ':scope > li' }),
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: 'ul.dynamic-columns', itemSelector: ':scope > .monitor-site, .docker-container, .flex' }),
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-horizontal', itemSelector: ':scope > .card' }),
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '.cards-vertical', itemSelector: ':scope > .widget-content-frame' }),
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: 'ul.list', itemSelector: ':scope > li' }),
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: 'ul.dynamic-columns', itemSelector: ':scope > .monitor-site, .docker-container, .flex' }),
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: '.cards-horizontal', itemSelector: ':scope > .card' }),
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: '.cards-vertical', itemSelector: ':scope > .widget-content-frame' }),
         ]),
         ...Array.from(column.querySelectorAll('.glimpsable-custom')).map(widget =>
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '[glimpse-list]' })
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: '[glimpse-list]' })
         ),
         ...Array.from(column.querySelectorAll('.glimpsable-custom-list')).map(widget =>
-          createWidgetResult({ widget, query, callId, pageTitle, listSelector: '[glimpse-list]', itemSelector: '[glimpse-item]' })
+          createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector: '[glimpse-list]', itemSelector: '[glimpse-item]' })
         )
       ])
     );
   }
-
 
   async function otherPageScrape({ slug, query, callId }) {
     return new Promise(async (resolve) => {
@@ -433,7 +434,60 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (windowPathname === '/' && mainPagePath === targetPathname) return resolve();
       if (targetPathname === '/' + currentPathList[currentPathList.length - 1]) return resolve();
 
-      const existingIframe = iframeBySlug[slug];
+      if (glimpseConfig.otherPages.useIframe) {
+        await otherPageScrapeWithIframe({ slug, query, callId });
+      } else {
+        await otherPageScrapeWithAPI({ slug, query, callId });
+      }
+      resolve();
+    });
+  }
+
+  async function otherPageScrapeWithAPI({ slug, query, callId }) {
+    return new Promise(async (resolve) => {
+
+      const existingCache = cacheOtherPage[slug];
+      if (existingCache) {
+        await searchScrape({
+          contentElement: existingCache.content,
+          query,
+          callId,
+          pageTitle: slug,
+          slug,
+        });
+        return resolve();
+      }
+
+      try {
+        const targetPage = await fetch(`/api/pages/${slug}/content`);
+        const htmlString = await targetPage.text();
+        const template = document.createElement('template');
+        template.innerHTML = htmlString;
+        const templateContent = template.content;
+
+        glimpse.appendChild(template);
+        cacheOtherPage[slug] = template;
+
+        await searchScrape({
+          contentElement: templateContent,
+          query,
+          callId,
+          pageTitle: slug,
+          slug,
+        });
+      } catch (error) {
+        console.error('Error scraping other page:', slug, 'with error:', error);
+      } finally {
+        resolve();
+      }
+    });
+  }
+
+  async function otherPageScrapeWithIframe({ slug, query, callId }) {
+    return new Promise(async (resolve) => {
+      const targetPathname = `/${slug}`;
+
+      const existingIframe = cacheOtherPage[slug];
       if (existingIframe) {
         await docSearch(existingIframe.contentDocument, slug);
         return resolve();
@@ -443,10 +497,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       iframe.style.display = 'none';
       iframe.src = targetPathname;
       glimpse.appendChild(iframe);
-      iframeBySlug[slug] = iframe;
+      cacheOtherPage[slug] = iframe;
 
       iframe.onerror = () => {
-        delete iframeBySlug[slug];
+        delete cacheOtherPage[slug];
         resolve();
       };
 
@@ -458,27 +512,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function docSearch(doc, s) {
       if (doc.title.includes('404') || !doc.querySelector('#page-content')) {
-        delete iframeBySlug[s];
+        delete cacheOtherPage[s];
         return;
       }
 
       while (!doc.body.classList.contains('page-columns-transitioned')) {
         if (callId !== lastCallId) return;
         await new Promise(r => setTimeout(r, 50));
-        if (!iframeBySlug[s]) break;
+        if (!cacheOtherPage[s]) break;
       }
 
-      await searchScrape({ contentElement: doc.querySelector('#page-content'), query, callId, pageTitle: doc.querySelector('#page>h1')?.innerText || '' });
+      await searchScrape({
+        contentElement: doc.querySelector('#page-content'),
+        query,
+        callId,
+        pageTitle: doc.querySelector('#page>h1')?.innerText || slug,
+        slug,
+      });
     }
   }
 
-  function cleanupAllIframes() {
-    if (!glimpseConfig.cleanupOtherPages) return;
-    glimpseConfig.pagesSlug.forEach(slug => {
-      const iframe = iframeBySlug[slug];
-      if (!iframe) return;
-      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-      delete iframeBySlug[slug];
+  function cleanupOtherPageCache() {
+    if (!glimpseConfig.otherPages.cleanUp) return;
+    glimpseConfig.otherPages.slugs.forEach(slug => {
+      const cachedPage = cacheOtherPage[slug];
+      if (!cachedPage) return;
+      if (cachedPage.parentNode) cachedPage.parentNode.removeChild(cachedPage);
+      delete cacheOtherPage[slug];
     });
   }
 
@@ -515,7 +575,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  async function createWidgetResult({ widget, query, callId, pageTitle, listSelector, itemSelector }) {
+  async function createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector, itemSelector }) {
     return new Promise((resolve) => {
       if (callId !== lastCallId) return resolve();
       const headerSource = widget.querySelector('.widget-header > h2')?.innerText;
@@ -541,21 +601,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         ?? document.getElementById(widgetContent.closest('.widget-group-content')?.getAttribute('aria-labelledby'))?.innerText
         ?? '';
 
+      const widgetHeaderH2 = createElementFn({
+        tag: 'h2', classes: 'uppercase',
+      });
+      const finalPageTitle = slug !== '' ? `<a href="/${slug}" target="_blank">${pageTitle}</a>` : pageTitle;
+      widgetHeaderH2.innerHTML = newTitle ? `${finalPageTitle} <span class="color-primary">→</span> ${newTitle}`: finalPageTitle;
+
       const newWidget = createElementFn({
         classes: 'widget',
-        children:[
-          {
-            classes: 'widget-header',
-            children: [
-              {
-                tag: 'h2',
-                classes: 'uppercase',
-                htmlContent: newTitle ? `${pageTitle} <span class="color-primary">→</span> ${newTitle}`: pageTitle
-              }
-            ]
-          }
-        ]
+        children:[ { classes: 'widget-header' } ]
       });
+      newWidget.querySelector('.widget-header').appendChild(widgetHeaderH2);
 
       widgetContentClone.innerHTML = '';
       newWidget.appendChild(widgetContentClone);
@@ -681,10 +737,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         { type: 'dropdown', name: 'Search Target', key: 'glanceSearch.target', value: storedGlimpseConfig.glanceSearch.target, options: ['_blank', '_self', '_parent', '_top'] },
         { type: 'text', name: 'Shortcut Key', key: 'glimpseKey', value: storedGlimpseConfig.glimpseKey, maxLength: 1 },
         { type: 'toggle', name: 'Show Bang Suggestions', key: 'showBangSuggest', value: storedGlimpseConfig.showBangSuggest },
-        { type: 'toggle', name: 'Cleanup Other Pages', key: 'cleanupOtherPages', value: storedGlimpseConfig.cleanupOtherPages, tooltip: 'Cleans other page search on Glimpse close. High resource usage if false.' },
-        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'pagesSlug', value: storedGlimpseConfig.pagesSlug, colOffset: 1, tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.' },
-        { type: 'multi-text', name: 'Allowed URL CIDR hosts', key: 'allowedUrlCidrHosts', value: storedGlimpseConfig.allowedUrlCidrHosts, disabled: !storedGlimpseConfig.detectUrl, colOffset: 2 },
-        { type: 'toggle', name: 'Detect URL', key: 'detectUrl', value: storedGlimpseConfig.detectUrl },
+        { type: 'toggle', name: 'Use Iframe to Search Other Pages', key: 'otherPages.useIframe',
+          value: storedGlimpseConfig.otherPages.useIframe, colOffset: 2,
+          tooltip: `By default, Other Page search uses Glance API which is a lot faster. However, using an iframe can provide better output in exchange for high resource usage since it will load JavaScripts.`
+        },
+        { type: 'toggle', name: 'Cleanup Other Pages', key: 'otherPages.cleanUp',
+          value: storedGlimpseConfig.otherPages.cleanUp,
+          tooltip: 'Glimpse can cache the Other Page to improve speed, in exchange for some resource. If you use iframe, the resource usage is much higher.'
+        },
+        { type: 'multi-text', name: 'Other Page Search (Slug)', key: 'otherPages.slugs', colOffset: 1,
+          value: storedGlimpseConfig.otherPages.slugs || [],
+          tooltip: 'By default, Glimpse searches only the currently loaded page. To include other pages, set this and include your primary page\'s slug and any additional pages. Slugs are used instead of titles or page names since they can be custom-defined.'
+        },
+        { type: 'multi-text', name: 'Allowed URL CIDR hosts', key: 'detectUrl.allowedCidrHosts', value: storedGlimpseConfig.detectUrl.allowedCidrHosts || [], disabled: !storedGlimpseConfig.detectUrl.enabled, colOffset: 2 },
+        { type: 'toggle', name: 'Detect URL', key: 'detectUrl.enabled', value: storedGlimpseConfig.detectUrl.enabled },
         { type: 'toggle', name: 'Wait For Glance', key: 'waitForGlance', value: storedGlimpseConfig.waitForGlance },
         { type: 'toggle', name: 'Mobile Bottom Search', key: 'mobileBottomSearch', value: storedGlimpseConfig.mobileBottomSearch, tooltip: 'Repositions the search bar and the suggestions to the bottom in mobile view for ease of access.' },
         { type: 'toggle', name: 'Resize On Keyboard', key: 'resizeOnSoftKeyboardOpen', value: storedGlimpseConfig.resizeOnSoftKeyboardOpen, tooltip: 'On most mobile browsers, when a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard. This attempts to fix that by making the content resized instead.' },
@@ -755,10 +821,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             _SET_KEYED_ELEMENT_('glanceSearch.placeholder', { value: config.glanceSearch.placeholder });
             _SET_KEYED_ELEMENT_('glimpseKey', { value: config.glimpseKey });
             _SET_KEYED_ELEMENT_('showBangSuggest', { checked: config.showBangSuggest });
-            _SET_KEYED_ELEMENT_('cleanupOtherPages', { checked: config.cleanupOtherPages });
-            _SET_KEYED_ELEMENT_('pagesSlug', { value: config.pagesSlug });
-            _SET_KEYED_ELEMENT_('detectUrl', { checked: config.detectUrl });
-            _SET_KEYED_ELEMENT_('allowedUrlCidrHosts', { value: config.allowedUrlCidrHosts, disabled: !config.detectUrl });
+            _SET_KEYED_ELEMENT_('otherPages.useIframe', { checked: config.otherPages.useIframe });
+            _SET_KEYED_ELEMENT_('otherPages.cleanUp', { checked: config.otherPages.cleanUp });
+            _SET_KEYED_ELEMENT_('otherPages.slugs', { value: (config.otherPages.slugs || []).join(',') });
+            _SET_KEYED_ELEMENT_('detectUrl.enabled', { checked: config.detectUrl.enabled });
+            _SET_KEYED_ELEMENT_('detectUrl.allowedCidrHosts', { value: (config.detectUrl.allowedCidrHosts || []).join(','), disabled: !config.detectUrl.enabled });
             _SET_KEYED_ELEMENT_('waitForGlance', { checked: config.waitForGlance });
             _SET_KEYED_ELEMENT_('mobileBottomSearch', { checked: config.mobileBottomSearch });
             _SET_KEYED_ELEMENT_('resizeOnSoftKeyboardOpen', { checked: config.resizeOnSoftKeyboardOpen });
