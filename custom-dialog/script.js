@@ -1,5 +1,7 @@
 'use strict';
-document.addEventListener('DOMContentLoaded', () => {
+const CURRENT_SCRIPT_TIMESTAMP = new URL(import.meta.url).searchParams.get('v') || '';
+
+document.addEventListener('DOMContentLoaded', async () => {
   // Catch duplicate instances
   const scriptName = 'Custom Dialog';
   if ((window.GLANCE_ADDON_SCRIPTS ??= {})[scriptName] === true) {
@@ -10,9 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     window.GLANCE_ADDON_SCRIPTS[scriptName] = true;
   }
-
   // Catch Missing Dependencies
-  const createElementFn = window.CREATE_ELEMENT;
+  const { default: createElementFn } = await import(`../global-functions/CREATE_ELEMENT.js?v=${CURRENT_SCRIPT_TIMESTAMP}`);
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
     if (typeof window.showToast === 'function') window.showToast?.(msg, { title: 'CUSTOM DIALOG', type: 'error' });

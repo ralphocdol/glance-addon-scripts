@@ -1,4 +1,6 @@
 'use strict';
+const CURRENT_SCRIPT_TIMESTAMP = new URL(import.meta.url).searchParams.get('v') || '';
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Catch duplicate instances
   const scriptName = 'Custom Settings';
@@ -12,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Catch Missing Dependencies
-  const createElementFn = window.CREATE_ELEMENT;
+  const { default: createElementFn } = await import(`../global-functions/CREATE_ELEMENT.js?v=${CURRENT_SCRIPT_TIMESTAMP}`);
   if (typeof createElementFn !== 'function') {
     const msg = 'The global-function CREATE_ELEMENT not found, read the dependency in the README.md of this script.';
 
