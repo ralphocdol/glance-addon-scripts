@@ -16,7 +16,15 @@
 [class^="iframe-links-"] li .bookmarks-icon-container,
 [class*=" iframe-links-"] li .bookmarks-icon-container {
   margin-block: unset;
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+[class^="iframe-links-"] li.active .bookmarks-icon-container,
+[class*=" iframe-links-"] li.active .bookmarks-icon-container {
+  border-radius:
+    calc(var(--border-radius) - 1px)
+    var(--border-radius)
+    var(--border-radius)
+    calc(var(--border-radius) - 1px);
 }
 
 [class^="iframe-links-"] li:hover a.bookmarks-link,
