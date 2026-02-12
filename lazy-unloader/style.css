@@ -5,7 +5,6 @@
 .lazy-unloader-parent img[data-src],
 .lazy-unloader-parent img[data-src].icon {
     opacity: 0;
-    transition: opacity 0.5s ease;
 }
 
 .lazy-unloader-parent img[data-src].lazy-unloader-loaded:not(.icon),

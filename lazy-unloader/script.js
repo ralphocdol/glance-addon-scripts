@@ -28,9 +28,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.lazyUnloader = obs;
   window.lazyUnloaderInit = img => {
+    const rect = img.getBoundingClientRect();
+    const currentTransition = getComputedStyle(img).transition;
+    const inView =
+      rect.top < window.innerHeight &&
+      rect.bottom > 0 &&
+      rect.left < window.innerWidth &&
+      rect.right > 0;
+
     if (img.src) {
       img.dataset.src = img.src;
-      img.removeAttribute('src');
+      img.classList.add('lazy-unloader-loaded');
+      if (!currentTransition.includes('opacity')) img.style.transition = `${currentTransition}, opacity 0.5s ease`;
+      if (!inView) img.removeAttribute('src');
     }
     obs.observe(img);
   }
