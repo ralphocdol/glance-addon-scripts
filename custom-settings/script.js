@@ -464,14 +464,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       widget.maxLength = widget.maxLength || null;
       const widgetElement = createElementFn({ classes: 'custom-settings-content-card' });
       if (widget?.style) Object.assign(widgetElement.style, widget.style);
-      if (!['textarea', 'custom-html'].includes(widget.type)) {
-        if (widget?.colSpan && widget.colSpan === 'full') {
-          widgetElement.classList.add('card-span-full')
-        } else if (!isNaN(widget?.colSpan)) {
-          widgetElement.classList.add(`card-span-${widget.colSpan}`);
-        } else {
-          widgetElement.classList.add('card-span-1')
-        }
+
+      if ((widget?.colSpan && widget.colSpan === 'full') || ['textarea', 'custom-html'].includes(widget.type)) {
+        widgetElement.classList.add('card-span-full')
+      } else if (!isNaN(widget?.colSpan)) {
+        widgetElement.classList.add(`card-span-${widget.colSpan}`);
+      } else {
+        widgetElement.classList.add('card-span-1')
       }
 
       const toolTipEl = widget.tooltip ? createElementFn({
@@ -517,13 +516,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           break;
         }
         case 'textarea': {
-          widgetElement.classList.add('card-textarea', 'card-span-full');
+          widgetElement.classList.add('card-textarea');
           widgetElement.style.gap = '1rem';
           widgetElement.appendChild(elementTextarea(widget, { labelElSpec }));
           break;
         }
         case 'custom-html':
-          widgetElement.classList.add('card-html', 'frameless', 'card-span-full');
+          widgetElement.classList.add('card-html', 'frameless');
           widgetElement.innerHTML = widget.contentHTML;
           break;
         case 'buttons': {
