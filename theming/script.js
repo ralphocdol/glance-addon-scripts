@@ -800,18 +800,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.showToast?.('Background image updated.', { type: 'success' });
           }
           try {
-            const c = new AbortController();
-            setTimeout(() => c.abort(), 2000);
-            const queryImage = await fetch(imagePath, { signal: c.signal });
-            const imageSize = queryImage.headers.get('content-length');
-            const isAcceptableSize = imageSize && Number(imageSize) <= 1048576;
-            if (isAcceptableSize ||
-              (!isAcceptableSize &&
-                await confirmDialog(`Image is higher than 1MB and may cause high memory usage.
-                  Do you still want to set this as background image?`, { confirmText: 'YES' }))) {
-                setImagePath();
+            if (imagePath !== '') {
+              const c = new AbortController();
+              setTimeout(() => c.abort(), 2000);
+              const queryImage = await fetch(imagePath, { signal: c.signal });
+              const imageSize = queryImage.headers.get('content-length');
+              const isAcceptableSize = imageSize && Number(imageSize) <= 1048576;
+              if (isAcceptableSize ||
+                (!isAcceptableSize &&
+                  await confirmDialog(`Image is higher than 1MB and may cause high memory usage.
+                    Do you still want to set this as background image?`, { confirmText: 'YES' }))) {
+                  setImagePath();
+              }
+            } else {
+              setImagePath();
             }
           } catch (error) {
+            console.warn(error);
             if (await confirmDialog(`Failed to determine image size.
               Be warned that recommended is under 1MB,
               beyond this can affect performance.

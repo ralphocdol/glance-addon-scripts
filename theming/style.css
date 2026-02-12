@@ -19,6 +19,14 @@
   backdrop-filter: var(--widget-background-blur, none);
 }
 
+[data-theming] .widget-header {
+  text-shadow: hsl(var(--color-widget-background-hsl-values)) 1px 1px 2px;
+}
+
+[data-theming] .widget-group-title {
+  text-shadow: inherit;
+}
+
 /* region: body background theming */
 [data-theming] body {
   background-color: unset;
