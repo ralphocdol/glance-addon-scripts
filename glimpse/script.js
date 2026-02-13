@@ -25,13 +25,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggest: { enabled: false, endpoint: '' }, otherPages: { slug: [], useIframe: false, cleanUp: false }, glimpseKey: '', waitForGlance: true, detectUrl: { enabled: true, allowedCidrHosts: [] }, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
+  const glimpseBaseConfig = { glanceSearch: { searchUrl: '', target: '_blank', placeholder: 'Type here to search…', bangs: [], }, showBangSuggest: true, searchSuggest: { enabled: false, endpoint: '' }, otherPages: { slug: [], useIframe: false, cleanUp: false }, glimpseKey: '', waitForGlance: true, detectUrl: { enabled: true, allowedCidrHosts: [] }, mobileBottomSearch: true, resizeOnSoftKeyboardOpen: false, autoClose: false, preserveQuery: true };
 
   const configPathKey = 'glimpse-config-path-url';
   const configKey = 'glimpse-search-config';
   // localStorage.setItem(configKey, ''); // uncomment once to Restore to default. Useful on mobile browsers
   const glimpseConfig = !!localStorage.getItem(configKey) ? JSON.parse(localStorage.getItem(configKey)) : glimpseBaseConfig;
-  glimpseConfig.glanceSearch.target = glimpseConfig.glanceSearch.target ?? '_blank';
 
   const replaceBraces = str => str.replace(/[{}]/g, '!');
   const newTab = glimpseConfig.glanceSearch.target === '_blank';
@@ -810,7 +809,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         { type: 'toggle', name: 'Resize On Keyboard', key: 'resizeOnSoftKeyboardOpen', value: storedGlimpseConfig.resizeOnSoftKeyboardOpen, tooltip: 'On most mobile browsers, when a soft keyboard is present, the page will just overlay making the entire content scrollable. This will result in disabled horizontal scroll of content near the soft keyboard. This attempts to fix that by making the content resized instead.' },
         { type: 'toggle', name: 'Auto Close', key: 'autoClose', value: storedGlimpseConfig.autoClose },
         { type: 'toggle', name: 'Preserve Search Query', key: 'preserveQuery', value: storedGlimpseConfig.preserveQuery, tooltip: 'Preserves Query on search.' },
-        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: JSON.stringify(storedGlimpseConfig.glanceSearch.bangs, null, 2).trim(), colSpan: 3 },
+        { type: 'textarea', name: 'Search Bangs (json)', key: 'glanceSearch.bangs', value: customSettingsFunctions.customJSONStringify(storedGlimpseConfig.glanceSearch.bangs), colSpan: 3 },
         { type: 'buttons', buttons: [
           { name: 'Restore Defaults', key: 'restore-defaults', negative: true },
           { name: 'Reload Page', key: 'reload-page' },
@@ -886,7 +885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             _SET_KEYED_ELEMENT_('resizeOnSoftKeyboardOpen', { checked: config.resizeOnSoftKeyboardOpen });
             _SET_KEYED_ELEMENT_('autoClose', { checked: config.autoClose });
             _SET_KEYED_ELEMENT_('preserveQuery', { checked: config.preserveQuery });
-            _SET_KEYED_ELEMENT_('glanceSearch.bangs', { value: JSON.stringify(config.glanceSearch.bangs, null, 2).trim() });
+            _SET_KEYED_ELEMENT_('glanceSearch.bangs', { value: customSettingsFunctions.customJSONStringify(config.glanceSearch.bangs) });
           }
         },
         ready: () => {
