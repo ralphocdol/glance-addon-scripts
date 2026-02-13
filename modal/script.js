@@ -90,14 +90,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  const attachEl = (target, source, attribute) => {
+  const attachEl = (source, target, attribute) => {
     const placeholder = document.createComment('');
-    target.replaceWith(placeholder);
-    source.replaceChildren(target);
-    target.removeAttribute(attribute);
+    source.replaceWith(placeholder);
+    target.replaceChildren(source);
+    source.removeAttribute(attribute);
     cleanUpModalClose.push(() => {
-      target.setAttribute(attribute, '');
-      placeholder.replaceWith(target);
+      source.setAttribute(attribute, '');
+      placeholder.replaceWith(source);
       placeholder.remove();
     });
   }
