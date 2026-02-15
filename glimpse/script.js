@@ -626,6 +626,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // https://github.com/glanceapp/glance/blob/c88fd526e55117445c7f4440c83b661faa402047/internal/glance/static/js/page.js#L50
+  const minuteInSeconds = 60;
+  const hourInSeconds = minuteInSeconds * 60;
+  const dayInSeconds = hourInSeconds * 24;
+  const monthInSeconds = dayInSeconds * 30.4;
+  const yearInSeconds = dayInSeconds * 365;
+
+  function timestampToRelativeTime(timestamp) {
+    let delta = Math.round((Date.now() / 1000) - timestamp);
+    let prefix = "";
+
+    if (delta < 0) {
+      delta = -delta;
+      prefix = "in ";
+    }
+
+    if (delta < minuteInSeconds) {
+      return prefix + "1m";
+    }
+    if (delta < hourInSeconds) {
+      return prefix + Math.floor(delta / minuteInSeconds) + "m";
+    }
+    if (delta < dayInSeconds) {
+      return prefix + Math.floor(delta / hourInSeconds) + "h";
+    }
+    if (delta < monthInSeconds) {
+      return prefix + Math.floor(delta / dayInSeconds) + "d";
+    }
+    if (delta < yearInSeconds) {
+      return prefix + Math.floor(delta / monthInSeconds) + "mo";
+    }
+
+    return prefix + Math.floor(delta / yearInSeconds) + "y";
+  }
+
   async function createWidgetResult({ widget, query, callId, pageTitle, slug, listSelector, itemSelector }) {
     return new Promise((resolve) => {
       if (callId !== lastCallId) return resolve();
@@ -690,6 +725,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (!!window.lazyUnloaderInit) window.lazyUnloaderInit(img);
         });
         ulClone.appendChild(clone);
+      });
+
+      const dynamicRelativeTimeEl = newWidget.querySelectorAll("[data-dynamic-relative-time]");
+      dynamicRelativeTimeEl.forEach(el => {
+        const timestamp = el.dataset.dynamicRelativeTime;
+        if (timestamp === undefined || el.textContent !== '') return;
+        el.textContent = timestampToRelativeTime(timestamp);
       });
 
       const uniqueWidget = Array.from(widget.classList).find(cls => cls.startsWith('glimpse-unique-'));

@@ -56,11 +56,7 @@ The current page where Glimpse was launched will still be prioritized and shown 
 
 ### useIframe
 When `false`, will use the Glance's API endpoint `/api/pages/${slug}/content` to get the HTML of the page. This has no way of loading JavaScript itself since it will just be an HTML element which is why it's a lot lighter and faster.
-When `true`, will use an `iframe` element and load the `/${slug}` directly inside it. This uses more resources but have more accurate layout. Layout that depends on JavaScript like:
-```html
-  <div data-dynamic-relative-time="1700055000"></div>
-```
-will not be handled properly and would return empty.
+When `true`, will use an `iframe` element and load the `/${slug}` directly inside it. This uses more resources but have more accurate layout.
 
 ### cleanUp
 Each page slugs' pages are stored in the DOM once per page load when you do a search, this does increase the resource usage if you have `useIframe` set to `true`. Setting the `cleanUp` to `false` will store those pages for the next time you do a query but will only do so if the page haven't changed.
