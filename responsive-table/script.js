@@ -50,9 +50,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     paginationOptions.setAttribute('current-page', 1);
 
     const targetPages = { start: 0, end: pageSize - 1 };
-
     const tableEl = createElementFn({
-      attrs: { role: 'table', 'responsive-table': '' },
+      attrs: {
+        role: 'table',
+        ...inheritAttributes(t)
+      },
       style: { minHeight: minHeight + 'px' },
     });
 
@@ -63,7 +65,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     headerElementColumns.forEach(c => c.setAttribute('role', 'columnheader'));
 
     const tableBody = createElementFn({
-      attrs: { role: 'rowgroup', 'table-body': '' },
+      attrs: {
+        role: 'rowgroup',
+        ...inheritAttributes(bodyElement)
+      },
+      classes: bodyElement.className || '',
+      style: inheritStyles(bodyElement),
     });
 
     const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
@@ -108,22 +115,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           events: {
             click: e => {
               if (!e.target.classList.contains('page-btn')) return;
-              const btn = e.target.textContent;
-              if (!isNaN(btn)) {
-                const start = (+btn - 1) * pageSize;
+              const page = e.target.textContent;
+              if (!isNaN(page)) {
+                const start = (+page - 1) * pageSize;
                 const targetPages = { start, end: start + pageSize - 1 };
-                paginationOptions.setAttribute('current-page', +btn);
-                updatePagination({ footer, totalPage, paginationOptions, currentPage: +btn, targetPages });
+                paginationOptions.setAttribute('current-page', +page);
+                updatePagination({ footer, totalPage, paginationOptions, currentPage: +page, targetPages });
                 updateRowPage({ headerElement, bodyElement, tableBody, templateStyle, targetPages });
               } else {
                 const currentPage = +paginationOptions.getAttribute('current-page');
                 let start = 1;
                 let newCurrentPage;
 
-                if (btn === '←' && currentPage > 1) {
+                if (page === '←' && currentPage > 1) {
                   start = (currentPage - 2) * pageSize;
                   newCurrentPage = currentPage - 1;
-                } else if (btn === '→' && currentPage < totalPage) {
+                } else if (page === '→' && currentPage < totalPage) {
                   start = currentPage * pageSize;
                   newCurrentPage = currentPage + 1;
                 } else {
@@ -191,7 +198,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               datasets: { sortDirection: sortedHeader?.dataset.sortDirection || 'asc' },
               props: { disabled: !sortedHeader },
               events: {
-                click: (e, thisEl) => {
+                click: (_, thisEl) => {
                   thisEl.disabled = true;
                   const sortedHeader = headerElementColumns.find(isSorted);
                   const sortedHeaderIndex = headerElementColumns.findIndex(isSorted);
@@ -401,9 +408,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               attrs: {
                 title: c.innerText.trim().replace(/\s+/g, ' '), // workaround text-truncate
               },
-              style: Object.fromEntries(
-                [...c.style].map(p => [p, c.style[p]])
-              ),
+              style: inheritStyles(c),
             }
           ]
         });
@@ -458,6 +463,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       : end + 1;
     paginationSummary.querySelector('[summary-size]').textContent = summarySize;
 
+    if (totalPage === 1) return;
+
     const backButton = createElementFn({
       tag: 'button',
       textContent: '←',
@@ -485,5 +492,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       props: { disabled: currentPage === totalPage }
     });
     paginationButtons.appendChild(nextButton);
+  }
+
+  function inheritAttributes(el) {
+    return Object.fromEntries(
+      [...el.attributes]
+        .filter(a => !['class', 'style'].includes(a.name))
+        .map(a => [a.name, a.value])
+    );
+  }
+
+  function inheritStyles(el) {
+    return Object.fromEntries(
+      [...el.style].map(p => [p, el.style[p]])
+    )
   }
 });
