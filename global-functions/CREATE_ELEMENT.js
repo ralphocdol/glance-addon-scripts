@@ -18,7 +18,16 @@ export default function CREATE_ELEMENT({
   events = null,
   children = null,
 } = {}) {
-  const e = isFragment ? document.createDocumentFragment() : document.createElement(tag);
+
+  if (isFragment) {
+    const frag = document.createDocumentFragment();
+    processChildren(frag, children);
+    return frag;
+  }
+
+  const e = document.createElement(tag);
+
+  processChildren(e, children);
 
   if (id !== null) e.id = id;
   if (props !== null) Object.assign(e, safeProps(props));
@@ -66,9 +75,12 @@ export default function CREATE_ELEMENT({
     }
   }
 
-  if (children && Array.isArray(children)) children.forEach(child => e.appendChild(CREATE_ELEMENT(child)));
-
   return e;
+}
+
+function processChildren(targetDoc, children) {
+  if (children && Array.isArray(children))
+    children.forEach(child => targetDoc.appendChild(CREATE_ELEMENT(child)));
 }
 
 function safeAttr(e, a) {
