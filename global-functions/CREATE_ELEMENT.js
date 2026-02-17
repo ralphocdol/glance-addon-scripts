@@ -27,8 +27,6 @@ export default function CREATE_ELEMENT({
 
   const e = document.createElement(tag);
 
-  processChildren(e, children);
-
   if (id !== null) e.id = id;
   if (props !== null) Object.assign(e, safeProps(props));
   if (classes !== null) e.className = classes;
@@ -74,6 +72,8 @@ export default function CREATE_ELEMENT({
       e.addEventListener(eventName, event => handler(event, e), options);
     }
   }
+
+  processChildren(e, children);
 
   return e;
 }
