@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   while (!document.body.classList.contains('page-columns-transitioned')) await new Promise(resolve => setTimeout(resolve, 50));
 
+  const maxWidthMedia = window.matchMedia('(max-width: 768px)');
   let restoreAttachedElements = [];
 
   document.querySelectorAll('template[responsive-table]').forEach((t, t_index) => {
@@ -43,19 +44,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!paginationOptions) return console.error('Missing Required: table-pagination-options');
 
     const minHeight = +paginationOptions.getAttribute('min-height') || 120;
+    const minHeightMobile = +paginationOptions.getAttribute('min-height-mobile') || 276;
+    const newMinHeight = !maxWidthMedia.matches ? minHeight : minHeightMobile;
+
     const pageSize = +paginationOptions.getAttribute('page-size');
+    const pageSizeMobile = +paginationOptions.getAttribute('page-size-mobile') || pageSize;
+    const newPageSize = !maxWidthMedia.matches ? pageSize : pageSizeMobile;
+
     const totalEntries = +paginationOptions.getAttribute('total-entries');
     const totalPage = Math.ceil(totalEntries / pageSize);
+    const totalPageMobile = Math.ceil(totalEntries / pageSizeMobile);
+    const newTotalPage = !maxWidthMedia.matches ? totalPage : totalPageMobile;
     paginationOptions.setAttribute('total-page', totalPage);
+    paginationOptions.setAttribute('total-page-mobile', totalPageMobile);
     paginationOptions.setAttribute('current-page', 1);
 
-    const targetPages = { start: 0, end: pageSize - 1 };
+    const targetPages = { start: 0, end: newPageSize - 1 };
     const tableEl = createElementFn({
       attrs: {
         role: 'table',
         ...inheritAttributes(t)
       },
-      style: { minHeight: minHeight + 'px' },
+      style: { minHeight: newMinHeight + 'px' },
     });
 
     const templateStyle = headerElement.children.map(h => (h.dataset.width || '1') + 'fr').join(' ');
@@ -96,9 +106,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sortedHeader = headerElementColumns.find(isSorted);
     const sortedHeaderIndex = headerElementColumns.findIndex(isSorted);
 
-    // Initial Page Load
-    sortTableDataset(commonParameters, sortedHeaderIndex, sortedHeader?.dataset.sortDirection || 'asc');
-
     tableEl.appendChild(tableBody);
 
     const currentPage = +paginationOptions.getAttribute('current-page');
@@ -116,11 +123,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             click: e => {
               if (!e.target.classList.contains('page-btn')) return;
               const page = e.target.textContent;
+              const newPageSize = !maxWidthMedia.matches ? pageSize : pageSizeMobile;
               if (!isNaN(page)) {
-                const start = (+page - 1) * pageSize;
-                const targetPages = { start, end: start + pageSize - 1 };
+                const start = (+page - 1) * newPageSize;
+                const targetPages = { start, end: start + newPageSize - 1 };
                 paginationOptions.setAttribute('current-page', +page);
-                updatePagination({ footer, totalPage, paginationOptions, currentPage: +page, targetPages });
+                updatePagination({ footer, paginationOptions, currentPage: +page, targetPages });
                 updateRowPage({ headerElement, bodyElement, tableBody, templateStyle, targetPages });
               } else {
                 const currentPage = +paginationOptions.getAttribute('current-page');
@@ -128,17 +136,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let newCurrentPage;
 
                 if (page === '←' && currentPage > 1) {
-                  start = (currentPage - 2) * pageSize;
+                  start = (currentPage - 2) * newPageSize;
                   newCurrentPage = currentPage - 1;
-                } else if (page === '→' && currentPage < totalPage) {
-                  start = currentPage * pageSize;
+                } else if (page === '→' && currentPage < newTotalPage) {
+                  start = currentPage * newPageSize;
                   newCurrentPage = currentPage + 1;
                 } else {
                   return;
                 }
 
-                const targetPages = { start, end: start + pageSize - 1 };
-                updatePagination({ footer, totalPage, paginationOptions, currentPage: newCurrentPage, targetPages });
+                const targetPages = { start, end: start + newPageSize - 1 };
+                updatePagination({ footer, paginationOptions, currentPage: newCurrentPage, targetPages });
                 updateRowPage({ headerElement, bodyElement, tableBody, templateStyle, targetPages });
               }
             }
@@ -147,8 +155,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       ]
     });
 
-    updatePagination({ footer, totalPage, paginationOptions, currentPage, targetPages });
+    updatePagination({ footer, paginationOptions, currentPage, targetPages });
     tableEl.appendChild(footer);
+
+    function displayChange(e) {
+      let targetPages = { start: 0, end: pageSize - 1 };
+      if (e.matches) targetPages = { start: 0, end: pageSizeMobile - 1 };
+      const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
+      updatePagination({ footer, paginationOptions, currentPage, targetPages });
+      sortTableDataset(commonParameters, sortedHeaderIndex, sortedHeader?.dataset.sortDirection || 'asc');
+    }
+    maxWidthMedia.addEventListener('change', displayChange);
+    displayChange(maxWidthMedia);
 
     const mobileSortContainer = createElementFn({
       classes: 'table-sort',
@@ -448,16 +466,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function updatePagination(params) {
-    const { footer, totalPage, paginationOptions, currentPage, targetPages } = params;
+    const { footer, paginationOptions, currentPage, targetPages } = params;
     const { start, end } = targetPages;
     paginationOptions.setAttribute('current-page', currentPage);
+
+    const totalPage = !maxWidthMedia.matches ? +paginationOptions.getAttribute('total-page') : +paginationOptions.getAttribute('total-page-mobile');
 
     const paginationButtons = footer.querySelector('.pagination-buttons');
     paginationButtons.innerHTML = '';
 
     const paginationSummary = footer.querySelector('.pagination-summary');
     paginationSummary.querySelector('[summary-current]').textContent = start + 1;
-    const summarySize = +paginationOptions.getAttribute('total-page') === currentPage
+    const summarySize = totalPage === currentPage
       ? +paginationOptions.getAttribute('total-entries')
       : end + 1;
     paginationSummary.querySelector('[summary-size]').textContent = summarySize;
