@@ -327,7 +327,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           {
             tag: 'ul',
             classes: 'list list-with-transition size-h5',
-            style: { '--table-template': templateStyle },
             children: Array.from(cells)
               .filter(c => !c.hasAttribute('data-show-on-mobile') && !c.hasAttribute('data-as-mobile-title'))
               .map((c, i) => {

@@ -319,7 +319,16 @@ div[responsive-table] .collapsed-column-details>summary::marker {
   div[responsive-table] .responsive-table-details {
     display: block;
     padding: 0 1rem 0.2rem;
-    background: var(--color-popover-background);
+  }
+
+  div[responsive-table] .responsive-table-details ul {
+    background: var(--color-widget-background-highlight);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 0 0.5rem;
+  }
+
+  div[responsive-table] details.responsive-table-details[open] .summary {
+    margin-bottom: 0;
   }
 
   div[responsive-table] .responsive-table-details>summary {
