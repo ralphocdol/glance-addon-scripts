@@ -52,7 +52,7 @@ Will be the fragment container for your data-table.
     - `min-height`: minimum height of the table as `number`, this should prevent layout shifting. Can be unset but defaults to 120. Gets converted to a `px`
     - `min-height-mobile`: similar to `min-height` but for mobile.
     - `page-size`: visible rows per page.
-    - `page-size-mobile`: same with `page-size` but for mobile view.
+    - `page-size-mobile`: similar to `page-size` but for mobile view.
     - `total-entries`: Array Length of the Table, this should be set in the custom-api template
   
 
