@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const totalEntries = +paginationOptions.getAttribute('total-entries');
     const totalPage = Math.ceil(totalEntries / pageSize);
     const totalPageMobile = Math.ceil(totalEntries / pageSizeMobile);
-    const newTotalPage = !maxWidthMedia.matches ? totalPage : totalPageMobile;
     paginationOptions.setAttribute('total-page', totalPage);
     paginationOptions.setAttribute('total-page-mobile', totalPageMobile);
     paginationOptions.setAttribute('current-page', 1);
@@ -126,6 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               if (!e.target.classList.contains('page-btn')) return;
               const page = e.target.textContent;
               const newPageSize = !maxWidthMedia.matches ? pageSize : pageSizeMobile;
+              const newTotalPage = !maxWidthMedia.matches ? totalPage : totalPageMobile;
               if (!isNaN(page)) {
                 const start = (+page - 1) * newPageSize;
                 const targetPages = { start, end: start + newPageSize - 1 };
