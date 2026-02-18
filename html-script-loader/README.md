@@ -6,6 +6,9 @@ Adding `<script></script>` in the `custom-api` template property or in the `html
 >
 > Using API queries like `fetch` with API keys within the script is possible but it WILL expose them in the browser.
 
+# Dependency
+- [Custom Menu](../custom-menu/README.md) *(optional)* - if not present, `setPausableInterval` will not work.
+
 # How to load
 Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
@@ -21,6 +24,11 @@ Add a script like so below your `custom-api`'s template property or `html`'s sou
   // your script should be in here
 </script>
 ```
+
+## Custom Functions
+- `setPausableInterval` - works like `setInterval()` but can be paused with a `custom-menu` button
+
+## Some examples
 
 ### Basic example
 ```yml
@@ -48,7 +56,7 @@ Add a script like so below your `custom-api`'s template property or `html`'s sou
   css-class: custom-widget-test # as your main class element to make sure you don't update anything else
   template: | #gohtml
     <script html-script>
-      setInterval(async () => {
+      setPausableInterval(async () => { // can be paused with the custom-menu item
         const mainElement = document.querySelector('.custom-widget-test');
         if (mainElement && mainElement.length === 0) return;
         const targetElement = mainElement.querySelector('.target-class');
