@@ -3,6 +3,9 @@
 ![preview1](preview/preview1.webp)
 ![preview2](preview/preview2.webp)
 
+# Dependency
+- [CREATE_ELEMENT](../global-functions/CREATE_ELEMENT.js) *(required)*
+
 # How to load
 Read the main [README.md](https://github.com/ralphocdol/glance-addon-scripts/blob/main/README.md#loading-script) on how to properly load this.
 ```html
