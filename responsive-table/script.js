@@ -83,11 +83,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       style: inheritStyles(bodyElement),
     });
 
-    const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
 
     headerElement.addEventListener('click', e => {
       const h = e.target.closest('[sortable]');
       if (!h) return;
+      const newPageSize = !maxWidthMedia.matches ? pageSize : pageSizeMobile;
+      const targetPages = { start: 0, end: newPageSize - 1 };
+      const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
       const direction = h.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
       headerElementColumns.forEach(c => delete c.dataset.sortDirection);
 
@@ -127,7 +129,6 @@ document.addEventListener('DOMContentLoaded', async () => {
               if (!isNaN(page)) {
                 const start = (+page - 1) * newPageSize;
                 const targetPages = { start, end: start + newPageSize - 1 };
-                paginationOptions.setAttribute('current-page', +page);
                 updatePagination({ footer, paginationOptions, currentPage: +page, targetPages });
                 updateRowPage({ headerElement, bodyElement, tableBody, templateStyle, targetPages });
               } else {
@@ -160,7 +161,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function displayChange(e) {
       let targetPages = { start: 0, end: pageSize - 1 };
-      if (e.matches) targetPages = { start: 0, end: pageSizeMobile - 1 };
+      let newMinHeight = minHeight;
+
+      if (e.matches) {
+        targetPages = { start: 0, end: pageSizeMobile - 1 };
+        newMinHeight = minHeightMobile;
+      }
+      tableEl.style.minHeight = newMinHeight + 'px';
+
       const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
       updatePagination({ footer, paginationOptions, currentPage, targetPages });
       sortTableDataset(commonParameters, sortedHeaderIndex, sortedHeader?.dataset.sortDirection || 'asc');
@@ -221,6 +229,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                   const sortedHeader = headerElementColumns.find(isSorted);
                   const sortedHeaderIndex = headerElementColumns.findIndex(isSorted);
                   if (sortedHeader) {
+                    const newPageSize = !maxWidthMedia.matches ? pageSize : pageSizeMobile;
+                    const targetPages = { start: 0, end: newPageSize - 1 };
+                    const commonParameters = { headerElement, bodyElement, tableBody, templateStyle, targetPages };
                     const direction = sortedHeader?.dataset.sortDirection === 'asc' ? 'desc' : 'asc';
                     headerElementColumns.forEach(c => delete c.dataset.sortDirection);
 
@@ -232,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                       direction
                     );
                   }
-                  setTimeout(() => thisEl.disabled = false, 100);
+                  setTimeout(() => thisEl.disabled = false, 100); // prevent spam click glitch
                 }
               }
             }
