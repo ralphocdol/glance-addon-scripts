@@ -37,21 +37,21 @@ It is **not affiliated with, endorsed by, or connected to** it or its maintainer
 
 | Script | Short Description | Tested Version |
 | ------ | :---------------: | :------------: |
-| [HTML Script Loader](html-script-loader/README.md) | Adds the ability to load `<script>` inside `custom-api` | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Swipe Left and Right](swipe-left-and-right/README.md) | Swipe left/right on Mobile | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Modal](modal/README.md) | A modal popup | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Tab Notification](tab-notification/README.md) | Show notification count on `group` tabs | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Glimpse](glimpse/README.md) | A Quick Launch for Glance | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Responsive Table](responsive-table/README.md) | A table widget | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Lazy Unloader](lazy-unloader/README.md) | Unloads image when not in view | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Custom Menu](custom-menu/README.md) | Menu grid for Addon Script | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Toast Message](toast-message/README.md) | Custom notification message display | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Custom Settings](custom-settings/README.md) | Custom settings manager for Addon Script | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Theming](theming/README.md) | Theme editor/manager for Glance | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Mobile Vertical Navigation](mobile-vertical-nav/README.md) | Replaces horizontal navigation | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Custom Dialog](custom-dialog/README.md) | A basic dialog box | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Navigation Shortcuts](navigation-shortcuts/README.md) | Navigation shortcut using `Ctrl+Shift+#` | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
-| [Iframe Bookmarks Nav](iframe-bookmarks-nav/README.md) | Turning bookmarks into navigation, paired with iframe | v0.8.5 \| dev@[c8dc5bb](https://github.com/glanceapp/glance/tree/c8dc5bb453d5ebfd92ab9a61eaac512a73dfcc93) |
+| [HTML Script Loader](html-script-loader/README.md) | Adds the ability to load `<script>` inside `custom-api` | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Swipe Left and Right](swipe-left-and-right/README.md) | Swipe left/right on Mobile | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Modal](modal/README.md) | A modal popup | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Tab Notification](tab-notification/README.md) | Show notification count on `group` tabs | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Glimpse](glimpse/README.md) | A Quick Launch for Glance | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Responsive Table](responsive-table/README.md) | A table widget | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Lazy Unloader](lazy-unloader/README.md) | Unloads image when not in view | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Custom Menu](custom-menu/README.md) | Menu grid for Addon Script | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Toast Message](toast-message/README.md) | Custom notification message display | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Custom Settings](custom-settings/README.md) | Custom settings manager for Addon Script | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Theming](theming/README.md) | Theme editor/manager for Glance | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Mobile Vertical Navigation](mobile-vertical-nav/README.md) | Replaces horizontal navigation | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Custom Dialog](custom-dialog/README.md) | A basic dialog box | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Navigation Shortcuts](navigation-shortcuts/README.md) | Navigation shortcut using `Ctrl+Shift+#` | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
+| [Iframe Bookmarks Nav](iframe-bookmarks-nav/README.md) | Turning bookmarks into navigation, paired with iframe | v0.8.6 \| dev@[376dca8](https://github.com/glanceapp/glance/commit/376dca87f52053df5ffd41128d3112d4b7e82128) |
 
 ### Limitations
 Scripts that provide GUI itself like `Modal` can only be used with widgets that allows custom html like `custom-api`, `html`, `extension` and the like.
@@ -113,11 +113,11 @@ Loading the scripts this way will have a [Cache Busting](https://www.keycdn.com/
 Here are several approach to do so:
 - By force reloading your browser while Glance is open, there are plenty of tutorial out there on how to do it but typically it's just `Ctrl+Shift+R`.
 - By updating all the instance of `?v=1` to `?v=2` and so on each addon-script update.
-- By modifying the Glance's Docker Compose entrypoint. By default, as of v0.8.5, it's `/app/glance --config /app/config/glance.yml` and is omitted.
+- By modifying the Glance's Docker Compose entrypoint. By default, as of v0.8.6, it's `/app/glance --config /app/config/glance.yml` and is omitted.
   ```yaml
     services:
       glance:
-        image: glanceapp/glance:v0.8.5
+        image: glanceapp/glance:v0.8.6
         container_name: glance
         environment:
           - MY_ENV_VAR=test-value
